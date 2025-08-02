@@ -1,0 +1,410 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a name="line.1"></a>
+<span class="sourceLineNo">002</span>    package com.pax.dal;<a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span>    import com.pax.dal.entity.FontInfo;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>    import com.pax.dal.entity.WLLcdCusorPosition;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>    import com.pax.dal.entity.WLLcdDisplaySize;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>    import com.pax.dal.exceptions.WLCustomerDisplayDevException;<a name="line.7"></a>
+<span class="sourceLineNo">008</span><a name="line.8"></a>
+<span class="sourceLineNo">009</span>    /**<a name="line.9"></a>
+<span class="sourceLineNo">010</span>     *  &lt;div class="zh"&gt;如果开启权限检查，需在AndroidManifest下添加权限:"com.pax.permission.LCD"&lt;/div&gt;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>     *  &lt;div class="en"&gt;If permission check is enabled, you need to add permission under AndroidManifest: "com.pax.permission.LCD".&lt;/div&gt;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>     */<a name="line.12"></a>
+<span class="sourceLineNo">013</span>    public interface IWLCustomerDisplay {<a name="line.13"></a>
+<span class="sourceLineNo">014</span>        /**<a name="line.14"></a>
+<span class="sourceLineNo">015</span>         * &lt;div class="zh"&gt;初始化客显屏 &lt;/div&gt; &lt;div class="en"&gt; Initialize the guest screen. &lt;/div&gt;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>         *<a name="line.16"></a>
+<span class="sourceLineNo">017</span>         * @throws WLCustomerDisplayDevException<a name="line.17"></a>
+<span class="sourceLineNo">018</span>         *<a name="line.18"></a>
+<span class="sourceLineNo">019</span>         * @since V4.11.00<a name="line.19"></a>
+<span class="sourceLineNo">020</span>         *<a name="line.20"></a>
+<span class="sourceLineNo">021</span>         */<a name="line.21"></a>
+<span class="sourceLineNo">022</span>        void scrInit()throws WLCustomerDisplayDevException;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>        /**<a name="line.24"></a>
+<span class="sourceLineNo">025</span>         * &lt;div class="zh"&gt;解除初始化客显屏 &lt;/div&gt; &lt;div class="en"&gt;Uninitialize the guest screen. &lt;/div&gt;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>         *<a name="line.26"></a>
+<span class="sourceLineNo">027</span>         * @throws WLCustomerDisplayDevException<a name="line.27"></a>
+<span class="sourceLineNo">028</span>         *<a name="line.28"></a>
+<span class="sourceLineNo">029</span>         * @since V4.11.00<a name="line.29"></a>
+<span class="sourceLineNo">030</span>         */<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        void scrUninit()throws WLCustomerDisplayDevException;<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>        /**<a name="line.33"></a>
+<span class="sourceLineNo">034</span>         * &lt;div class="zh"&gt;清除指定的一行或若干行，参数不合理时无动作。 &lt;/div&gt; &lt;div class="en"&gt;Uninitialize the guest screen. &lt;/div&gt;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         *<a name="line.35"></a>
+<span class="sourceLineNo">036</span>         * @param startline<a name="line.36"></a>
+<span class="sourceLineNo">037</span>         *        &lt;div class="zh"&gt;开始行数 &lt;/div&gt; &lt;div class="en"&gt;Start line&lt;/div&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         * @param endline<a name="line.38"></a>
+<span class="sourceLineNo">039</span>         *         &lt;div class="zh"&gt;结束行数 &lt;/div&gt; &lt;div class="en"&gt;End line&lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>         *<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         * @throws WLCustomerDisplayDevException<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         *<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         * @since V4.11.00<a name="line.43"></a>
+<span class="sourceLineNo">044</span>         */<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        void scrClrLine(byte startline,byte endline)throws WLCustomerDisplayDevException;<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>        /**<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * &lt;div class="zh"&gt;定位 LCD 显示光标 &lt;/div&gt; &lt;div class="en"&gt;Position the LCD display cursor. &lt;/div&gt;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         *<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * @param pixel_X<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         *        &lt;div class="zh"&gt;x坐标 &lt;/div&gt; &lt;div class="en"&gt;x coordinate&lt;/div&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * @param pixel_Y<a name="line.52"></a>
+<span class="sourceLineNo">053</span>         *         &lt;div class="zh"&gt;y坐标 &lt;/div&gt; &lt;div class="en"&gt;y coordinate&lt;/div&gt;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         *<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * @throws WLCustomerDisplayDevException<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         *<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * @since V4.11.00<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         */<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        void scrGotoxyEx(int pixel_X, int pixel_Y)throws WLCustomerDisplayDevException;<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>        /**<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * &lt;div class="zh"&gt;将光标移到屏幕指定的位置 &lt;/div&gt; &lt;div class="en"&gt;Moves the cursor to the specified position on the screen. &lt;/div&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         *<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * @param x<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         *        &lt;div class="zh"&gt;x坐标 &lt;/div&gt; &lt;div class="en"&gt;x coordinate&lt;/div&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * @param y<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         *         &lt;div class="zh"&gt;y坐标 &lt;/div&gt; &lt;div class="en"&gt;y coordinate&lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         *<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * @throws WLCustomerDisplayDevException<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         *<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * @since V4.11.00<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        void scrGotoxy(byte x, byte y)throws WLCustomerDisplayDevException;<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>        /**<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         * &lt;div class="zh"&gt;在屏幕当前位置格式化显示字符串 &lt;/div&gt; &lt;div class="en"&gt;Format the display string at the current position on the screen. &lt;/div&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         *<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * @param display<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         *        &lt;div class="zh"&gt;显示内容 &lt;/div&gt; &lt;div class="en"&gt;Display content&lt;/div&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         *<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * @throws WLCustomerDisplayDevException<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         *<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * @since V4.11.00<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        void scrLcdDisplay(String display)throws WLCustomerDisplayDevException;<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>        /**<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * &lt;div class="zh"&gt;在指定的屏幕位置显示字符串。 &lt;/div&gt; &lt;div class="en"&gt;Displays a string at the specified screen location. &lt;/div&gt;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         *<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * @param x<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         *      &lt;div class="zh"&gt;x坐标 &lt;/div&gt; &lt;div class="en"&gt;x coordinate&lt;/div&gt;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         *<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         * @param y<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         *      &lt;div class="zh"&gt;y坐标 &lt;/div&gt; &lt;div class="en"&gt;y coordinate&lt;/div&gt;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         *<a name="line.95"></a>
+<span class="sourceLineNo">096</span>         * @param display<a name="line.96"></a>
+<span class="sourceLineNo">097</span>         *        &lt;div class="zh"&gt;显示内容 &lt;/div&gt; &lt;div class="en"&gt;Display content&lt;/div&gt;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>         *<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * @throws WLCustomerDisplayDevException<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         *<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * @since V4.11.00<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         */<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        void scrLcdDisplay(int x,int y,String display)throws WLCustomerDisplayDevException;<a name="line.103"></a>
+<span class="sourceLineNo">104</span><a name="line.104"></a>
+<span class="sourceLineNo">105</span>        /**<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * &lt;div class="zh"&gt;在屏幕指定位置格式化显示字符串 &lt;/div&gt; &lt;div class="en"&gt;Format the display string at a specified location on the screen &lt;/div&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         *<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * @param col<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         *      &lt;div class="zh"&gt;显示的起始点阵列号 &lt;/div&gt; &lt;div class="en"&gt;Display starting point array number&lt;/div&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         *<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * @param row<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         *      &lt;div class="zh"&gt;显示的起始行号.注：8个像素点为1行，需要屏幕分辨率看支持显示几行 &lt;/div&gt; &lt;div class="en"&gt;The start line number displayed. Note: 8 pixels are 1 line, and the screen resolution is required to see how many lines are supported&lt;/div&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         *<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * @param mode<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         *      &lt;div class="zh"&gt;Bit0：字体设置，为0-ASCII字体，1-CFONT 字体；Bit1~Bit6：预留；Bit7：显示属性，0-正常显示，1-反显。 0x00-ASCII/正常显示 ;0x01-CFONT/正常显示; 0x80-ASCII/反显; 0x81-CFONT/反显&lt;/div&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         *      &lt;div class="en"&gt;Bit0: Font setting, 0-ASCII font, 1-CFONT font; Bit1~Bit6: reserved; Bit7: Display attribute, 0- normal display, 1- reverse display 0x00-ASCII/ Normal display; 0x01-CFONT/ Normal display; 0x80-ASCII/ reverse display; 0x81-CFONT/ Reverse display.&lt;/div&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>         *<a name="line.117"></a>
+<span class="sourceLineNo">118</span>         * @param display<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         *        &lt;div class="zh"&gt;显示内容,注:参数col、row超出屏幕范围时，不显示;指定的字体、属性及坐标仅对本函数有效.要显示"%"时，需要2个%号，即"%%" &lt;/div&gt; &lt;div class="en"&gt;Display content,Note: When the parameters col and row exceed the screen range, they will not be displayed; The specified fonts, properties, and coordinates are valid only for this function. To display "%", you need 2 % signs, i.e. "%%"&lt;/div&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         *<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * @throws WLCustomerDisplayDevException<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         *<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * @since V4.11.00<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         */<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        void scrLcdDisplay(byte col,byte row,byte mode,String display)throws WLCustomerDisplayDevException;<a name="line.125"></a>
+<span class="sourceLineNo">126</span><a name="line.126"></a>
+<span class="sourceLineNo">127</span>        /**<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         * &lt;div class="zh"&gt;清除整个屏幕 &lt;/div&gt; &lt;div class="en"&gt;Clear the entire screen. &lt;/div&gt;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>         *<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * @throws WLCustomerDisplayDevException<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         *<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * @since V4.11.00<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         */<a name="line.133"></a>
+<span class="sourceLineNo">134</span>        void scrCls()throws WLCustomerDisplayDevException;<a name="line.134"></a>
+<span class="sourceLineNo">135</span><a name="line.135"></a>
+<span class="sourceLineNo">136</span>        /**<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * @deprecated &lt;div class="zh"&gt;此方法已过时 &lt;/div&gt; &lt;div class="en"&gt;This method is outdated&lt;/div&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         *<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * &lt;div class="zh"&gt;设置显示屏幕的对比度。 &lt;/div&gt; &lt;div class="en"&gt;Set the contrast of the display screen. &lt;/div&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         *<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * @param mode<a name="line.141"></a>
+<span class="sourceLineNo">142</span>         *        &lt;div class="zh"&gt;对比度级别[0~7,0最暗,7最亮] &lt;/div&gt; &lt;div class="en"&gt;Contrast level [0 to 7,0 darkest,7 brightest]&lt;/div&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         *<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         * @throws WLCustomerDisplayDevException<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         *<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @since V4.11.00<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         */<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        void scrGray(int mode)throws WLCustomerDisplayDevException;<a name="line.148"></a>
+<span class="sourceLineNo">149</span><a name="line.149"></a>
+<span class="sourceLineNo">150</span>        /**<a name="line.150"></a>
+<span class="sourceLineNo">151</span>         * &lt;div class="zh"&gt;设置屏幕背光 &lt;/div&gt; &lt;div class="en"&gt;Set the screen backlight. &lt;/div&gt;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>         *<a name="line.152"></a>
+<span class="sourceLineNo">153</span>         * @param mode<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         *        &lt;div class="zh"&gt;[0~1] 0-灭屏;1-亮屏  &lt;/div&gt; &lt;div class="en"&gt;[0~1] 0- Off the screen. 1- Light the screen&lt;/div&gt;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         *<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * @throws WLCustomerDisplayDevException<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         *<a name="line.157"></a>
+<span class="sourceLineNo">158</span>         * @since V4.11.00<a name="line.158"></a>
+<span class="sourceLineNo">159</span>         */<a name="line.159"></a>
+<span class="sourceLineNo">160</span>        void scrBackLight(byte mode)throws WLCustomerDisplayDevException;<a name="line.160"></a>
+<span class="sourceLineNo">161</span><a name="line.161"></a>
+<span class="sourceLineNo">162</span>        /**<a name="line.162"></a>
+<span class="sourceLineNo">163</span>         * &lt;div class="zh"&gt;设置显示属性，正常显示或反白显示 &lt;/div&gt; &lt;div class="en"&gt;Set display properties, normal display or anti-white display&lt;/div&gt;<a name="line.163"></a>
+<span class="sourceLineNo">164</span>         *<a name="line.164"></a>
+<span class="sourceLineNo">165</span>         * @param attr<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         *        &lt;div class="zh"&gt;属性值 0：以正常方式显示; 非0：以反白方式显示 &lt;/div&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>         *        &lt;div class="en"&gt;0: displayed normally; Non-0: Displayed in reverse white mode&lt;/div&gt;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         *<a name="line.168"></a>
+<span class="sourceLineNo">169</span>         * @return  &lt;div class="zh"&gt;返回上一次设置的值&lt;/div&gt; &lt;div class="en"&gt;Returns the last value set&lt;/div&gt;<a name="line.169"></a>
+<span class="sourceLineNo">170</span>         *<a name="line.170"></a>
+<span class="sourceLineNo">171</span>         * @throws WLCustomerDisplayDevException<a name="line.171"></a>
+<span class="sourceLineNo">172</span>         *<a name="line.172"></a>
+<span class="sourceLineNo">173</span>         * @since V4.11.00<a name="line.173"></a>
+<span class="sourceLineNo">174</span>         */<a name="line.174"></a>
+<span class="sourceLineNo">175</span>        int scrAttrSet(byte attr)throws WLCustomerDisplayDevException;<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>        /**<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         * &lt;div class="zh"&gt;保存当前的屏幕显示内容或恢复上一次保存的屏幕显示内容 注：该函数不用于保存与恢复图标显示 &lt;/div&gt;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>         * &lt;div class="en"&gt;Save the current screen display or restore the last saved screen display. Note: This function is not used to save and restore icon display&lt;/div&gt;<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         *<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         * @param mode<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         *        &lt;div class="zh"&gt;0：保存; &gt;=1：恢复 &lt;/div&gt; &lt;div class="en"&gt;0: save; &gt;=1: Recovery&lt;/div&gt;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         *<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         * @return<a name="line.184"></a>
+<span class="sourceLineNo">185</span>         *      &lt;div class="zh"&gt;0x00 成功; 其它值: 失败(如恢复前没有保存内容)&lt;/div&gt;<a name="line.185"></a>
+<span class="sourceLineNo">186</span>         *      &lt;div class="en"&gt;0x00 Success; Other value: Failure (e.g. not saving before resuming)&lt;/div&gt;<a name="line.186"></a>
+<span class="sourceLineNo">187</span>         *<a name="line.187"></a>
+<span class="sourceLineNo">188</span>         * @throws WLCustomerDisplayDevException<a name="line.188"></a>
+<span class="sourceLineNo">189</span>         *<a name="line.189"></a>
+<span class="sourceLineNo">190</span>         * @since V4.11.00<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         */<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        int scrRestore(byte mode)throws WLCustomerDisplayDevException;<a name="line.192"></a>
+<span class="sourceLineNo">193</span><a name="line.193"></a>
+<span class="sourceLineNo">194</span>        /**<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         * &lt;div class="zh"&gt;读取 LCD 显示区域的大小&lt;/div&gt; &lt;div class="en"&gt;Read the size of the LCD display area&lt;/div&gt;<a name="line.195"></a>
+<span class="sourceLineNo">196</span>         *<a name="line.196"></a>
+<span class="sourceLineNo">197</span>         *<a name="line.197"></a>
+<span class="sourceLineNo">198</span>         * @return  {@link WLLcdDisplaySize}<a name="line.198"></a>
+<span class="sourceLineNo">199</span>         *<a name="line.199"></a>
+<span class="sourceLineNo">200</span>         * @throws WLCustomerDisplayDevException<a name="line.200"></a>
+<span class="sourceLineNo">201</span>         *<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * @since V4.11.00<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         */<a name="line.203"></a>
+<span class="sourceLineNo">204</span>        WLLcdDisplaySize scrGetLcdSize()throws WLCustomerDisplayDevException;<a name="line.204"></a>
+<span class="sourceLineNo">205</span><a name="line.205"></a>
+<span class="sourceLineNo">206</span>        /**<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         * &lt;div class="zh"&gt;读取LCD上光标的当前位置&lt;/div&gt; &lt;div class="en"&gt;Read the current position of the cursor on the LCD&lt;/div&gt;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         *<a name="line.208"></a>
+<span class="sourceLineNo">209</span>         *<a name="line.209"></a>
+<span class="sourceLineNo">210</span>         * @return  {@link WLLcdCusorPosition}<a name="line.210"></a>
+<span class="sourceLineNo">211</span>         *<a name="line.211"></a>
+<span class="sourceLineNo">212</span>         * @throws WLCustomerDisplayDevException<a name="line.212"></a>
+<span class="sourceLineNo">213</span>         *<a name="line.213"></a>
+<span class="sourceLineNo">214</span>         * @since V4.11.00<a name="line.214"></a>
+<span class="sourceLineNo">215</span>         */<a name="line.215"></a>
+<span class="sourceLineNo">216</span>        WLLcdCusorPosition scrGetxyEx()throws WLCustomerDisplayDevException;<a name="line.216"></a>
+<span class="sourceLineNo">217</span><a name="line.217"></a>
+<span class="sourceLineNo">218</span>        /**<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         * &lt;div class="zh"&gt;在屏幕指定位置画点。 &lt;/div&gt; &lt;div class="en"&gt;Draw dots at specified locations on the screen. &lt;/div&gt;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         *<a name="line.220"></a>
+<span class="sourceLineNo">221</span>         * @param x<a name="line.221"></a>
+<span class="sourceLineNo">222</span>         *      &lt;div class="zh"&gt;横坐标 &lt;/div&gt; &lt;div class="en"&gt;Horizontal coordinate&lt;/div&gt;<a name="line.222"></a>
+<span class="sourceLineNo">223</span>         *<a name="line.223"></a>
+<span class="sourceLineNo">224</span>         * @param y<a name="line.224"></a>
+<span class="sourceLineNo">225</span>         *      &lt;div class="zh"&gt;纵坐标 &lt;/div&gt; &lt;div class="en"&gt;Vertical coordinate&lt;/div&gt;<a name="line.225"></a>
+<span class="sourceLineNo">226</span>         *<a name="line.226"></a>
+<span class="sourceLineNo">227</span>         * @param color<a name="line.227"></a>
+<span class="sourceLineNo">228</span>         *        &lt;div class="zh"&gt;指定动作。非0：画点；0：擦点 &lt;/div&gt; &lt;div class="en"&gt;Specify the action. Non-0: draw points; 0: Rub point&lt;/div&gt;<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         *<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         * @throws WLCustomerDisplayDevException<a name="line.230"></a>
+<span class="sourceLineNo">231</span>         *<a name="line.231"></a>
+<span class="sourceLineNo">232</span>         * @since V4.11.00<a name="line.232"></a>
+<span class="sourceLineNo">233</span>         */<a name="line.233"></a>
+<span class="sourceLineNo">234</span>        void scrPlot(byte x, byte y,byte color)throws WLCustomerDisplayDevException;<a name="line.234"></a>
+<span class="sourceLineNo">235</span><a name="line.235"></a>
+<span class="sourceLineNo">236</span>        /**<a name="line.236"></a>
+<span class="sourceLineNo">237</span>         * &lt;div class="zh"&gt;将指定的点阵数据放到显示模块的缓冲区，适合显示 LOGO。 &lt;/div&gt;<a name="line.237"></a>
+<span class="sourceLineNo">238</span>         * &lt;div class="en"&gt;Put the specified dot matrix data into the buffer of the display module, which is suitable for displaying the LOGO. &lt;/div&gt;<a name="line.238"></a>
+<span class="sourceLineNo">239</span>         *<a name="line.239"></a>
+<span class="sourceLineNo">240</span>         * @param logo<a name="line.240"></a>
+<span class="sourceLineNo">241</span>         *        &lt;div class="zh"&gt;Logo数据 &lt;/div&gt; &lt;div class="en"&gt;Logo datat&lt;/div&gt;<a name="line.241"></a>
+<span class="sourceLineNo">242</span>         *<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         * @throws WLCustomerDisplayDevException<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         *<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         * @since V4.11.00<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         */<a name="line.246"></a>
+<span class="sourceLineNo">247</span>        void scrDrLogo(byte[] logo)throws WLCustomerDisplayDevException;<a name="line.247"></a>
+<span class="sourceLineNo">248</span><a name="line.248"></a>
+<span class="sourceLineNo">249</span>        /**<a name="line.249"></a>
+<span class="sourceLineNo">250</span>         * &lt;div class="zh"&gt;在指定的坐标处显示LOGO]。 &lt;/div&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         *  &lt;div class="en"&gt;Display LOGO at the specified coordinates . &lt;/div&gt;<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         *<a name="line.252"></a>
+<span class="sourceLineNo">253</span>         * @param left<a name="line.253"></a>
+<span class="sourceLineNo">254</span>         *      &lt;div class="zh"&gt;横坐标 &lt;/div&gt; &lt;div class="en"&gt;Horizontal coordinate&lt;/div&gt;<a name="line.254"></a>
+<span class="sourceLineNo">255</span>         *<a name="line.255"></a>
+<span class="sourceLineNo">256</span>         * @param top<a name="line.256"></a>
+<span class="sourceLineNo">257</span>         *      &lt;div class="zh"&gt;纵坐标 &lt;/div&gt; &lt;div class="en"&gt;Vertical coordinate&lt;/div&gt;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>         *<a name="line.258"></a>
+<span class="sourceLineNo">259</span>         * @param logo<a name="line.259"></a>
+<span class="sourceLineNo">260</span>         *        &lt;div class="zh"&gt;Logo数据 &lt;/div&gt; &lt;div class="en"&gt;Logo datat&lt;/div&gt;<a name="line.260"></a>
+<span class="sourceLineNo">261</span>         *<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         * @throws WLCustomerDisplayDevException<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         *<a name="line.263"></a>
+<span class="sourceLineNo">264</span>         * @since V4.11.00<a name="line.264"></a>
+<span class="sourceLineNo">265</span>         */<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        void scrDrLogoEx(int left,int top,byte[] logo)throws WLCustomerDisplayDevException;<a name="line.266"></a>
+<span class="sourceLineNo">267</span><a name="line.267"></a>
+<span class="sourceLineNo">268</span>        /**<a name="line.268"></a>
+<span class="sourceLineNo">269</span>         * &lt;div class="zh"&gt;画矩形。 &lt;/div&gt; &lt;div class="en"&gt;Draw the rectangle. &lt;/div&gt;<a name="line.269"></a>
+<span class="sourceLineNo">270</span>         *<a name="line.270"></a>
+<span class="sourceLineNo">271</span>         * @param left<a name="line.271"></a>
+<span class="sourceLineNo">272</span>         *      &lt;div class="zh"&gt;左&lt;/div&gt; &lt;div class="en"&gt;Left&lt;/div&gt;<a name="line.272"></a>
+<span class="sourceLineNo">273</span>         *<a name="line.273"></a>
+<span class="sourceLineNo">274</span>         * @param top<a name="line.274"></a>
+<span class="sourceLineNo">275</span>         *      &lt;div class="zh"&gt;顶&lt;/div&gt; &lt;div class="en"&gt;Top&lt;/div&gt;<a name="line.275"></a>
+<span class="sourceLineNo">276</span>         *<a name="line.276"></a>
+<span class="sourceLineNo">277</span>         * @param right<a name="line.277"></a>
+<span class="sourceLineNo">278</span>         *        &lt;div class="zh"&gt;右&lt;/div&gt; &lt;div class="en"&gt;Right&lt;/div&gt;<a name="line.278"></a>
+<span class="sourceLineNo">279</span>         *<a name="line.279"></a>
+<span class="sourceLineNo">280</span>         * @param bottom<a name="line.280"></a>
+<span class="sourceLineNo">281</span>         *       &lt;div class="zh"&gt;底&lt;/div&gt; &lt;div class="en"&gt;Bottom&lt;/div&gt;<a name="line.281"></a>
+<span class="sourceLineNo">282</span>         *<a name="line.282"></a>
+<span class="sourceLineNo">283</span>         * @throws WLCustomerDisplayDevException<a name="line.283"></a>
+<span class="sourceLineNo">284</span>         *<a name="line.284"></a>
+<span class="sourceLineNo">285</span>         * @since V4.11.00<a name="line.285"></a>
+<span class="sourceLineNo">286</span>         */<a name="line.286"></a>
+<span class="sourceLineNo">287</span>        void scrDrawRect(int left,int top,int  right,int bottom)throws WLCustomerDisplayDevException;<a name="line.287"></a>
+<span class="sourceLineNo">288</span><a name="line.288"></a>
+<span class="sourceLineNo">289</span>        /**<a name="line.289"></a>
+<span class="sourceLineNo">290</span>         * &lt;div class="zh"&gt;清除矩形区域的显示信息。&lt;/div&gt; &lt;div class="en"&gt;Clear the display of the rectangular area. &lt;/div&gt;<a name="line.290"></a>
+<span class="sourceLineNo">291</span>         *<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * @param left<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         *      &lt;div class="zh"&gt;左&lt;/div&gt; &lt;div class="en"&gt;Left&lt;/div&gt;<a name="line.293"></a>
+<span class="sourceLineNo">294</span>         *<a name="line.294"></a>
+<span class="sourceLineNo">295</span>         * @param top<a name="line.295"></a>
+<span class="sourceLineNo">296</span>         *      &lt;div class="zh"&gt;顶&lt;/div&gt; &lt;div class="en"&gt;Top&lt;/div&gt;<a name="line.296"></a>
+<span class="sourceLineNo">297</span>         *<a name="line.297"></a>
+<span class="sourceLineNo">298</span>         * @param right<a name="line.298"></a>
+<span class="sourceLineNo">299</span>         *        &lt;div class="zh"&gt;右&lt;/div&gt; &lt;div class="en"&gt;Right&lt;/div&gt;<a name="line.299"></a>
+<span class="sourceLineNo">300</span>         *<a name="line.300"></a>
+<span class="sourceLineNo">301</span>         * @param bottom<a name="line.301"></a>
+<span class="sourceLineNo">302</span>         *       &lt;div class="zh"&gt;底&lt;/div&gt; &lt;div class="en"&gt;Bottom&lt;/div&gt;<a name="line.302"></a>
+<span class="sourceLineNo">303</span>         *<a name="line.303"></a>
+<span class="sourceLineNo">304</span>         * @throws WLCustomerDisplayDevException<a name="line.304"></a>
+<span class="sourceLineNo">305</span>         *<a name="line.305"></a>
+<span class="sourceLineNo">306</span>         * @since V4.11.00<a name="line.306"></a>
+<span class="sourceLineNo">307</span>         */<a name="line.307"></a>
+<span class="sourceLineNo">308</span>        void scrClrRect(int left,int top,int  right,int bottom)throws WLCustomerDisplayDevException;<a name="line.308"></a>
+<span class="sourceLineNo">309</span><a name="line.309"></a>
+<span class="sourceLineNo">310</span>//        /**<a name="line.310"></a>
+<span class="sourceLineNo">311</span>//         * &lt;div class="zh"&gt;选择LCD显示字体&lt;/div&gt; &lt;div class="en"&gt;Select LCD to display the font&lt;/div&gt;<a name="line.311"></a>
+<span class="sourceLineNo">312</span>//         *<a name="line.312"></a>
+<span class="sourceLineNo">313</span>//         *<a name="line.313"></a>
+<span class="sourceLineNo">314</span>//         * @param multiCodeFontAttr   {@link FontInfo}<a name="line.314"></a>
+<span class="sourceLineNo">315</span>//         *<a name="line.315"></a>
+<span class="sourceLineNo">316</span>//         * @param singleCodeFontAttr  {@link FontInfo}<a name="line.316"></a>
+<span class="sourceLineNo">317</span>//         *<a name="line.317"></a>
+<span class="sourceLineNo">318</span>//         * @throws WLCustomerDisplayDevException<a name="line.318"></a>
+<span class="sourceLineNo">319</span>//         *<a name="line.319"></a>
+<span class="sourceLineNo">320</span>//         * @since V4.11.00<a name="line.320"></a>
+<span class="sourceLineNo">321</span>//         */<a name="line.321"></a>
+<span class="sourceLineNo">322</span>//        void scrSelectFont(FontInfo singleCodeFontAttr,FontInfo multiCodeFontAttr)throws WLCustomerDisplayDevException;<a name="line.322"></a>
+<span class="sourceLineNo">323</span><a name="line.323"></a>
+<span class="sourceLineNo">324</span>        /**<a name="line.324"></a>
+<span class="sourceLineNo">325</span>         * &lt;div class="zh"&gt;设置显示的行间距和字间距。&lt;/div&gt; &lt;div class="en"&gt;Sets the line spacing and word spacing for the display. &lt;/div&gt;<a name="line.325"></a>
+<span class="sourceLineNo">326</span>         *<a name="line.326"></a>
+<span class="sourceLineNo">327</span>         * @param charSpace<a name="line.327"></a>
+<span class="sourceLineNo">328</span>         *      &lt;div class="zh"&gt;字间距&lt;/div&gt; &lt;div class="en"&gt;Word spacing&lt;/div&gt;<a name="line.328"></a>
+<span class="sourceLineNo">329</span>         *<a name="line.329"></a>
+<span class="sourceLineNo">330</span>         * @param lineSpace<a name="line.330"></a>
+<span class="sourceLineNo">331</span>         *      &lt;div class="zh"&gt;行间距&lt;/div&gt; &lt;div class="en"&gt;Row spacing&lt;/div&gt;<a name="line.331"></a>
+<span class="sourceLineNo">332</span>         *<a name="line.332"></a>
+<span class="sourceLineNo">333</span>         * @throws WLCustomerDisplayDevException<a name="line.333"></a>
+<span class="sourceLineNo">334</span>         *<a name="line.334"></a>
+<span class="sourceLineNo">335</span>         * @since V4.11.00<a name="line.335"></a>
+<span class="sourceLineNo">336</span>         */<a name="line.336"></a>
+<span class="sourceLineNo">337</span>        void scrSpaceSet(int charSpace,int lineSpace)throws WLCustomerDisplayDevException;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>    }<a name="line.338"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

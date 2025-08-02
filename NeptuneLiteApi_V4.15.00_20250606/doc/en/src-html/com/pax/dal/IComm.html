@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.exceptions.CommException;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>/**<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * &lt;div class="zh"&gt; 通信接口 &lt;/div&gt; &lt;div class="en"&gt; Communication interface &lt;/div&gt;<a name="line.22"></a>
+<span class="sourceLineNo">023</span> */<a name="line.23"></a>
+<span class="sourceLineNo">024</span>public interface IComm {<a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span>    /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;div class="zh"&gt; 连接状态定义 &lt;/div&gt; &lt;div class="en"&gt; connection status &lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     * <a name="line.28"></a>
+<span class="sourceLineNo">029</span>     */<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    public enum EConnectStatus {<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        /**<a name="line.31"></a>
+<span class="sourceLineNo">032</span>         * &lt;div class="zh"&gt; 断开连接 &lt;/div&gt; &lt;div class="en"&gt; disconnected &lt;/div&gt;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>         * <a name="line.33"></a>
+<span class="sourceLineNo">034</span>         */<a name="line.34"></a>
+<span class="sourceLineNo">035</span>        DISCONNECTED,<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        /**<a name="line.36"></a>
+<span class="sourceLineNo">037</span>         * &lt;div class="zh"&gt; 正在连接 &lt;/div&gt; &lt;div class="en"&gt; connecting &lt;/div&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         * <a name="line.38"></a>
+<span class="sourceLineNo">039</span>         */<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        CONNECTING,<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        /**<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         * &lt;div class="zh"&gt; 已连接 &lt;/div&gt; &lt;div class="en"&gt; connected &lt;/div&gt;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         * <a name="line.43"></a>
+<span class="sourceLineNo">044</span>         */<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        CONNECTED<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    }<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>    /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     * &lt;div class="zh"&gt; 获取连接超时时间，默认20000ms。 &lt;/div&gt; &lt;div class="en"&gt; get connect timeout, default is 20000ms &lt;/div&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     * <a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * <a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * @return &lt;div class="zh"&gt; 连接超时，单位ms &lt;/div&gt; &lt;div class="en"&gt; connect timeout, in ms &lt;/div&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * <a name="line.53"></a>
+<span class="sourceLineNo">054</span>     */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>    public int getConnectTimeout();<a name="line.55"></a>
+<span class="sourceLineNo">056</span><a name="line.56"></a>
+<span class="sourceLineNo">057</span>    /**<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;div class="zh"&gt; 设置连接超时时间 ，默认20000ms。&lt;/div&gt; &lt;div class="en"&gt; set connect timeout, default is 20000ms &lt;/div&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * <a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * <a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * @param timeoutMs<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     *            &lt;div class="zh"&gt; 连接超时，单位ms &lt;/div&gt; &lt;div class="en"&gt; connect timeout, in ms &lt;/div&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * <a name="line.63"></a>
+<span class="sourceLineNo">064</span>     */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    public void setConnectTimeout(int timeoutMs);<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>    /**<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     * &lt;div class="zh"&gt; 获取发送超时时间，默认20000ms。 &lt;/div&gt; &lt;div class="en"&gt; get send timeout, default is 20000ms &lt;/div&gt;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     * <a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * @return &lt;div class="zh"&gt; 获取发送超时时间 &lt;/div&gt; &lt;div class="en"&gt; send timeout, in ms &lt;/div&gt;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * <a name="line.71"></a>
+<span class="sourceLineNo">072</span>     */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    public int getSendTimeout();<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>    /**<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * &lt;div class="zh"&gt; 设置发送超时时间，默认20000ms。 &lt;/div&gt; &lt;div class="en"&gt; set send timeout, default is 20000ms &lt;/div&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * <a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * <a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * @param timeoutMs<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     *            &lt;div class="zh"&gt; 发送超时，单位ms &lt;/div&gt; &lt;div class="en"&gt; send timeout, in ms &lt;/div&gt;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * <a name="line.81"></a>
+<span class="sourceLineNo">082</span>     */<a name="line.82"></a>
+<span class="sourceLineNo">083</span>    public void setSendTimeout(int timeoutMs);<a name="line.83"></a>
+<span class="sourceLineNo">084</span><a name="line.84"></a>
+<span class="sourceLineNo">085</span>    /**<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     * &lt;div class="zh"&gt; 获取接收超时时间，默认20000ms。 &lt;/div&gt; &lt;div class="en"&gt; get receive timeout, default is 20000ms &lt;/div&gt;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * <a name="line.87"></a>
+<span class="sourceLineNo">088</span>     * <a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * @return &lt;div class="zh"&gt; 接收超时，单位ms &lt;/div&gt; &lt;div class="en"&gt; receive timeout, in ms &lt;/div&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * <a name="line.90"></a>
+<span class="sourceLineNo">091</span>     */<a name="line.91"></a>
+<span class="sourceLineNo">092</span>    public int getRecvTimeout();<a name="line.92"></a>
+<span class="sourceLineNo">093</span><a name="line.93"></a>
+<span class="sourceLineNo">094</span>    /**<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     * &lt;div class="zh"&gt; 设置接收超时时间 ，默认20000ms。&lt;/div&gt; &lt;div class="en"&gt; set receive timeout, default is 20000ms &lt;/div&gt;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     * <a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * <a name="line.97"></a>
+<span class="sourceLineNo">098</span>     * @param timeoutMs<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     *            &lt;div class="zh"&gt; 接收超时，单位ms &lt;/div&gt; &lt;div class="en"&gt; receive timeout, in ms &lt;/div&gt;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     * <a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * <a name="line.101"></a>
+<span class="sourceLineNo">102</span>     */<a name="line.102"></a>
+<span class="sourceLineNo">103</span>    public void setRecvTimeout(int timeoutMs);<a name="line.103"></a>
+<span class="sourceLineNo">104</span><a name="line.104"></a>
+<span class="sourceLineNo">105</span>    /**<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * &lt;div class="zh"&gt; 连接 &lt;/div&gt; &lt;div class="en"&gt; connect &lt;/div&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     * <a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * <a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * @throws CommException<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     *             &lt;div class="zh"&gt; 通信异常 &lt;/div&gt; &lt;div class="en"&gt; communication exception &lt;/div&gt;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * <a name="line.111"></a>
+<span class="sourceLineNo">112</span>     */<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    public void connect() throws CommException;<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>    /**<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     * &lt;div class="zh"&gt; 获取连接状态 &lt;/div&gt; &lt;div class="en"&gt; get connection status &lt;/div&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     * <a name="line.117"></a>
+<span class="sourceLineNo">118</span>     * <a name="line.118"></a>
+<span class="sourceLineNo">119</span>     * @return &lt;div class="zh"&gt; 连接状态 &lt;/div&gt; &lt;div class="en"&gt; connection status &lt;/div&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     * <a name="line.120"></a>
+<span class="sourceLineNo">121</span>     */<a name="line.121"></a>
+<span class="sourceLineNo">122</span>    public EConnectStatus getConnectStatus();<a name="line.122"></a>
+<span class="sourceLineNo">123</span><a name="line.123"></a>
+<span class="sourceLineNo">124</span>    /**<a name="line.124"></a>
+<span class="sourceLineNo">125</span>     * &lt;div class="zh"&gt; 断开连接 &lt;/div&gt; &lt;div class="en"&gt; disconnect &lt;/div&gt;<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     * <a name="line.126"></a>
+<span class="sourceLineNo">127</span>     * <a name="line.127"></a>
+<span class="sourceLineNo">128</span>     * @throws CommException<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     *             &lt;div class="zh"&gt; 通信异常 &lt;/div&gt; &lt;div class="en"&gt; communication exception &lt;/div&gt;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     * <a name="line.130"></a>
+<span class="sourceLineNo">131</span>     */<a name="line.131"></a>
+<span class="sourceLineNo">132</span>    public void disconnect() throws CommException;<a name="line.132"></a>
+<span class="sourceLineNo">133</span><a name="line.133"></a>
+<span class="sourceLineNo">134</span>    /**<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     * &lt;div class="zh"&gt; 发送数据 &lt;/div&gt; &lt;div class="en"&gt; send data &lt;/div&gt;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     * <a name="line.136"></a>
+<span class="sourceLineNo">137</span>     * <a name="line.137"></a>
+<span class="sourceLineNo">138</span>     * @param data<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     *            &lt;div class="zh"&gt; 待发送数据 &lt;/div&gt; &lt;div class="en"&gt; data to send &lt;/div&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     * <a name="line.140"></a>
+<span class="sourceLineNo">141</span>     * @throws CommException<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     *             &lt;div class="zh"&gt; 通信异常 &lt;/div&gt; &lt;div class="en"&gt; communication exception &lt;/div&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     * <a name="line.143"></a>
+<span class="sourceLineNo">144</span>     */<a name="line.144"></a>
+<span class="sourceLineNo">145</span>    public void send(byte[] data) throws CommException;<a name="line.145"></a>
+<span class="sourceLineNo">146</span><a name="line.146"></a>
+<span class="sourceLineNo">147</span>    /**<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     * &lt;div class="zh"&gt; 发送数据 &lt;/div&gt; &lt;div class="en"&gt; send data &lt;/div&gt;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     *<a name="line.149"></a>
+<span class="sourceLineNo">150</span>     *<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     * @param data<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     *            &lt;div class="zh"&gt; 待发送数据，数据大小不限制在8K以内 &lt;/div&gt; &lt;div class="en"&gt; data to send,Data size is not limited to 8K&lt;/div&gt;<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     *<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     * @throws CommException<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     *             &lt;div class="zh"&gt; 通信异常 &lt;/div&gt; &lt;div class="en"&gt; communication exception &lt;/div&gt;<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     *<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     */<a name="line.157"></a>
+<span class="sourceLineNo">158</span>    public void sendDataUnlimited(byte[] data) throws CommException;<a name="line.158"></a>
+<span class="sourceLineNo">159</span><a name="line.159"></a>
+<span class="sourceLineNo">160</span>    /**<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     * &lt;div class="zh"&gt; 在阻塞模式下接收指定长度数据 &lt;/div&gt; &lt;div class="en"&gt; receive data with expected length, in blocking mode<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * &lt;/div&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     * <a name="line.163"></a>
+<span class="sourceLineNo">164</span>     * <a name="line.164"></a>
+<span class="sourceLineNo">165</span>     * @param expLen<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     *            &lt;div class="zh"&gt; 期望接收的数据长度<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     *            &lt;p&gt;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     *            若传入-1，则此接口功能为检测串口缓存区的数据长度，此时返回值为int转化后的4字节数组 .<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     *            &lt;ul&gt;<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     *            &lt;li&gt;timeout = 0: 不论串口缓存是否有数据，该接口立刻返回结果 &lt;/li&gt;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     *            &lt;li&gt;timeout &gt; 0: 如在超时时间内检测到缓存数据，立即返回；如缓存无数据，保持检测等待直到超时后返回 &lt;/li&gt;<a name="line.171"></a>
+<span class="sourceLineNo">172</span>     *            &lt;li&gt;timeout &lt; 0: 可以无限等待直到有串口缓存数据&lt;/li&gt;<a name="line.172"></a>
+<span class="sourceLineNo">173</span>     *            &lt;/ul&gt;<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     *            &lt;/div&gt; &lt;div class="en"&gt; length of data expected to<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     *            receive<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     *            &lt;p&gt;<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     *            if expLen == -1, the interface is to detect the available data length of the serial buffer, and the<a name="line.177"></a>
+<span class="sourceLineNo">178</span>     *            return value is an int-converted 4-byte array.<a name="line.178"></a>
+<span class="sourceLineNo">179</span>     *            &lt;ul&gt;<a name="line.179"></a>
+<span class="sourceLineNo">180</span>     *            &lt;li&gt;timeout = 0: Whether or not the serial port cache has data, the interface returns the result immediately. &lt;/li&gt;<a name="line.180"></a>
+<span class="sourceLineNo">181</span>     *            &lt;li&gt;timeout &gt; 0: If the cached data is detected within the timeout time, it will be returned immediately; if there is no data in the cache, keep the detection waiting until it returns after the timeout. &lt;/li&gt;<a name="line.181"></a>
+<span class="sourceLineNo">182</span>     *            &lt;li&gt;timeout &lt; 0: You can wait indefinitely until you have a serial port to cache data&lt;/li&gt;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>     *            &lt;/ul&gt;<a name="line.183"></a>
+<span class="sourceLineNo">184</span>     *            &lt;/div&gt;<a name="line.184"></a>
+<span class="sourceLineNo">185</span>     * <a name="line.185"></a>
+<span class="sourceLineNo">186</span>     * @return &lt;div class="zh"&gt; 接收到的数据, 如果没收到任何数据则返回new byte[0] &lt;/div&gt; &lt;div class="en"&gt; data received, new byte[0] is<a name="line.186"></a>
+<span class="sourceLineNo">187</span>     *         returned if nothing received &lt;/div&gt;<a name="line.187"></a>
+<span class="sourceLineNo">188</span>     * <a name="line.188"></a>
+<span class="sourceLineNo">189</span>     * @throws CommException<a name="line.189"></a>
+<span class="sourceLineNo">190</span>     *             &lt;div class="zh"&gt; 通信错误 &lt;/div&gt; &lt;div class="en"&gt; communication exception &lt;/div&gt;<a name="line.190"></a>
+<span class="sourceLineNo">191</span>     * <a name="line.191"></a>
+<span class="sourceLineNo">192</span>     */<a name="line.192"></a>
+<span class="sourceLineNo">193</span>    public byte[] recv(int expLen) throws CommException;<a name="line.193"></a>
+<span class="sourceLineNo">194</span><a name="line.194"></a>
+<span class="sourceLineNo">195</span>    /**<a name="line.195"></a>
+<span class="sourceLineNo">196</span>     * &lt;div class="zh"&gt; 在非阻塞模式下尽可能多的接收数据（即立即返回） &lt;/div&gt; &lt;div class="en"&gt; receive data as much as possible, in<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     * non-blocking mode(i.e. returns immediately) &lt;/div&gt;<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     * <a name="line.198"></a>
+<span class="sourceLineNo">199</span>     * @return &lt;div class="zh"&gt; 接收到的数据, 如果没收到任何数据则返回new byte[0] &lt;/div&gt; &lt;div class="en"&gt; data received, new byte[0] is<a name="line.199"></a>
+<span class="sourceLineNo">200</span>     *         returned if nothing received &lt;/div&gt;<a name="line.200"></a>
+<span class="sourceLineNo">201</span>     * <a name="line.201"></a>
+<span class="sourceLineNo">202</span>     * @throws CommException<a name="line.202"></a>
+<span class="sourceLineNo">203</span>     * <a name="line.203"></a>
+<span class="sourceLineNo">204</span>     *             &lt;div class="zh"&gt; 通信错误 &lt;/div&gt; &lt;div class="en"&gt; communication exception &lt;/div&gt;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>     * <a name="line.205"></a>
+<span class="sourceLineNo">206</span>     */<a name="line.206"></a>
+<span class="sourceLineNo">207</span>    public byte[] recvNonBlocking() throws CommException;<a name="line.207"></a>
+<span class="sourceLineNo">208</span><a name="line.208"></a>
+<span class="sourceLineNo">209</span>    /**<a name="line.209"></a>
+<span class="sourceLineNo">210</span>     * &lt;div class="zh"&gt; 重置接收缓冲区 &lt;/div&gt; &lt;div class="en"&gt; reset receive buffer &lt;/div&gt;<a name="line.210"></a>
+<span class="sourceLineNo">211</span>     */<a name="line.211"></a>
+<span class="sourceLineNo">212</span>    public void reset();<a name="line.212"></a>
+<span class="sourceLineNo">213</span><a name="line.213"></a>
+<span class="sourceLineNo">214</span>    /**<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     * &lt;div class="zh"&gt; 在阻塞模式下取消接收数据 &lt;/div&gt; &lt;div class="en"&gt; cancel receiving process in blocking mode &lt;/div&gt;<a name="line.215"></a>
+<span class="sourceLineNo">216</span>     */<a name="line.216"></a>
+<span class="sourceLineNo">217</span>    public void cancelRecv();<a name="line.217"></a>
+<span class="sourceLineNo">218</span>}<a name="line.218"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

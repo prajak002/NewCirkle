@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span>package com.pax.dal;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.List;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.pax.dal.entity.FaceConfig;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pax.dal.entity.FaceInfo;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.pax.dal.exceptions.FaceDetectException;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>import android.graphics.Bitmap;<a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span>/**<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * &lt;div class="zh"&gt;人脸识别。&lt;/div&gt; &lt;div class="en"&gt;Face detector.&lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * <a name="line.28"></a>
+<span class="sourceLineNo">029</span> * @since V3.14.00<a name="line.29"></a>
+<span class="sourceLineNo">030</span> */<a name="line.30"></a>
+<span class="sourceLineNo">031</span>public interface IFaceDetector {<a name="line.31"></a>
+<span class="sourceLineNo">032</span>    /**<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * &lt;div class="zh"&gt;初始化人脸识别。&lt;/div&gt; &lt;div class="en"&gt;Initialize face recognition.&lt;/div&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * <a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * @param type &lt;div class="zh"&gt;算法类型。<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     * &lt;ul&gt;&lt;li&gt;0:百富。&lt;/li&gt;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>     * &lt;li&gt;1:腾讯。&lt;/li&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     * &lt;li&gt;2:云从。&lt;/li&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;/ul&gt;&lt;/div&gt; &lt;div class="en"&gt;Algorithm type.<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     * &lt;ul&gt;&lt;li&gt;0:Pax.&lt;/li&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>     * &lt;li&gt;1:Tencent.&lt;/li&gt;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * &lt;/ul&gt;2:CloudWalk.&lt;/div&gt;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * <a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * @throws FaceDetectException<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * @since V3.14.00<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     */<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    void init(int type) throws FaceDetectException;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    <a name="line.48"></a>
+<span class="sourceLineNo">049</span>    /**<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     * &lt;div class="zh"&gt;配置检测项。&lt;/div&gt; &lt;div class="en"&gt;Configure detection item.&lt;/div&gt;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * <a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * @param config &lt;div class="zh"&gt;检测项。{@link FaceConfig}&lt;/div&gt; &lt;div class="en"&gt;detection item. {@link FaceConfig}&lt;/div&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * <a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * @throws FaceDetectException <a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * @since V3.14.00<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    void setConfig(FaceConfig config) throws FaceDetectException;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>    <a name="line.58"></a>
+<span class="sourceLineNo">059</span>    /**<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * &lt;div class="zh"&gt;提取人脸特征值。&lt;/div&gt; &lt;div class="en"&gt;Extract face feature values.&lt;/div&gt;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * <a name="line.61"></a>
+<span class="sourceLineNo">062</span>     * @param face &lt;div class="zh"&gt;待检测的人脸。最大支持1080p。&lt;/div&gt; &lt;div class="en"&gt;Face to be tested.Maximum 1080p support.&lt;/div&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * <a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * @return &lt;div class="zh"&gt;人脸特征值。&lt;/div&gt; &lt;div class="en"&gt;Face feature values.&lt;/div&gt;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * <a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * @throws FaceDetectException<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * @since V3.14.00<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    float[] extractFeature(Bitmap face) throws FaceDetectException;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    <a name="line.70"></a>
+<span class="sourceLineNo">071</span>    /**<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * &lt;div class="zh"&gt;人脸特征对比。&lt;/div&gt; &lt;div class="en"&gt;Face feature comparison.&lt;/div&gt;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     * <a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * @param face &lt;div class="zh"&gt;待检测的人脸。最大支持1080p。&lt;/div&gt; &lt;div class="en"&gt;Face to be tested.Maximum 1080p support.&lt;/div&gt;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * <a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * @param feature &lt;div class="zh"&gt;人脸特征值。&lt;/div&gt; &lt;div class="en"&gt;Face feature values.&lt;/div&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * <a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * @return &lt;div class="zh"&gt;人脸相似度。(0, 1]。建议大于0.63表示同一个人。&lt;/div&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     *  &lt;div class="en"&gt;Face similarity.(0, 1]. A recommendation greater than 0.63 indicates the same person.&lt;/div&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     * <a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * @throws FaceDetectException<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     * @since V3.14.00<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    float compare(Bitmap face, float[] feature) throws FaceDetectException;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    <a name="line.85"></a>
+<span class="sourceLineNo">086</span>    /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * &lt;div class="zh"&gt;人脸特征对比。&lt;/div&gt; &lt;div class="en"&gt;Face feature comparison.&lt;/div&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     * <a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * @param face1 &lt;div class="zh"&gt;待检测的人脸。最大支持1080p。&lt;/div&gt; &lt;div class="en"&gt;Face to be tested.Maximum 1080p support.&lt;/div&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * <a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * @param face2 &lt;div class="zh"&gt;待检测的人脸。最大支持1080p。&lt;/div&gt; &lt;div class="en"&gt;Face to be tested.Maximum 1080p support.&lt;/div&gt;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     * <a name="line.92"></a>
+<span class="sourceLineNo">093</span>     * @return &lt;div class="zh"&gt;人脸相似度。(0, 1]。建议大于0.63表示同一个人。&lt;/div&gt;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     *  &lt;div class="en"&gt;Face similarity.(0, 1]. A recommendation greater than 0.63 indicates the same person.&lt;/div&gt;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     * <a name="line.95"></a>
+<span class="sourceLineNo">096</span>     * @throws FaceDetectException<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * @since V3.14.00<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     */<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    float compare(Bitmap face1, Bitmap face2) throws FaceDetectException;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    <a name="line.100"></a>
+<span class="sourceLineNo">101</span>    /**<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * &lt;div class="zh"&gt;人脸特征对比。&lt;/div&gt; &lt;div class="en"&gt;Face feature comparison.&lt;/div&gt;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * <a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * @param feature1 &lt;div class="zh"&gt;人脸特征值。&lt;/div&gt; &lt;div class="en"&gt;Face feature values.&lt;/div&gt;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * <a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * @param feature2 &lt;div class="zh"&gt;人脸特征值。&lt;/div&gt; &lt;div class="en"&gt;Face feature values.&lt;/div&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     * <a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * @return&lt;div class="zh"&gt;人脸相似度。(0, 1]。建议大于0.63表示同一个人。&lt;/div&gt;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     *  &lt;div class="en"&gt;Face similarity.(0, 1]. A recommendation greater than 0.63 indicates the same person.&lt;/div&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * <a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * @throws FaceDetectException<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     * @since V3.14.00<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     */<a name="line.113"></a>
+<span class="sourceLineNo">114</span>    float compare(float[] feature1, float[] feature2) throws FaceDetectException;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>    <a name="line.115"></a>
+<span class="sourceLineNo">116</span>    /**<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     * &lt;div class="zh"&gt;进行人脸检测。&lt;/div&gt; &lt;div class="en"&gt;Face detection.&lt;/div&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     * <a name="line.118"></a>
+<span class="sourceLineNo">119</span>     * @param face &lt;div class="zh"&gt;待检测的人脸。最大支持1080p。&lt;/div&gt; &lt;div class="en"&gt;Face to be tested.Maximum 1080p support.&lt;/div&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     * <a name="line.120"></a>
+<span class="sourceLineNo">121</span>     * @return &lt;div class="zh"&gt;人脸信息。{@link FaceInfo}&lt;/div&gt; &lt;div class="en"&gt;Face information.{@link FaceInfo}&lt;/div&gt;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     * <a name="line.122"></a>
+<span class="sourceLineNo">123</span>     * @throws FaceDetectException<a name="line.123"></a>
+<span class="sourceLineNo">124</span>     * @since V3.14.00<a name="line.124"></a>
+<span class="sourceLineNo">125</span>     */<a name="line.125"></a>
+<span class="sourceLineNo">126</span>    List&lt;FaceInfo&gt; detect(Bitmap face) throws FaceDetectException;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>    <a name="line.127"></a>
+<span class="sourceLineNo">128</span>    /**<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     * &lt;div class="zh"&gt;设置AppID。若未设置，则使用默认AppID("000001")。&lt;/div&gt; <a name="line.129"></a>
+<span class="sourceLineNo">130</span>     * &lt;div class="en"&gt;Set the AppID.If not, the default AppID("000001") is used.&lt;/div&gt;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     * <a name="line.131"></a>
+<span class="sourceLineNo">132</span>     * @param appId &lt;div class="zh"&gt;6位AppID。&lt;/div&gt; &lt;div class="en"&gt;6 bit length AppID.&lt;/div&gt;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     * @throws FaceDetectException<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     * @since V3.14.00<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     */<a name="line.135"></a>
+<span class="sourceLineNo">136</span>    void setAppId(String appId) throws FaceDetectException;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>    <a name="line.137"></a>
+<span class="sourceLineNo">138</span>    /**<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     * &lt;div class="zh"&gt;释放人脸识别资源。&lt;/div&gt; &lt;div class="en"&gt;Free face recognition resources.&lt;/div&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     * <a name="line.140"></a>
+<span class="sourceLineNo">141</span>     * @throws FaceDetectException<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     * @since V3.14.00<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     */<a name="line.143"></a>
+<span class="sourceLineNo">144</span>    void release() throws FaceDetectException;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>}<a name="line.145"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

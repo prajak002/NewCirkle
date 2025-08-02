@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal.exceptions;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.utils.Utils;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>public enum EPrintDevException {<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    /**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>     * &lt;div class="zh"&gt; 未知异常 &lt;/div&gt; &lt;div class="en"&gt; unexpected error &lt;/div&gt;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>    DEVICES_ERR_UNEXPECTED(97, "unexpected error", "未知异常"),<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;div class="zh"&gt; 参数错误 &lt;/div&gt; &lt;div class="en"&gt; invalid argument error &lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    DEVICES_ERR_INVALID_ARGUMENT(98, "invalid argument error", "参数错误"),<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * &lt;div class="zh"&gt; RPC I/O 连接异常 &lt;/div&gt; &lt;div class="en"&gt; connect error &lt;/div&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     */<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    DEVICES_ERR_CONNECT(99, "connect error", "RPC I/O 连接异常"),<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * &lt;div class="zh"&gt; 不支持 &lt;/div&gt; &lt;div class="en"&gt; not support error &lt;/div&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    DEVICES_ERR_NO_SUPPORT(100, "not support error", "不支持"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt; 无权限异常&lt;/div&gt; &lt;div class="en"&gt; no permission error &lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     */<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    DEVICES_ERR_NO_PERMISSION(101, "no permission error", "无权限异常"),<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>    /**<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * &lt;div class="zh"&gt; 模块被禁用 &lt;/div&gt; &lt;div class="en"&gt; module disabled &lt;/div&gt;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     */<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    ERROR_DISABLED(102, "module disabled", "模块被禁用"),<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    <a name="line.47"></a>
+<span class="sourceLineNo">048</span>    /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     * &lt;div class="zh"&gt; 不在白名单中 &lt;/div&gt; &lt;div class="en"&gt; not in whiteList &lt;/div&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     */<a name="line.50"></a>
+<span class="sourceLineNo">051</span>    ERROR_NOT_IN_WHITELIST(103,"not in whiteList","不在白名单中"),<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>    /**<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * &lt;div class="zh"&gt; 打印机忙 &lt;/div&gt; &lt;div class="en"&gt; Printer busy &lt;/div&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     */<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    PRINTER_ERR_BUSY(1, "busy error", "打印机忙"),<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    /**<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;div class="zh"&gt; 打印机缺纸 &lt;/div&gt; &lt;div class="en"&gt; Out of paper &lt;/div&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     */<a name="line.59"></a>
+<span class="sourceLineNo">060</span>    PRINTER_ERR_OUT_OF_PAPER(2, "out of paper error", " 打印机缺纸"),<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    /**<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     * &lt;div class="zh"&gt; 打印数据包格式错 &lt;/div&gt; &lt;div class="en"&gt; The format of print data packet error &lt;/div&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     */<a name="line.63"></a>
+<span class="sourceLineNo">064</span>    PRINTER_ERR_DATA_PACKET_ERROR(3, "data packet error", "打印数据包格式错"),<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * &lt;div class="zh"&gt; 打印机故障 &lt;/div&gt; &lt;div class="en"&gt; Printer problems &lt;/div&gt;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>    PRINTER_ERR_PRINTER_PROBLEMS(4, "printer error", "打印机故障"),<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * &lt;div class="zh"&gt; 打印机过热 &lt;/div&gt; &lt;div class="en"&gt; Printer over heating &lt;/div&gt;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     */<a name="line.71"></a>
+<span class="sourceLineNo">072</span>    PRINTER_ERR_PRINTER_OVER_HEATING(5, "printer over heating", " 打印机过热"),<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    /**<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * &lt;div class="zh"&gt; 打印未完成 &lt;/div&gt; &lt;div class="en"&gt; Print unfinished &lt;/div&gt;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     */<a name="line.75"></a>
+<span class="sourceLineNo">076</span>    PRINTER_ERR_PRINT_UNFINISHED(6, "print unfinished error", "打印未完成"),<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    /**<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * &lt;div class="zh"&gt; 打印机未装字库 &lt;/div&gt; &lt;div class="en"&gt; Lack of font &lt;/div&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     */<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    PRINTER_ERR_LACK_OF_FONT(7, "lack of font error", "打印机未装字库"),<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    /**<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     * &lt;div class="zh"&gt; 数据包过长 &lt;/div&gt; &lt;div class="en"&gt; Package too long &lt;/div&gt;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    PRINTER_ERR_TOO_LONG(8, "too long error", "数据包过长"),<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    /**<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     * &lt;div class="zh"&gt; 打印机电压过低 &lt;/div&gt; &lt;div class="en"&gt; voltage is too low &lt;/div&gt;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     */<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    PRINTER_ERR_VOLTAGE_TOO_LOW(9, "voltage is too low", "打印机电压过低"),<a name="line.88"></a>
+<span class="sourceLineNo">089</span><a name="line.89"></a>
+<span class="sourceLineNo">090</span>    /**<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * &lt;div class="zh"&gt; 切纸异常 &lt;/div&gt; &lt;div class="en"&gt; cut paper error &lt;/div&gt;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     */<a name="line.92"></a>
+<span class="sourceLineNo">093</span>    PRINTER_ERR_CUT_PAPER(10, "cut paper error", "切纸异常"), // Neptune添加，处理非0返回值。<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>    // 20180605添加posapi bug 值：-5,-6,97,21,16,<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * &lt;div class="zh"&gt;开盖错误(支持E500 E800) &lt;/div&gt; &lt;div class="en"&gt; cover open error &lt;/div&gt;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     */<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    PRINTER_ERR_COVER_OPEN(11, "cover open error", "开盖错误(支持E500 E800)"),<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    /**<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * &lt;div class="zh"&gt;切刀异常(支持E500 E800)&lt;/div&gt; &lt;div class="en"&gt;cut jam error&lt;/div&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     */<a name="line.102"></a>
+<span class="sourceLineNo">103</span>    PRINTER_ERR_CUTTER_JAM(12, "cut jam error", "切刀异常(支持E500 E800)"),<a name="line.103"></a>
+<span class="sourceLineNo">104</span>    /**<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * &lt;div class="zh"&gt;不支持的编码 &lt;/div&gt; &lt;div class="en"&gt;unsupported encoding error&lt;/div&gt;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     */<a name="line.106"></a>
+<span class="sourceLineNo">107</span>    PRINTER_ERR_UNSUPPORTED_ENCODING(13, "unsupported encoding error", "不支持的编码"),<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    /**<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * &lt;div class="zh"&gt;字体文件名错误 &lt;/div&gt; &lt;div class="en"&gt; font file format error &lt;/div&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     */<a name="line.110"></a>
+<span class="sourceLineNo">111</span>    PRINTER_ERR_FONT_FORMAT_ERR(14, "font file format error", "字体文件名错误"),<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    /**<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     * &lt;div class="zh"&gt;字体不存在 &lt;/div&gt; &lt;div class="en"&gt;font not exist error &lt;/div&gt;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     */<a name="line.114"></a>
+<span class="sourceLineNo">115</span>    PRINTER_ERR_FONT_NOT_EXIST(15, "font not exist error", "字体不存在"),<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>    ;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>    private int errCodeFromBasement;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>    private String errMsgCn;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>    private String errMsgEn;<a name="line.120"></a>
+<span class="sourceLineNo">121</span><a name="line.121"></a>
+<span class="sourceLineNo">122</span>    private EPrintDevException(int errCodeFromBasement, String errMsgEn, String errMsnCn) {<a name="line.122"></a>
+<span class="sourceLineNo">123</span>        this.errCodeFromBasement = errCodeFromBasement;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        this.errMsgCn = errMsnCn;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        this.errMsgEn = errMsgEn;<a name="line.125"></a>
+<span class="sourceLineNo">126</span>    }<a name="line.126"></a>
+<span class="sourceLineNo">127</span><a name="line.127"></a>
+<span class="sourceLineNo">128</span>    public int getErrCodeFromBasement() {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        return errCodeFromBasement;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>    }<a name="line.130"></a>
+<span class="sourceLineNo">131</span><a name="line.131"></a>
+<span class="sourceLineNo">132</span>    public String getErrMsg() {<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        if (Utils.isZh()) {<a name="line.133"></a>
+<span class="sourceLineNo">134</span>            return errMsgCn;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>        } else {<a name="line.135"></a>
+<span class="sourceLineNo">136</span>            return errMsgEn;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        }<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>    }<a name="line.139"></a>
+<span class="sourceLineNo">140</span><a name="line.140"></a>
+<span class="sourceLineNo">141</span>}<a name="line.141"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

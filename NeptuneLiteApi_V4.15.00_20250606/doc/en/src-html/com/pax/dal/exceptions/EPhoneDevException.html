@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal.exceptions;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.utils.Utils;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>public enum EPhoneDevException {<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    /**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>     * &lt;div class="zh"&gt; 未知异常 &lt;/div&gt; &lt;div class="en"&gt; unexpected error &lt;/div&gt;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>    DEVICES_ERR_UNEXPECTED(97, "unexpected error", "未知异常"),<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;div class="zh"&gt; 服务不可用 &lt;/div&gt; &lt;div class="en"&gt; service not available &lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    SERVICE_NOT_AVAILABLE(1, "service not available", "服务不可用"),<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * &lt;div class="zh"&gt; 服务未知错误 &lt;/div&gt; &lt;div class="en"&gt; service unknow error &lt;/div&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     */<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    SERVICE_UNKNOW_ERR(-1, "service unknow error", "服务未知错误"),<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * &lt;div class="zh"&gt; 服务访问被拒绝 &lt;/div&gt; &lt;div class="en"&gt; service access denied &lt;/div&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    SERVICE_ACCESS_DENIED(-2, "service access denied", "服务访问被拒绝"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt; 服务绑定失败 &lt;/div&gt; &lt;div class="en"&gt; service bind fail &lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     */<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    SERVICE_BIND_FAIL(1000, "service bind fail", "服务绑定失败"),<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    /**<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * &lt;div class="zh"&gt; 服务不存在 &lt;/div&gt; &lt;div class="en"&gt; service not exist &lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     */<a name="line.44"></a>
+<span class="sourceLineNo">045</span>    SERVICE_NOT_EXIST(1001, "service not exist", "服务不存在"),<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * &lt;div class="zh"&gt; 服务初始化失败 &lt;/div&gt; &lt;div class="en"&gt; service init fail &lt;/div&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    SERVICE_INIT_FAIL(1002, "service init fail", "服务初始化失败"),<a name="line.49"></a>
+<span class="sourceLineNo">050</span>    /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * &lt;div class="zh"&gt; 服务未就绪 &lt;/div&gt; &lt;div class="en"&gt; service not ready" &lt;/div&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     */<a name="line.52"></a>
+<span class="sourceLineNo">053</span>    SERVICE_NOT_READY(1003, "service not ready", "服务未就绪"),<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    /**<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * &lt;div class="zh"&gt; 服务切换 &lt;/div&gt; &lt;div class="en"&gt; service switching &lt;/div&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    SERVICE_SWITCHING(1004, "service switching", "服务切换"),<a name="line.57"></a>
+<span class="sourceLineNo">058</span>    /**<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * &lt;div class="zh"&gt; 服务过于频繁 &lt;/div&gt; &lt;div class="en"&gt; service too frequently &lt;/div&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    SERVICE_TOO_FREQUENTLY(1005, "service too frequently", "服务过于频繁"),<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    /**<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * &lt;div class="zh"&gt; 操作无效错误 &lt;/div&gt; &lt;div class="en"&gt; operation invalid error &lt;/div&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    OPERATION_INVALID_ERR(1006, "operation invalid error", "操作无效错误"),<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    /**<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * &lt;div class="zh"&gt; 输入无效错误 &lt;/div&gt; &lt;div class="en"&gt; input invalid error &lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    INPUT_INVALID_ERR(1007, "input invalid error", "输入无效错误"),<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    /**<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * &lt;div class="zh"&gt; 没有可操作的卡 &lt;/div&gt; &lt;div class="en"&gt; no more operational card &lt;/div&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    NO_MORE_OPERATIONAL_CARD(1008, "no more operational card", "没有可操作的卡"),<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * &lt;div class="zh"&gt; 参数无效 &lt;/div&gt; &lt;div class="en"&gt; parameter invalid &lt;/div&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     */<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    DEVICES_ERR_INVALID_ARGUMENT(98, "parameter invalid", "参数错误"),<a name="line.77"></a>
+<span class="sourceLineNo">078</span>    /**<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * &lt;div class="zh"&gt; 不支持此机型 &lt;/div&gt; &lt;div class="en"&gt; not support for this device &lt;/div&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    DEVICES_ERR_NO_SUPPORT(100, "not support for this device", "不支持此机型"),<a name="line.81"></a>
+<span class="sourceLineNo">082</span>    /**<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * &lt;div class="zh"&gt; RPC I/O 连接异常 &lt;/div&gt; &lt;div class="en"&gt; connect error &lt;/div&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    DEVICES_ERR_CONNECT(99, "connect error", "RPC I/O 连接异常"),<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * &lt;div class="zh"&gt; 无权限异常&lt;/div&gt; &lt;div class="en"&gt; no permission error &lt;/div&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     */<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    DEVICES_ERR_NO_PERMISSION(101,"no permission error","无权限异常"),<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>    ;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>    private int errCodeFromBasement;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>    private String errMsgCn;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    private String errMsgEn;<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>    private EPhoneDevException(int errCodeFromBasement, String errMsgEn, String errMsnCn) {<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        this.errCodeFromBasement = errCodeFromBasement;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        this.errMsgCn = errMsnCn;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        this.errMsgEn = errMsgEn;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    }<a name="line.100"></a>
+<span class="sourceLineNo">101</span><a name="line.101"></a>
+<span class="sourceLineNo">102</span>    public int getErrCodeFromBasement() {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        return errCodeFromBasement;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>    }<a name="line.104"></a>
+<span class="sourceLineNo">105</span><a name="line.105"></a>
+<span class="sourceLineNo">106</span>    public String getErrMsg() {<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        if (Utils.isZh()) {<a name="line.107"></a>
+<span class="sourceLineNo">108</span>            return errMsgCn;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        } else {<a name="line.109"></a>
+<span class="sourceLineNo">110</span>            return errMsgEn;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        }<a name="line.111"></a>
+<span class="sourceLineNo">112</span><a name="line.112"></a>
+<span class="sourceLineNo">113</span>    }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>}<a name="line.115"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

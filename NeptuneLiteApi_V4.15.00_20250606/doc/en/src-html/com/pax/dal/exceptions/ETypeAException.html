@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal.exceptions;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.utils.Utils;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>/**<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * &lt;div class="zh"&gt;TypeA异常枚举类。&lt;/div&gt;<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * &lt;div class="en"&gt;Type exception enum.&lt;/div&gt;<a name="line.23"></a>
+<span class="sourceLineNo">024</span> */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>public enum ETypeAException {<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    RECEIVE_CMD_ERROR(-1, "接收应答命令字错误", "receive cmd error"),<a name="line.26"></a>
+<span class="sourceLineNo">027</span>    RECEIVE_LEN_ERROR(-2, "接收数据长度错误", "receive length error"),<a name="line.27"></a>
+<span class="sourceLineNo">028</span>    RECEIVE_DATA_ERROR(-3, "接收响应数据错误", "receive response data error"),<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    RECEIVE_LRC_ERROR(-4, "接收校验值错误", "receive check value error"),<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    CMD_NOT_EQUAL_ERROR(-5, "应答命令字和请求命令字不一致错误", "cmd not equal error"),<a name="line.30"></a>
+<span class="sourceLineNo">031</span>    LRC_NOT_EQUAL_ERROR(-6, "数据校验值不一致错误", "check value not equal error"),<a name="line.31"></a>
+<span class="sourceLineNo">032</span>    INS_NOT_EQUAL_ERROR(-7, "扩展指令码不一致错误", "extend cmd not equal error"),<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    TYPEA_CONNECT_ERROR(-8, "连接错误", "connect error"),<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    TYPEA_DISCONNECT_ERROR(-9, "断开连接错误", "disconnect equal error"),<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    TYPEA_CANCEL_RECV_ERROR(-10, "取消接收错误", "cancel receive error"),<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    TYPEA_RECV_ERROR(-11, "接收数据包错误", "receive error"),<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    TYPEA_INCOMPLETE_DATA_ERROR(-12,"数据不完整异常", "incomplete data error"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    SUB_CMD_NOT_EQUAL_ERROR(-13, "子命令不一致错误", "sub cmd not equal error"),<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    PACKET_LENGTH_ERROR(1, "数据包长度错误", "packet length error"),<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    KEY_INDEX_ERROR(2, "密钥索引错误", "key index error"),<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    MODE_ERROR(3, "Mode错误","mode error"),<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    COORDINATE_VALUE_ERROR(4, "显示坐标值错误", "coordinate value error"),<a name="line.42"></a>
+<span class="sourceLineNo">043</span>    INPUT_LENGTH_ERROR(5, "允许输入长度错误", "input length error"),<a name="line.43"></a>
+<span class="sourceLineNo">044</span>    CANCEL_INPUT(6, "用户取消输入", "cancel input"),<a name="line.44"></a>
+<span class="sourceLineNo">045</span>    INPUT_TIMEOUT_ERROR(7, "输入超时错误", "input timeout error"),<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    CANCEL_DUKPT_INPUT(8, "取消输入（PINPAD 上按 CANCEL 键）", "Cancel input (press CANCEL on PINPAD)"),<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    PIN_NOT_EQUAL_ERROR(9, "两次输入的密码不一致错误", "pin not equal error"),<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    ENTERED_EMPTY_ERROR(10, "输入了空串（仅按 ENTER 键）", "Empty string entered (press ENTER key only)"),<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    KEY_NOT_EXIST_ERROR(11, "指定的密钥不存在", "key not exist error"),<a name="line.49"></a>
+<span class="sourceLineNo">050</span>    MEMORY_ERROR(12, "内存错误", "memory error"),<a name="line.50"></a>
+<span class="sourceLineNo">051</span>    SEND_LRC_ERROR(13, "发送校验值错误", "send lrc error"),<a name="line.51"></a>
+<span class="sourceLineNo">052</span>    TMK_ERROR(14, "TMK错误", "tmk error"),<a name="line.52"></a>
+<span class="sourceLineNo">053</span>    MAC2_NOT_EQUAL_ERROR(15, "MAC2不相等错误", "mac2 not equal error"),<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    SEQUENCE_NO_OR_LINE_NO_ERROR(16,"开始序号或结束序号或行数错误", "The starting sequence number or ending sequence " +<a name="line.54"></a>
+<span class="sourceLineNo">055</span>            "number or the number of rows is wrong"),<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    SHORT_INTERVAL_ERROR(26,     "连续两次输入的间隔时间未达到指定时长", "short interval error"),<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    INVALID_KEY_ERROR(80, "指定的密钥无效", "invalid key error"),<a name="line.57"></a>
+<span class="sourceLineNo">058</span>    KSN_OVERFLOW_ERROR(81, "KSN溢出错误", "ksn overflow error"),<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    NO_DUKPT_KEY_SPACE_ERROR(82, "无空闲的 DUKPT 密钥存储空间", "no dukpt key space error"),<a name="line.59"></a>
+<span class="sourceLineNo">060</span>    INVALID_APP_NO_ERROR(83, "无效的应用标志号", "invalid app no error"),<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    KEY_CHECK_VALUE_NOT_EXIST_ERROR(86, "指定密钥的校验字不存在", "key check value not exist error"),<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    BDK_LENGTH_ERROR(87, "无效的密钥(BDK)长度", "bdk length error"),<a name="line.62"></a>
+<span class="sourceLineNo">063</span>    KSN_LENGTH_ERROR(88, "无效的密钥序号(KSN)长度", "ksn length error"),<a name="line.63"></a>
+<span class="sourceLineNo">064</span>    KEY_CHECK_VALUE_NOT_EQUAL_ERROR(89, "指定密钥的校验字不符", "key check value not equal error"),<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    KEY_TO_BE_CLEARED_NOT_EXIST_ERROR(95, "欲清除的密钥已不存在" , "key to be cleared not exist error"),<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    PINPAD_CANCEL_ERROR(198, "PINPAD端取消", "pinpad cancel error"),<a name="line.66"></a>
+<span class="sourceLineNo">067</span>    PINPAD_LOCKED_ERROR(206, "PINPAD被锁", "pinpad locked error"),<a name="line.67"></a>
+<span class="sourceLineNo">068</span>    UNLOCK_ERRO(207, "解锁失败", "unlock error"),<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    INVALID_CMD_ERROR(238, "无效的命令请求字", "invalid cmd error"),<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    TXK_ACCESS_ERROR(209, "TXK 存取失败", "TXK access error"),<a name="line.70"></a>
+<span class="sourceLineNo">071</span>    WORKING_KEY_LENGTH_ERROR(210, "工作密钥长度错" , "working key length error"),<a name="line.71"></a>
+<span class="sourceLineNo">072</span>    CIPHER_FLAG_ERROR(211,"扩展 MAC CihperFlag 错误或者 INPUTMODE 错误" , "cipherflag or inputmode error"),<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    CLEAR_BUTTON_ERROR(212, "按clear键取消", "clear button error"),<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    OTHER_ERROR(255, "其他错误", "other error")<a name="line.74"></a>
+<span class="sourceLineNo">075</span>    ;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>    private final int errCodeFromBasement;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    private final String errMsgCn;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>    private final String errMsgEn;<a name="line.78"></a>
+<span class="sourceLineNo">079</span><a name="line.79"></a>
+<span class="sourceLineNo">080</span>    ETypeAException(int errCodeFromBasement, String errMsgCn, String errMsgEn) {<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        this.errCodeFromBasement = errCodeFromBasement;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        this.errMsgEn = errMsgEn;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        this.errMsgCn = errMsgCn;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    }<a name="line.84"></a>
+<span class="sourceLineNo">085</span><a name="line.85"></a>
+<span class="sourceLineNo">086</span>    public int getErrCodeFromBasement() {<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        return errCodeFromBasement;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    }<a name="line.88"></a>
+<span class="sourceLineNo">089</span><a name="line.89"></a>
+<span class="sourceLineNo">090</span>    public String getErrMsg() {<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        if (Utils.isZh()) {<a name="line.91"></a>
+<span class="sourceLineNo">092</span>            return errMsgCn;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        } else {<a name="line.93"></a>
+<span class="sourceLineNo">094</span>            return errMsgEn;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        }<a name="line.95"></a>
+<span class="sourceLineNo">096</span><a name="line.96"></a>
+<span class="sourceLineNo">097</span>    }<a name="line.97"></a>
+<span class="sourceLineNo">098</span>}<a name="line.98"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

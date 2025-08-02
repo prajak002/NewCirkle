@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.pax.dal.entity.AuthData;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pax.dal.entity.EPedType;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.pax.dal.entity.EPinBlockMode;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import com.pax.dal.exceptions.PedDevException;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>public interface IPedAuthManager {<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>    /**<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     * &lt;div class="zh"&gt; 打开一个设备间安全传输的功能，用sessionID作为标记。&lt;/div&gt;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>     * &lt;div class="en"&gt; Enable a secure transfer between devices, marked with sessionID.&lt;/div&gt;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * @throws PedDevException<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * @since V3.29.00<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    void authOpen(byte[] sessionID) throws PedDevException;<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>    /**<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     * &lt;div class="zh"&gt; 关闭sessionID对应的设备间安全传输的功能。&lt;/div&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>     * &lt;div class="en"&gt; Disable a secure transfer between devices according to sessionID.&lt;/div&gt;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * @throws PedDevException<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * @since V3.29.00<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     */<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    void authClose(byte[] sessionID) throws PedDevException;<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span>    /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * &lt;div class="zh"&gt; 关闭所有传输通道。&lt;/div&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * &lt;div class="en"&gt; Close all transfers between devices.&lt;/div&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * @throws PedDevException<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * @since V3.29.00<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    void authCloseAll() throws PedDevException;<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span><a name="line.59"></a>
+<span class="sourceLineNo">060</span>    /**<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * &lt;div class="zh"&gt; 根据设备自身的公私钥，导出一个ECDHE的随机公钥。&lt;/div&gt;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     * &lt;div class="en"&gt; According to the public and private keys of the device itself, a random public key of ECDHE is derived.&lt;/div&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     *<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * @return {@link AuthData}<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * @throws PedDevException<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     * @since V3.29.00<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     */<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    AuthData authEcdhPublicKey(byte[] sessionID) throws PedDevException;<a name="line.70"></a>
+<span class="sourceLineNo">071</span><a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>    /**<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * &lt;div class="zh"&gt; 根据peer设备自身的本地公钥和ECDHE公钥，产生一个ECDHE的共享密钥,并存储在SP内部。&lt;/div&gt;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * &lt;div class="en"&gt; According to the local public key and the ECDHE public key of the peer device, an ECDHE shared key is generated and stored in the SP.&lt;/div&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     *<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * @param peerPubKey &lt;div class="zh"&gt;对端ECDHE公钥&lt;/div&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     *                   &lt;div class="en"&gt;Peer ECDHE public key&lt;/div&gt;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * @param peerCertData &lt;div class="zh"&gt;对端证书&lt;/div&gt;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     *                     &lt;div class="en"&gt;Peer certificate&lt;/div&gt;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * @throws PedDevException<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     * @since V3.29.00<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     */<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    void authEcdhShareKey(byte[] sessionID, byte[] peerPubKey, byte[] peerCertData) throws PedDevException;<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>    /**<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * &lt;div class="zh"&gt; 根据ECDHE的共享密钥发散出工作密钥，类型由keyType指定。&lt;/div&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * &lt;div class="en"&gt; Diverging a working key based on ECDHE's shared key, the type is specified by keyType.&lt;/div&gt;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     *<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     * @param keyType &lt;ul&gt;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     *                &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAESK }&lt;/li&gt;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     *                &lt;li&gt; {@link com.pax.dal.entity.EPedKeyType#TPK}&lt;/li&gt;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     *<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     * @throws PedDevException<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     * @since V3.29.00<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     */<a name="line.100"></a>
+<span class="sourceLineNo">101</span>    void authDeriveWorkKey(byte[] sessionID, byte keyType) throws PedDevException;<a name="line.101"></a>
+<span class="sourceLineNo">102</span><a name="line.102"></a>
+<span class="sourceLineNo">103</span><a name="line.103"></a>
+<span class="sourceLineNo">104</span>    /**<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * &lt;div class="zh"&gt; 与PedGetPinBlock一样，但密钥是sessionID指定的PED_TPK。&lt;/div&gt;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * &lt;div class="en"&gt; Same as PedGetPinBlock, but key is PED_TPK specified by sessionID.&lt;/div&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     *<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * @param expPinLen<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     *            &lt;div class="zh"&gt; &lt;p&gt;当IPed为{@link EPedType#INTERNAL}:可输入的合法密码长度字符串，应用程序把允许的密码长度全部枚举出来，并且用","号隔开每个长度，密码长度的有效取值为：0，4~12。若允许输入 4、6 位密码并且允许无密码直接按确认，则该字符串应该设置为"0，4，6"。<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     *            若枚举 0 长度则示意可以不输任何数字而直接按确认键返回。若枚举字符串中存在长度的无效值，比如"2，6，7，10"，无效值将被忽略。&lt;/p&gt; &lt;p&gt;当IPed为{@link EPedType#EXTERNAL_TYPEA}:PIN长度在expPinLen中的最小值和最大值区间。如果mode = EPinBlockMode.ISO9564_0时,当最小长度不为0时,允许按"确认"退出 。&lt;/p&gt; &lt;/div&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     *            &lt;div class="en"&gt;&lt;p&gt;When IPed is {@link EPedType#INTERNAL}:The legal password length string that can be input. The application enumerates all the allowed password lengths and separates each length with "," signs. The valid values for password lengths are: 0,4 to 12. If 4 or 6-digit passwords are allowed to be entered and direct confirmation without a password is permitted, the string should be set to "0,4,6".<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     *            If the enumeration length is 0, it indicates that no numbers can be entered and the confirmation key can be directly pressed to return. If there are invalid values of length in the enumeration string, such as "2,6,7,10", the invalid values will be ignored.&lt;p&gt;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     *            &lt;p&gt;When IPed is {@link EPedType#EXTERNAL_TYPEA}:The PIN length is between the minimum and maximum values in expPinLen. If mode = EPinBlockMode.ISO9564_0, press "ok" to exit when the minimum length is not 0.&lt;/p&gt; &lt;/div&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     * @param dataIn &lt;div class="zh"&gt;当mode= 0x01时,输入参数为参与PinBlock的格式化,8字节数据(根据ISO9564的规范,该数据可以是随机数、交易流水号或时间戳等)。&lt;/div&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     *               &lt;div class="en"&gt;When mode=0x01, Input parameters for participation in PinBlock formatting, 8 bytes data.(refer to ISO9564 standard, this data can be Random number, the transaction serial number or time stamp, etc.)&lt;/div&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     * @param mode &lt;div class="zh"&gt;0x01， ISO9564 格式 1 &lt;/div&gt; &lt;div class="en"&gt;0x01, ISO9564 format 1&lt;/div&gt;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>     * @param timeoutMs &lt;div class="zh"&gt;输入 PIN 的超时时间,单位：毫秒 最大值为 300000ms &lt;/div&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     *                  &lt;div class="en"&gt;Timeout time for entering PIN, unit: milliseconds, the maximum value is 300000ms&lt;/div&gt;<a name="line.120"></a>
+<span class="sourceLineNo">121</span>     * @return &lt;div class="zh"&gt;8字节的PINBlock&lt;/div&gt; &lt;div class="en"&gt;8-byte PINBlock&lt;/div&gt;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     * @throws PedDevException<a name="line.122"></a>
+<span class="sourceLineNo">123</span>     * @since V3.29.00<a name="line.123"></a>
+<span class="sourceLineNo">124</span>     */<a name="line.124"></a>
+<span class="sourceLineNo">125</span>    byte[] getPinBlockSession(byte[] sessionID, String expPinLen, byte[] dataIn, byte mode, int timeoutMs) throws PedDevException;<a name="line.125"></a>
+<span class="sourceLineNo">126</span><a name="line.126"></a>
+<span class="sourceLineNo">127</span>    /**<a name="line.127"></a>
+<span class="sourceLineNo">128</span>     * &lt;div class="zh"&gt; 与PedSetOfflinePinMode一样，但密钥是sessionID指定的PED_TPK。&lt;/div&gt;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     * &lt;div class="en"&gt; Same as PedSetOfflinePinMode, but key is PED_TPK specified by sessionID.&lt;/div&gt;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     *<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     * @param mode &lt;div class="zh"&gt;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     *                &lt;ul&gt;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     *                 &lt;li&gt;0x00:内部PINPAD，默认模式。&lt;/li&gt;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     *                 &lt;li&gt;0x01:外部PINPAD。&lt;/li&gt;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     *                &lt;/ul&gt;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     *               &lt;/div&gt;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     *               &lt;div class="en"&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     *                &lt;ul&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     *                 &lt;li&gt;0x00:Built-in PINPAD, default mode.&lt;/li&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     *                 &lt;li&gt;0x01:External PINPAD.&lt;/li&gt;<a name="line.140"></a>
+<span class="sourceLineNo">141</span>     *                &lt;/ul&gt;<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     *               &lt;/div&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.143"></a>
+<span class="sourceLineNo">144</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>     * @param pinBlock &lt;div class="zh"&gt;8-byte Cipher PINBLOCK with ISO9564 Format 1 &lt;/div&gt;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>     *                 &lt;div class="en"&gt;8-byte Cipher PINBLOCK with ISO9564 Format 1 &lt;/div&gt;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>     * @throws PedDevException<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     * @since V3.29.00<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     */<a name="line.149"></a>
+<span class="sourceLineNo">150</span>    void setOfflinePinModeSession(byte mode, byte[] sessionID, byte[] pinBlock) throws PedDevException;<a name="line.150"></a>
+<span class="sourceLineNo">151</span><a name="line.151"></a>
+<span class="sourceLineNo">152</span>    /**<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * &lt;div class="zh"&gt; 与PedAesDataCalc一样，但密钥是sessionID指定的AES_TDK。&lt;/div&gt;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     * &lt;div class="en"&gt; Same as PedAesDataCalc, but key is AES_TDK specified by sessionID.&lt;/div&gt;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     *<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     * @param sessionID &lt;div class="zh"&gt; 16 bytes session number &lt;/div&gt;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     *                  &lt;div class="en"&gt; 16 bytes session number &lt;/div&gt;<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     * @param initVector &lt;div class="zh"&gt;ECB模式: 初始向量为空<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     *                   &lt;br&gt; CBC模式: 初始向量, 16字节&lt;/div&gt;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>     *                   &lt;div class="en"&gt;ECB mode: initial vector is empty<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     *                   &lt;br&gt; CBC mode: initial vector, 16 bytes&lt;/div&gt;<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * @param dataIn &lt;div class="zh"&gt;用于加密或解密的数据 最大长度 &lt;= 1024, 且为16的倍数。&lt;/div&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     *               &lt;div class="en"&gt;data for encryption or decryption, maximum length &lt;= 1024, and is a multiple of 16&lt;/div&gt;<a name="line.163"></a>
+<span class="sourceLineNo">164</span>     * @param mode &lt;div class="zh"&gt; &lt;ul&gt;<a name="line.164"></a>
+<span class="sourceLineNo">165</span>     *             &lt;li&gt;0x00: ECB解密&lt;/li&gt;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     *             &lt;li&gt;0x01: ECB加密&lt;/li&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     *             &lt;li&gt;0x02: CBC解密&lt;/li&gt;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     *             &lt;li&gt;0x03: CBC加密&lt;/li&gt;&lt;/ul&gt; &lt;/div&gt;<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     *             &lt;div class="en"&gt;&lt;ul&gt;<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     *             &lt;li&gt;0x00: ECB decryption&lt;/li&gt;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     *             &lt;li&gt;0x01: ECB encryption&lt;/li&gt;<a name="line.171"></a>
+<span class="sourceLineNo">172</span>     *             &lt;li&gt;0x02: CBC decryption&lt;/li&gt;<a name="line.172"></a>
+<span class="sourceLineNo">173</span>     *             &lt;li&gt;0x03: CBC encryption&lt;/li&gt;&lt;/ul&gt; &lt;/div&gt;<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     * @return &lt;div class="zh"&gt;加密或解密后的数据&lt;/div&gt; &lt;div class="en"&gt;encrypted or decrypted data&lt;/div&gt;<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * @throws PedDevException<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     * @since V3.29.00<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     */<a name="line.177"></a>
+<span class="sourceLineNo">178</span>    byte[] getAesDataCalcSession(byte[] sessionID, byte[] initVector, byte[] dataIn, byte mode) throws PedDevException;<a name="line.178"></a>
+<span class="sourceLineNo">179</span><a name="line.179"></a>
+<span class="sourceLineNo">180</span>}<a name="line.180"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

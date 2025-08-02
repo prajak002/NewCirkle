@@ -1,0 +1,710 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import android.graphics.Bitmap;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pax.dal.entity.EFontTypeAscii;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.pax.dal.entity.EFontTypeExtCode;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import com.pax.dal.exceptions.PrinterDevException;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span> /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>  *  &lt;div class="zh"&gt;关于Monitor Printer的API。 如果开启权限检查，需在AndroidManifest下添加权限:"com.pax.permission.PRINTER"&lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>  *  &lt;div class="en"&gt;API for Monitor Printer. If permission check is enabled, you need to add permission under AndroidManifest: "com.pax.permission.PRINTER".&lt;/div&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>  */<a name="line.29"></a>
+<span class="sourceLineNo">030</span>public interface IPrinter {<a name="line.30"></a>
+<span class="sourceLineNo">031</span>    /**<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     * &lt;div class="zh"&gt; 打印初始化 &lt;/div&gt; &lt;div class="en"&gt; Printer Initialization &lt;/div&gt;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * <a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * @throws PrinterDevException<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    public void init() throws PrinterDevException;<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt; 设置打印的字体 &lt;/div&gt; &lt;div class="en"&gt; set print font &lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     * <a name="line.40"></a>
+<span class="sourceLineNo">041</span>     * <a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * @param asciiFontType<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     *            {@link EFontTypeAscii} &lt;div class="zh"&gt; Ascii码的字体设置&lt;br/&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     *            &lt;ul&gt;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_8_16}:8x16字体[基本]&lt;/li&gt;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_12_24}:12x24字体[基本]&lt;/li&gt;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_8_32}:8x16字体纵向放大&lt;/li&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_12_48}:12x24字体纵向放大&lt;/li&gt;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_16_16}:8x16字体横向放大&lt;/li&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_24_24}:12x24字体横向放大&lt;/li&gt;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_16_32}:8x16字体整体放大&lt;/li&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_24_48}:12x24字体整体放大&lt;/li&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     *            &lt;/ul&gt;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     *            &lt;/div&gt; &lt;div class="en"&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     *            &lt;ul&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_8_16}:8x16 font (Basic)&lt;/li&gt;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_12_24}:12x24 font (Basic)&lt;/li&gt;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_8_32}:8x16 font (enlarge vertically)&lt;/li&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_12_48}:12x24 font (enlarge vertically)&lt;/li&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_16_16}:8x16 font (enlarge horizontally)&lt;/li&gt;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_24_24}:12x24 font (enlarge horizontally)&lt;/li&gt;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_16_32}:8x16 font (enlarge on both levels)&lt;/li&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     *            &lt;li&gt;{@link EFontTypeAscii#FONT_24_48}:12x24 font (enlarge on both levels)&lt;/li&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     *            &lt;/ul&gt;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     *            &lt;/div&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * <a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * @param fontTypeExtCode<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     *            {@link EFontTypeExtCode} &lt;div class="zh"&gt; 扩展码的字体设置&lt;br/&gt;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     *            &lt;ul&gt;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_16_16}:16x16字体[基本]&lt;/li&gt;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_24_24}:24x24字体[基本]&lt;/li&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_16_32}:16x16字体纵向放大&lt;/li&gt;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_24_48}:24x24字体纵向放大&lt;/li&gt;<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_32_16}:16x16字体横向放大&lt;/li&gt;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_48_24}:24x24字体横向放大&lt;/li&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_32_32}:16x16字体整体放大&lt;/li&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     *            &lt;li&gt;{@link EFontTypeExtCode#FONT_48_48}:24x24字体整体放大&lt;/li&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     *            &lt;/ul&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     *            &lt;/div&gt; &lt;div class="en"&gt; font set for extended code characters<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     *            &lt;ul&gt;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     *            &lt;li&gt;FONT_16_16 -16x16 font (Basic)&lt;/li&gt;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     *            &lt;li&gt;FONT_24_24 -24x24 font (Basic)&lt;/li&gt;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     *            &lt;li&gt;FONT_16_32 -16x16 font (enlarge vertically)&lt;/li&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     *            &lt;li&gt;FONT_24_48 -24x24 font (enlarge vertically)&lt;/li&gt;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     *            &lt;li&gt;FONT_48_24 -16x16 font (enlarge horizontally)&lt;/li&gt;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     *            &lt;li&gt;FONT_32_32 -24x24 font (enlarge horizontally)&lt;/li&gt;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     *            &lt;li&gt;FONT_48_24 -16x16 font (enlarge on both levels)&lt;/li&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     *            &lt;li&gt;FONT_48_48 -24x24 font (enlarge on both levels)&lt;/li&gt;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     *            &lt;/ul&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     *            &lt;/div&gt;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * <a name="line.91"></a>
+<span class="sourceLineNo">092</span>     * @throws PrinterDevException<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     */<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    public void fontSet(EFontTypeAscii asciiFontType, EFontTypeExtCode fontTypeExtCode) throws PrinterDevException;<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>    /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * &lt;div class="zh"&gt; 设置打印字间距、行间距。&lt;br/&gt;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     * &lt;ul&gt;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     * &lt;li&gt;在对打印机有效设置后将一直有效，直至下次设置或调用{@link IPrinter#init()}&lt;/li&gt;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     * &lt;li&gt;打印机的默认字间距为0&lt;/li&gt;<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * &lt;li&gt;打印机的默认行间距热敏为0，针打为2&lt;/li&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * &lt;li&gt;打印机的行间距极大值为255&lt;br/&gt;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * &lt;li&gt;打印机的字间距极大值为255，针式打印机最大间距为60&lt;/li&gt;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * &lt;/ul&gt;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * &lt;/div&gt; &lt;div class="en"&gt;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * &lt;ul&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     * &lt;li&gt;Settings will be valid until they are set again or {@link IPrinter#init()} is called;&lt;/li&gt;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * &lt;li&gt;Printing character space is 0 by default;&lt;/li&gt;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * &lt;li&gt;Printing line space is 0 for thermal and 2 for stylus printer;&lt;/li&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * &lt;li&gt;The maximum line space can be 255;&lt;/li&gt;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * &lt;li&gt;The maximum character space can be 255. (stylus printer is 60);&lt;/li&gt;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     * &lt;/ul&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     * &lt;/div&gt;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     * <a name="line.114"></a>
+<span class="sourceLineNo">115</span>     * @param wordSpace<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     *            &lt;div class="zh"&gt; 字间距[像素点] &lt;/div&gt; &lt;div class="en"&gt; Character space [pixels] &lt;/div&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     * <a name="line.117"></a>
+<span class="sourceLineNo">118</span>     * @param lineSpace<a name="line.118"></a>
+<span class="sourceLineNo">119</span>     *            &lt;div class="zh"&gt; 行间距[像素点] &lt;/div&gt; &lt;div class="en"&gt; Line space [pixels] &lt;/div&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     * <a name="line.120"></a>
+<span class="sourceLineNo">121</span>     * @throws PrinterDevException<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     */<a name="line.122"></a>
+<span class="sourceLineNo">123</span>    public void spaceSet(byte wordSpace, byte lineSpace) throws PrinterDevException;<a name="line.123"></a>
+<span class="sourceLineNo">124</span><a name="line.124"></a>
+<span class="sourceLineNo">125</span>    /**<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     * &lt;div class="zh"&gt; 让打印机走纸pixel个像素点&lt;br/&gt;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     * &lt;ul&gt;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>     * &lt;li&gt;如果pixel为正数则进纸，pixel为负数则退纸，pixel为0时无动作。&lt;/li&gt;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     * &lt;li&gt;该指令为一次打印动作，即在执行后即刻失效。&lt;/li&gt;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     * &lt;li&gt;对于针式打印机，pixel小于-255或者大于255，该函数不做任何动作&lt;/li&gt;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     * &lt;/ul&gt;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     * &lt;/div&gt; &lt;div class="en"&gt;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     * &lt;ul&gt;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     * &lt;li&gt;If the pixel value is positive, then the paper will feed forward. If it is negative, then feed backward. If<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     * it is 0,then no action.&lt;/li&gt;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     * &lt;li&gt;This is a one time action.&lt;/li&gt;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     * &lt;li&gt;For the stylus printer, there is no action when pixel less than -255 or pixel greater than 255.&lt;/li&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     * &lt;/ul&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     * &lt;/div&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     * <a name="line.140"></a>
+<span class="sourceLineNo">141</span>     * @param pixel<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     *            &lt;div class="zh"&gt; 像素点个数 &lt;/div&gt; &lt;div class="en"&gt; number of pixels &lt;/div&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     * <a name="line.143"></a>
+<span class="sourceLineNo">144</span>     * @throws PrinterDevException<a name="line.144"></a>
+<span class="sourceLineNo">145</span>     */<a name="line.145"></a>
+<span class="sourceLineNo">146</span>    public void step(int pixel) throws PrinterDevException;<a name="line.146"></a>
+<span class="sourceLineNo">147</span><a name="line.147"></a>
+<span class="sourceLineNo">148</span>    /**<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     * &lt;div class="zh"&gt; 打印字符串&lt;br/&gt;<a name="line.149"></a>
+<span class="sourceLineNo">150</span>     * &lt;ul&gt;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     * &lt;li&gt;支持打印串中出现‘\n‘[换行]、‘\f‘[换页]控制字符;&lt;/li&gt;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     * &lt;li&gt;如果打印数据包过长，则程序将溢出;&lt;/li&gt;<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * &lt;li&gt;如果打印字符串超出打印范围，将自动换行后继续打印;&lt;/li&gt;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     * &lt;li&gt;缓冲区最大为2048字节。&lt;/li&gt;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     * &lt;li&gt;将str存入打印缓冲区，在调用{@link IPrinter#start()}后，按照写入缓冲区的顺序，开始打印缓冲区里的数据。&lt;/li&gt;<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     * &lt;/ul&gt;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     * &lt;/div&gt; &lt;div class="en"&gt;<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     * &lt;ul&gt;<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     * &lt;li&gt;Support '\n' (new line) and '\f' (new page) control characters;&lt;/li&gt;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>     * &lt;li&gt;If the printing data package is too long, then the printing program will overflow;&lt;/li&gt;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     * &lt;li&gt;If the string is longer than the current printing line, change line automatically and continue printing.&lt;/li&gt;<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * &lt;li&gt;The maximum buffer size is 2048 bytes.&lt;/li&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     * &lt;li&gt;<a name="line.163"></a>
+<span class="sourceLineNo">164</span>     * Store str in printing buffer, and print data in printing buffer in sequence after calling<a name="line.164"></a>
+<span class="sourceLineNo">165</span>     * {@link IPrinter#start()}.&lt;/li&gt;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     * &lt;/ul&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     * &lt;/div&gt;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     * <a name="line.168"></a>
+<span class="sourceLineNo">169</span>     * @param str<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     *            &lt;div class="zh"&gt; 打印字符串 &lt;/div&gt; &lt;div class="en"&gt; print string &lt;/div&gt;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     * <a name="line.171"></a>
+<span class="sourceLineNo">172</span>     * @param charset<a name="line.172"></a>
+<span class="sourceLineNo">173</span>     *            &lt;div class="zh"&gt; Str字符集，为null时，默认为UTF-8字符集 &lt;/div&gt; &lt;div class="en"&gt; When character set is NULL,default<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     *            to UTF-8. &lt;/div&gt;<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * <a name="line.175"></a>
+<span class="sourceLineNo">176</span>     * @throws PrinterDevException<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     */<a name="line.177"></a>
+<span class="sourceLineNo">178</span>    public void printStr(String str, String charset) throws PrinterDevException;<a name="line.178"></a>
+<span class="sourceLineNo">179</span><a name="line.179"></a>
+<span class="sourceLineNo">180</span>    /**<a name="line.180"></a>
+<span class="sourceLineNo">181</span>     * &lt;div class="zh"&gt; 打印图片 &lt;/div&gt; &lt;div class="en"&gt; Print bitmap &lt;/div&gt;<a name="line.181"></a>
+<span class="sourceLineNo">182</span>     * <a name="line.182"></a>
+<span class="sourceLineNo">183</span>     * @param bitmap<a name="line.183"></a>
+<span class="sourceLineNo">184</span>     *            &lt;div class="zh"&gt; 需打印的图片信息 &lt;/div&gt; &lt;div class="en"&gt; Picture information. &lt;/div&gt;<a name="line.184"></a>
+<span class="sourceLineNo">185</span>     * <a name="line.185"></a>
+<span class="sourceLineNo">186</span>     * @throws PrinterDevException<a name="line.186"></a>
+<span class="sourceLineNo">187</span>     */<a name="line.187"></a>
+<span class="sourceLineNo">188</span>    public void printBitmap(Bitmap bitmap) throws PrinterDevException;<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>    /**<a name="line.190"></a>
+<span class="sourceLineNo">191</span>     * &lt;div class="zh"&gt; 打印图片 &lt;/div&gt; &lt;div class="en"&gt; Print bitmap &lt;/div&gt;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>     * <a name="line.192"></a>
+<span class="sourceLineNo">193</span>     * @param bitmap<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     *            &lt;div class="zh"&gt; 需打印的图片&lt;/div&gt; &lt;div class="en"&gt; bitmap. &lt;/div&gt;<a name="line.194"></a>
+<span class="sourceLineNo">195</span>     * @param grayThreshold<a name="line.195"></a>
+<span class="sourceLineNo">196</span>     *            &lt;div class="zh"&gt; 图像灰度阀值 0-255 &lt;/div&gt; &lt;div class="en"&gt; gray threshold . between 0 and 255 &lt;/div&gt;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     * <a name="line.197"></a>
+<span class="sourceLineNo">198</span>     * @throws PrinterDevException<a name="line.198"></a>
+<span class="sourceLineNo">199</span>     */<a name="line.199"></a>
+<span class="sourceLineNo">200</span>    public void printBitmapWithMonoThreshold(Bitmap bitmap, int grayThreshold) throws PrinterDevException;<a name="line.200"></a>
+<span class="sourceLineNo">201</span><a name="line.201"></a>
+<span class="sourceLineNo">202</span>    /**<a name="line.202"></a>
+<span class="sourceLineNo">203</span>     * &lt;div class="zh"&gt; 启动打印机，将缓冲区里的数据打印出来, 此接口为同步接口&lt;br/&gt;<a name="line.203"></a>
+<span class="sourceLineNo">204</span>     * &lt;ul&gt;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>     * &lt;li&gt;在调用该函数后，打印机将进行打印，直到打印结束后才返回;&lt;/li&gt;<a name="line.205"></a>
+<span class="sourceLineNo">206</span>     * &lt;li&gt;在打印结束后，该函数会返回打印状态，因此可不必再查询打印状态;&lt;/li&gt;<a name="line.206"></a>
+<span class="sourceLineNo">207</span>     * &lt;li&gt;如果打印机在成功完成打印任务后，再次调用该函数，则会将单据重打一遍。&lt;/li&gt;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>     * &lt;li&gt;使用上应遵循公式：每行的点数 = 字符的高度 + 行距。总的点数 =每行的点数 * 行数 。总的点数要小于30000，默认字符高度是24。&lt;/li&gt;<a name="line.208"></a>
+<span class="sourceLineNo">209</span>     * &lt;/ul&gt;<a name="line.209"></a>
+<span class="sourceLineNo">210</span>     * <a name="line.210"></a>
+<span class="sourceLineNo">211</span>     * &lt;/div&gt; &lt;div class="en"&gt; Start printer and prints data in buffer.This is synchronous interface.<a name="line.211"></a>
+<span class="sourceLineNo">212</span>     * &lt;ul&gt;<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     * &lt;li&gt;After calling this function, the printer will perform the printing task and return after completed the whole<a name="line.213"></a>
+<span class="sourceLineNo">214</span>     * printing task.&lt;/li&gt;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     * &lt;li&gt;<a name="line.215"></a>
+<span class="sourceLineNo">216</span>     * After completed the whole printing task, this function will return the printer status in return value. Therefore<a name="line.216"></a>
+<span class="sourceLineNo">217</span>     * the check printer status is not required.&lt;/li&gt;<a name="line.217"></a>
+<span class="sourceLineNo">218</span>     * &lt;li&gt;If the printing process is completed, recalling this function will reprint the slip.&lt;/li&gt;<a name="line.218"></a>
+<span class="sourceLineNo">219</span>     * &lt;li&gt;Use should follow the formula: the number of points per line = the height of the character + the line space.<a name="line.219"></a>
+<span class="sourceLineNo">220</span>     *  Total number of points = number of points per row * number of rows.The total number of points should be less than 30,000,<a name="line.220"></a>
+<span class="sourceLineNo">221</span>     *  and the default character height is 24.&lt;/li&gt;<a name="line.221"></a>
+<span class="sourceLineNo">222</span>     * &lt;/ul&gt;<a name="line.222"></a>
+<span class="sourceLineNo">223</span>     * <a name="line.223"></a>
+<span class="sourceLineNo">224</span>     * &lt;/div&gt;<a name="line.224"></a>
+<span class="sourceLineNo">225</span>     * <a name="line.225"></a>
+<span class="sourceLineNo">226</span>     * @return &lt;div class="zh"&gt;<a name="line.226"></a>
+<span class="sourceLineNo">227</span>     *         &lt;ul&gt;<a name="line.227"></a>
+<span class="sourceLineNo">228</span>     *         &lt;li&gt;0: 正常&lt;/li&gt;<a name="line.228"></a>
+<span class="sourceLineNo">229</span>     *         &lt;li&gt;1: 打印机忙&lt;/li&gt;<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     *         &lt;li&gt;2: 打印机缺纸&lt;/li&gt;<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     *         &lt;li&gt;3: 打印数据包格式错&lt;/li&gt;<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     *         &lt;li&gt;4: 打印机故障&lt;/li&gt;<a name="line.232"></a>
+<span class="sourceLineNo">233</span>     *         &lt;li&gt;8: 打印机过热&lt;/li&gt;<a name="line.233"></a>
+<span class="sourceLineNo">234</span>     *         &lt;li&gt;9: 打印机电压过低&lt;/li&gt;<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     *         &lt;li&gt;-16:打印未完成&lt;/li&gt;<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     *         &lt;li&gt;-6:切刀异常(支持E500,E800)&lt;/li&gt;<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     *         &lt;li&gt;-5:开盖错误(支持E500,E800)&lt;/li&gt;<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     *         &lt;li&gt;-4：打印机未安装字库&lt;/li&gt;<a name="line.238"></a>
+<span class="sourceLineNo">239</span>     *         &lt;li&gt;-2：数据包过长&lt;/li&gt;<a name="line.239"></a>
+<span class="sourceLineNo">240</span>     *         &lt;/ul&gt;<a name="line.240"></a>
+<span class="sourceLineNo">241</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.241"></a>
+<span class="sourceLineNo">242</span>     *         &lt;ul&gt;<a name="line.242"></a>
+<span class="sourceLineNo">243</span>     *         &lt;li&gt;0- Success&lt;/li&gt;<a name="line.243"></a>
+<span class="sourceLineNo">244</span>     *         &lt;li&gt;1- Printer is busy&lt;/li&gt;<a name="line.244"></a>
+<span class="sourceLineNo">245</span>     *         &lt;li&gt;2- Out of paper&lt;/li&gt;<a name="line.245"></a>
+<span class="sourceLineNo">246</span>     *         &lt;li&gt;3- The format of print data packet error&lt;/li&gt;<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     *         &lt;li&gt;4- Printer malfunctions&lt;/li&gt;<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     *         &lt;li&gt;8- Printer over heats&lt;/li&gt;<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     *         &lt;li&gt;9- Printer voltage is too low&lt;/li&gt;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     *         &lt;li&gt;-16- Printing is unfinished&lt;/li&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>     *         &lt;li&gt;-6: cut jam error(only support:E500,E800)&lt;/li&gt;<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     *         &lt;li&gt;-5: cover open error(only support:E500,E800)&lt;/li&gt;<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     *         &lt;li&gt;-4- The printer has not installed font library&lt;/li&gt;<a name="line.253"></a>
+<span class="sourceLineNo">254</span>     *         &lt;li&gt;-2- Data package is too long&lt;/li&gt;<a name="line.254"></a>
+<span class="sourceLineNo">255</span>     *         &lt;/ul&gt;<a name="line.255"></a>
+<span class="sourceLineNo">256</span>     *         &lt;/div&gt;<a name="line.256"></a>
+<span class="sourceLineNo">257</span>     * <a name="line.257"></a>
+<span class="sourceLineNo">258</span>     * @throws PrinterDevException<a name="line.258"></a>
+<span class="sourceLineNo">259</span>     */<a name="line.259"></a>
+<span class="sourceLineNo">260</span>    public int start() throws PrinterDevException;<a name="line.260"></a>
+<span class="sourceLineNo">261</span><a name="line.261"></a>
+<span class="sourceLineNo">262</span>    /**<a name="line.262"></a>
+<span class="sourceLineNo">263</span>     * &lt;div class="zh"&gt; 查询当前打印状态 &lt;/div&gt; &lt;div class="en"&gt; Check current printer status. &lt;/div&gt;<a name="line.263"></a>
+<span class="sourceLineNo">264</span>     * <a name="line.264"></a>
+<span class="sourceLineNo">265</span>     * @return &lt;div class="zh"&gt;<a name="line.265"></a>
+<span class="sourceLineNo">266</span>     *         &lt;ul&gt;<a name="line.266"></a>
+<span class="sourceLineNo">267</span>     *         &lt;li&gt;0: 正常&lt;/li&gt;<a name="line.267"></a>
+<span class="sourceLineNo">268</span>     *         &lt;li&gt;1: 打印机忙&lt;/li&gt;<a name="line.268"></a>
+<span class="sourceLineNo">269</span>     *         &lt;li&gt;2: 打印机缺纸&lt;/li&gt;<a name="line.269"></a>
+<span class="sourceLineNo">270</span>     *         &lt;li&gt;3: 打印数据包格式错&lt;/li&gt;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     *         &lt;li&gt;4: 打印机故障&lt;/li&gt;<a name="line.271"></a>
+<span class="sourceLineNo">272</span>     *         &lt;li&gt;8: 打印机过热&lt;/li&gt;<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     *         &lt;li&gt;9: 打印机电压过低&lt;/li&gt;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>     *         &lt;li&gt;-16:打印未完成&lt;/li&gt;<a name="line.274"></a>
+<span class="sourceLineNo">275</span>     *         &lt;li&gt;-6:切刀异常(支持E500,E800)&lt;/li&gt;<a name="line.275"></a>
+<span class="sourceLineNo">276</span>     *         &lt;li&gt;-5:开盖错误(支持E500,E800,SK600,SK800)&lt;/li&gt;<a name="line.276"></a>
+<span class="sourceLineNo">277</span>     *         &lt;li&gt;-4：打印机未安装字库&lt;/li&gt;<a name="line.277"></a>
+<span class="sourceLineNo">278</span>     *         &lt;li&gt;-2：数据包过长&lt;/li&gt;<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     *         &lt;/ul&gt;<a name="line.279"></a>
+<span class="sourceLineNo">280</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.280"></a>
+<span class="sourceLineNo">281</span>     *         &lt;ul&gt;<a name="line.281"></a>
+<span class="sourceLineNo">282</span>     *         &lt;li&gt;0- Success&lt;/li&gt;<a name="line.282"></a>
+<span class="sourceLineNo">283</span>     *         &lt;li&gt;1- Printer is busy&lt;/li&gt;<a name="line.283"></a>
+<span class="sourceLineNo">284</span>     *         &lt;li&gt;2- Out of paper&lt;/li&gt;<a name="line.284"></a>
+<span class="sourceLineNo">285</span>     *         &lt;li&gt;3- The format of print data packet error&lt;/li&gt;<a name="line.285"></a>
+<span class="sourceLineNo">286</span>     *         &lt;li&gt;4- Printer malfunctions&lt;/li&gt;<a name="line.286"></a>
+<span class="sourceLineNo">287</span>     *         &lt;li&gt;8- Printer over heats&lt;/li&gt;<a name="line.287"></a>
+<span class="sourceLineNo">288</span>     *         &lt;li&gt;9- Printer voltage is too low&lt;/li&gt;<a name="line.288"></a>
+<span class="sourceLineNo">289</span>     *         &lt;li&gt;-16- Printing is unfinished&lt;/li&gt;<a name="line.289"></a>
+<span class="sourceLineNo">290</span>     *         &lt;li&gt;-6: cut jam error(only support:E500,E800)&lt;/li&gt;<a name="line.290"></a>
+<span class="sourceLineNo">291</span>     *         &lt;li&gt;-5: cover open error(only support:E500,E800,SK600,SK800)&lt;/li&gt;<a name="line.291"></a>
+<span class="sourceLineNo">292</span>     *         &lt;li&gt;-4- The printer has not installed font library&lt;/li&gt;<a name="line.292"></a>
+<span class="sourceLineNo">293</span>     *         &lt;li&gt;-2- Data package is too long&lt;/li&gt;<a name="line.293"></a>
+<span class="sourceLineNo">294</span>     *         &lt;/ul&gt;<a name="line.294"></a>
+<span class="sourceLineNo">295</span>     *         &lt;/div&gt;<a name="line.295"></a>
+<span class="sourceLineNo">296</span>     * <a name="line.296"></a>
+<span class="sourceLineNo">297</span>     * @throws PrinterDevException<a name="line.297"></a>
+<span class="sourceLineNo">298</span>     */<a name="line.298"></a>
+<span class="sourceLineNo">299</span>    public int getStatus() throws PrinterDevException;<a name="line.299"></a>
+<span class="sourceLineNo">300</span><a name="line.300"></a>
+<span class="sourceLineNo">301</span>    /**<a name="line.301"></a>
+<span class="sourceLineNo">302</span>     * &lt;div class="zh"&gt; 设置字符打印左边界&lt;br/&gt;<a name="line.302"></a>
+<span class="sourceLineNo">303</span>     * 默认边界为0&lt;br/&gt;<a name="line.303"></a>
+<span class="sourceLineNo">304</span>     * 当输入的参数超过最大值时，按照最大值设置&lt;br/&gt;<a name="line.304"></a>
+<span class="sourceLineNo">305</span>     * &lt;/div&gt; &lt;div class="en"&gt; Set character printing left boundary. Default value is 0. If the input value exceed the<a name="line.305"></a>
+<span class="sourceLineNo">306</span>     * maximum, the maximum one will be used. &lt;/div&gt;<a name="line.306"></a>
+<span class="sourceLineNo">307</span>     * <a name="line.307"></a>
+<span class="sourceLineNo">308</span>     * @param indent<a name="line.308"></a>
+<span class="sourceLineNo">309</span>     *            &lt;div class="zh"&gt; 左边界空白像素点，范围：0~300 &lt;/div&gt; &lt;div class="en"&gt; 0~300 Vacant dots in left boundary, range:<a name="line.309"></a>
+<span class="sourceLineNo">310</span>     *            0~300 &lt;/div&gt;<a name="line.310"></a>
+<span class="sourceLineNo">311</span>     * <a name="line.311"></a>
+<span class="sourceLineNo">312</span>     * @throws PrinterDevException<a name="line.312"></a>
+<span class="sourceLineNo">313</span>     */<a name="line.313"></a>
+<span class="sourceLineNo">314</span>    public void leftIndent(int indent) throws PrinterDevException;<a name="line.314"></a>
+<span class="sourceLineNo">315</span><a name="line.315"></a>
+<span class="sourceLineNo">316</span>    /**<a name="line.316"></a>
+<span class="sourceLineNo">317</span>     * &lt;div class="zh"&gt; 取得当前已打印的点阵行 &lt;/div&gt; &lt;div class="en"&gt; Get current printed dot line for slip alignment. &lt;/div&gt;<a name="line.317"></a>
+<span class="sourceLineNo">318</span>     * <a name="line.318"></a>
+<span class="sourceLineNo">319</span>     * @return &lt;div class="zh"&gt; 当前已打印的点阵行 &lt;/div&gt; &lt;div class="en"&gt; Current dot line. &lt;/div&gt;<a name="line.319"></a>
+<span class="sourceLineNo">320</span>     * <a name="line.320"></a>
+<span class="sourceLineNo">321</span>     * @throws PrinterDevException<a name="line.321"></a>
+<span class="sourceLineNo">322</span>     */<a name="line.322"></a>
+<span class="sourceLineNo">323</span>    public int getDotLine() throws PrinterDevException;<a name="line.323"></a>
+<span class="sourceLineNo">324</span><a name="line.324"></a>
+<span class="sourceLineNo">325</span>    /**<a name="line.325"></a>
+<span class="sourceLineNo">326</span>     * &lt;div class="zh"&gt; 设置打印黑度等级 &lt;/div&gt; &lt;div class="en"&gt; Set printing gray level. &lt;/div&gt;<a name="line.326"></a>
+<span class="sourceLineNo">327</span>     * <a name="line.327"></a>
+<span class="sourceLineNo">328</span>     * @param level<a name="line.328"></a>
+<span class="sourceLineNo">329</span>     *            &lt;div class="zh"&gt;<a name="line.329"></a>
+<span class="sourceLineNo">330</span>     *            &lt;ul&gt;<a name="line.330"></a>
+<span class="sourceLineNo">331</span>     *            &lt;li&gt;Level=0 保留&lt;/li&gt;<a name="line.331"></a>
+<span class="sourceLineNo">332</span>     *            &lt;li&gt;Level=1 缺省黑度，即普通打印单&lt;/li&gt;<a name="line.332"></a>
+<span class="sourceLineNo">333</span>     *            &lt;li&gt;Level=2 保留&lt;/li&gt;<a name="line.333"></a>
+<span class="sourceLineNo">334</span>     *            &lt;li&gt;Level=3 双层热敏打印&lt;/li&gt;<a name="line.334"></a>
+<span class="sourceLineNo">335</span>     *            &lt;li&gt;Level=4 双层热敏打印，比3的黑度更高&lt;/li&gt;<a name="line.335"></a>
+<span class="sourceLineNo">336</span>     *            &lt;li&gt;Level=[50~500] 黑度按照缺省黑度百分比进行设置，如50是把黑度设置为默认值的50%，500则把黑度设置为500%&lt;/li&gt;<a name="line.336"></a>
+<span class="sourceLineNo">337</span>     *            &lt;/ul&gt;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>     *            &lt;/div&gt; &lt;div class="en"&gt;<a name="line.338"></a>
+<span class="sourceLineNo">339</span>     *            &lt;ul&gt;<a name="line.339"></a>
+<span class="sourceLineNo">340</span>     *            &lt;li&gt;Level=0 -Reserved&lt;/li&gt;<a name="line.340"></a>
+<span class="sourceLineNo">341</span>     *            &lt;li&gt;Level=1 -Default level, normal print slip&lt;/li&gt;<a name="line.341"></a>
+<span class="sourceLineNo">342</span>     *            &lt;li&gt;Level=2 -Reserved&lt;/li&gt;<a name="line.342"></a>
+<span class="sourceLineNo">343</span>     *            &lt;li&gt;Level=3 -Two-layer thermal printing&lt;/li&gt;<a name="line.343"></a>
+<span class="sourceLineNo">344</span>     *            &lt;li&gt;Level=4 -Two-layer thermal printing, higher gray level than 3&lt;/li&gt;<a name="line.344"></a>
+<span class="sourceLineNo">345</span>     *            &lt;li&gt;Level=[50~500] -Gray level is set according to percentage of default value. If it is 50, then set<a name="line.345"></a>
+<span class="sourceLineNo">346</span>     *            gray level to be 50% of default value; If it is 500, then set grey level to be 500% of default value.&lt;/li&gt;<a name="line.346"></a>
+<span class="sourceLineNo">347</span>     *            &lt;/ul&gt;<a name="line.347"></a>
+<span class="sourceLineNo">348</span>     *            &lt;/div&gt;<a name="line.348"></a>
+<span class="sourceLineNo">349</span>     * <a name="line.349"></a>
+<span class="sourceLineNo">350</span>     * @throws PrinterDevException<a name="line.350"></a>
+<span class="sourceLineNo">351</span>     */<a name="line.351"></a>
+<span class="sourceLineNo">352</span>    public void setGray(int level) throws PrinterDevException;<a name="line.352"></a>
+<span class="sourceLineNo">353</span><a name="line.353"></a>
+<span class="sourceLineNo">354</span>    /**<a name="line.354"></a>
+<span class="sourceLineNo">355</span>     * &lt;div class="zh"&gt; 设置打印字体宽度，可在基本字体上实现双倍宽度的打印 &lt;/div&gt; &lt;div class="en"&gt; Set printing font which is based on base font<a name="line.355"></a>
+<span class="sourceLineNo">356</span>     * to double width. &lt;/div&gt;<a name="line.356"></a>
+<span class="sourceLineNo">357</span>     * <a name="line.357"></a>
+<span class="sourceLineNo">358</span>     * @param isAscDouble<a name="line.358"></a>
+<span class="sourceLineNo">359</span>     *            &lt;div class="zh"&gt; 单内码字体是否倍宽 &lt;/div&gt; &lt;div class="en"&gt; If the single coding font is double width or not.<a name="line.359"></a>
+<span class="sourceLineNo">360</span>     *            &lt;/div&gt;<a name="line.360"></a>
+<span class="sourceLineNo">361</span>     * <a name="line.361"></a>
+<span class="sourceLineNo">362</span>     * @param isLocalDouble<a name="line.362"></a>
+<span class="sourceLineNo">363</span>     *            &lt;div class="zh"&gt; 多内码字体是否倍宽 &lt;/div&gt; &lt;div class="en"&gt; If the multi coding font is double width or not.<a name="line.363"></a>
+<span class="sourceLineNo">364</span>     *            &lt;/div&gt;<a name="line.364"></a>
+<span class="sourceLineNo">365</span>     * <a name="line.365"></a>
+<span class="sourceLineNo">366</span>     * @throws PrinterDevException<a name="line.366"></a>
+<span class="sourceLineNo">367</span>     */<a name="line.367"></a>
+<span class="sourceLineNo">368</span>    public void doubleWidth(boolean isAscDouble, boolean isLocalDouble) throws PrinterDevException;<a name="line.368"></a>
+<span class="sourceLineNo">369</span><a name="line.369"></a>
+<span class="sourceLineNo">370</span>    /**<a name="line.370"></a>
+<span class="sourceLineNo">371</span>     * &lt;div class="zh"&gt; 设置打印字体高度，可在基本字体上实现双倍高度的打印。 &lt;/div&gt; &lt;div class="en"&gt; Set printing font which is based on base font<a name="line.371"></a>
+<span class="sourceLineNo">372</span>     * to double height. &lt;/div&gt;<a name="line.372"></a>
+<span class="sourceLineNo">373</span>     * <a name="line.373"></a>
+<span class="sourceLineNo">374</span>     * @param isAscDouble<a name="line.374"></a>
+<span class="sourceLineNo">375</span>     *            &lt;div class="zh"&gt; 单内码字体是否倍高 &lt;/div&gt; &lt;div class="en"&gt; If the single coding font is double height or not.<a name="line.375"></a>
+<span class="sourceLineNo">376</span>     *            &lt;/div&gt;<a name="line.376"></a>
+<span class="sourceLineNo">377</span>     * @param isLocalDouble<a name="line.377"></a>
+<span class="sourceLineNo">378</span>     *            &lt;div class="zh"&gt; 多内码字体是否倍高&lt;/div&gt; &lt;div class="en"&gt; If the multi coding font is double height or not.<a name="line.378"></a>
+<span class="sourceLineNo">379</span>     *            &lt;/div&gt;<a name="line.379"></a>
+<span class="sourceLineNo">380</span>     * @throws PrinterDevException<a name="line.380"></a>
+<span class="sourceLineNo">381</span>     */<a name="line.381"></a>
+<span class="sourceLineNo">382</span>    public void doubleHeight(boolean isAscDouble, boolean isLocalDouble) throws PrinterDevException;<a name="line.382"></a>
+<span class="sourceLineNo">383</span><a name="line.383"></a>
+<span class="sourceLineNo">384</span>    /**<a name="line.384"></a>
+<span class="sourceLineNo">385</span>     * &lt;div class="zh"&gt; 设置反显打印，缺省为正常打印。 &lt;/div&gt; &lt;div class="en"&gt; Invert Pinter Setting,default to normal printing. &lt;/div&gt;<a name="line.385"></a>
+<span class="sourceLineNo">386</span>     * <a name="line.386"></a>
+<span class="sourceLineNo">387</span>     * @param isInvert<a name="line.387"></a>
+<span class="sourceLineNo">388</span>     *            &lt;div class="zh"&gt;<a name="line.388"></a>
+<span class="sourceLineNo">389</span>     *            &lt;ul&gt;<a name="line.389"></a>
+<span class="sourceLineNo">390</span>     *            &lt;li&gt;true-反显&lt;/li&gt;<a name="line.390"></a>
+<span class="sourceLineNo">391</span>     *            &lt;li&gt;false-正常&lt;/li&gt;<a name="line.391"></a>
+<span class="sourceLineNo">392</span>     *            &lt;/ul&gt;<a name="line.392"></a>
+<span class="sourceLineNo">393</span>     *            &lt;/div&gt; &lt;div class="en"&gt;<a name="line.393"></a>
+<span class="sourceLineNo">394</span>     *            &lt;ul&gt;<a name="line.394"></a>
+<span class="sourceLineNo">395</span>     *            &lt;li&gt;true -Invert&lt;/li&gt;<a name="line.395"></a>
+<span class="sourceLineNo">396</span>     *            &lt;li&gt;false -Normal&lt;/li&gt;<a name="line.396"></a>
+<span class="sourceLineNo">397</span>     *            &lt;/ul&gt;<a name="line.397"></a>
+<span class="sourceLineNo">398</span>     *            &lt;/div&gt;<a name="line.398"></a>
+<span class="sourceLineNo">399</span>     * <a name="line.399"></a>
+<span class="sourceLineNo">400</span>     * @throws PrinterDevException<a name="line.400"></a>
+<span class="sourceLineNo">401</span>     */<a name="line.401"></a>
+<span class="sourceLineNo">402</span>    public void invert(boolean isInvert) throws PrinterDevException;<a name="line.402"></a>
+<span class="sourceLineNo">403</span><a name="line.403"></a>
+<span class="sourceLineNo">404</span>    /**<a name="line.404"></a>
+<span class="sourceLineNo">405</span>     * &lt;div class="zh"&gt; 切纸 &lt;/div&gt; &lt;div class="en"&gt; cut paper &lt;/div&gt;<a name="line.405"></a>
+<span class="sourceLineNo">406</span>     * <a name="line.406"></a>
+<span class="sourceLineNo">407</span>     * @param mode<a name="line.407"></a>
+<span class="sourceLineNo">408</span>     *            &lt;div class="zh"&gt; mode =0时, 表示全部切纸 ;mode =1时, 表示部分切纸&lt;/div&gt; &lt;div class="en"&gt; mode =0: full paper<a name="line.408"></a>
+<span class="sourceLineNo">409</span>     *            cut;mode =1:Partial paper cutting&lt;/div&gt;<a name="line.409"></a>
+<span class="sourceLineNo">410</span>     * @throws PrinterDevException<a name="line.410"></a>
+<span class="sourceLineNo">411</span>     */<a name="line.411"></a>
+<span class="sourceLineNo">412</span>    public void cutPaper(int mode) throws PrinterDevException;<a name="line.412"></a>
+<span class="sourceLineNo">413</span><a name="line.413"></a>
+<span class="sourceLineNo">414</span>    /**<a name="line.414"></a>
+<span class="sourceLineNo">415</span>     * &lt;div class="zh"&gt; 获取当前切纸模式 &lt;/div&gt; &lt;div class="en"&gt; get cut mode &lt;/div&gt;<a name="line.415"></a>
+<span class="sourceLineNo">416</span>     * <a name="line.416"></a>
+<span class="sourceLineNo">417</span>     * @return &lt;div class="zh"&gt;<a name="line.417"></a>
+<span class="sourceLineNo">418</span>     *         &lt;ul&gt;<a name="line.418"></a>
+<span class="sourceLineNo">419</span>     *         &lt;li&gt;0：仅支持全切&lt;/li&gt;<a name="line.419"></a>
+<span class="sourceLineNo">420</span>     *         &lt;li&gt;1：仅支持半切&lt;/li&gt;<a name="line.420"></a>
+<span class="sourceLineNo">421</span>     *         &lt;li&gt;2：支持全切 和 半切&lt;/li&gt;<a name="line.421"></a>
+<span class="sourceLineNo">422</span>     *         &lt;li&gt;-1：无切刀,不支持切纸&lt;/li&gt;<a name="line.422"></a>
+<span class="sourceLineNo">423</span>     *         &lt;/ul&gt;<a name="line.423"></a>
+<span class="sourceLineNo">424</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.424"></a>
+<span class="sourceLineNo">425</span>     *         &lt;ul&gt;<a name="line.425"></a>
+<span class="sourceLineNo">426</span>     *         &lt;li&gt;0:Only support full paper cut&lt;/li&gt;<a name="line.426"></a>
+<span class="sourceLineNo">427</span>     *         &lt;li&gt;1:Only support partial paper cutting&lt;/li&gt;<a name="line.427"></a>
+<span class="sourceLineNo">428</span>     *         &lt;li&gt;2:support partial paper and full paper cutting&lt;/li&gt;<a name="line.428"></a>
+<span class="sourceLineNo">429</span>     *         &lt;li&gt;-1:No cutting knife,not support&lt;/li&gt;<a name="line.429"></a>
+<span class="sourceLineNo">430</span>     *         &lt;/ul&gt;<a name="line.430"></a>
+<span class="sourceLineNo">431</span>     *         &lt;/div&gt;<a name="line.431"></a>
+<span class="sourceLineNo">432</span>     * @throws PrinterDevException<a name="line.432"></a>
+<span class="sourceLineNo">433</span>     */<a name="line.433"></a>
+<span class="sourceLineNo">434</span>    public int getCutMode() throws PrinterDevException;<a name="line.434"></a>
+<span class="sourceLineNo">435</span><a name="line.435"></a>
+<span class="sourceLineNo">436</span>    /**<a name="line.436"></a>
+<span class="sourceLineNo">437</span>     * &lt;div class="zh"&gt; 直接打印Bitmap,异步封装接口 (不能与除了{@link #setGray(int)}之外的Printer接口直接混用)。print前后会自动init,但灰度值会保留&lt;/div&gt; &lt;div<a name="line.437"></a>
+<span class="sourceLineNo">438</span>     * class="en"&gt; Print bitmap directly,asynchronous encapsulation interface(Cannot mix with the Printer interface<a name="line.438"></a>
+<span class="sourceLineNo">439</span>     * except {@link #setGray (int)}).Init automatically print before and after,but the grey value will be saved.&lt;/div&gt;<a name="line.439"></a>
+<span class="sourceLineNo">440</span>     * <a name="line.440"></a>
+<span class="sourceLineNo">441</span>     * @param bitmap<a name="line.441"></a>
+<span class="sourceLineNo">442</span>     *            &lt;div class="zh"&gt;位图,不能为null&lt;/div&gt; &lt;div class="en"&gt;bitmap,can't be null&lt;/div&gt;<a name="line.442"></a>
+<span class="sourceLineNo">443</span>     * @param listener<a name="line.443"></a>
+<span class="sourceLineNo">444</span>     *            &lt;div class="zh"&gt;监听器({@link IPinterListener}),为null时直接打印无结果回调&lt;/div&gt; &lt;div class="en"&gt;listener(<a name="line.444"></a>
+<span class="sourceLineNo">445</span>     *            {@link IPinterListener} ),direct print without result callback for null&lt;/div&gt;<a name="line.445"></a>
+<span class="sourceLineNo">446</span>     */<a name="line.446"></a>
+<span class="sourceLineNo">447</span>    public void print(Bitmap bitmap, IPinterListener listener);<a name="line.447"></a>
+<span class="sourceLineNo">448</span><a name="line.448"></a>
+<span class="sourceLineNo">449</span>    /**<a name="line.449"></a>
+<span class="sourceLineNo">450</span>     * &lt;div class="zh"&gt; 直接打印Bitmap,异步封装接口 (不能与除了{@link #setGray(int)}之外的Printer接口直接混用)。print前后会自动init,但灰度值会保留&lt;/div&gt; &lt;div<a name="line.450"></a>
+<span class="sourceLineNo">451</span>     * class="en"&gt; Print bitmap directly,asynchronous encapsulation interface(Cannot mix with the Printer interface<a name="line.451"></a>
+<span class="sourceLineNo">452</span>     * except {@link #setGray (int)}).Init automatically print before and after,but the grey value will be saved.&lt;/div&gt;<a name="line.452"></a>
+<span class="sourceLineNo">453</span>     * <a name="line.453"></a>
+<span class="sourceLineNo">454</span>     * @param bitmap<a name="line.454"></a>
+<span class="sourceLineNo">455</span>     *            &lt;div class="zh"&gt;位图,不能为null&lt;/div&gt; &lt;div class="en"&gt;bitmap,can't be null&lt;/div&gt;<a name="line.455"></a>
+<span class="sourceLineNo">456</span>     * @param cutMode<a name="line.456"></a>
+<span class="sourceLineNo">457</span>     *            &lt;div class="zh"&gt;切纸模式, mode =0时, 表示全部切纸 ;mode =1时, 表示部分切纸&lt;/div&gt; &lt;div class="en"&gt;cut mode,mode =0: full<a name="line.457"></a>
+<span class="sourceLineNo">458</span>     *            paper cut;mode =1:Partial paper cutting&lt;/div&gt;<a name="line.458"></a>
+<span class="sourceLineNo">459</span>     * @param listener<a name="line.459"></a>
+<span class="sourceLineNo">460</span>     *            &lt;div class="zh"&gt;监听器({@link IPinterListener}),为null时直接打印无结果回调&lt;/div&gt; &lt;div class="en"&gt;listener(<a name="line.460"></a>
+<span class="sourceLineNo">461</span>     *            {@link IPinterListener} ),direct print without result callback for null&lt;/div&gt;<a name="line.461"></a>
+<span class="sourceLineNo">462</span>     * @since V2.03.00<a name="line.462"></a>
+<span class="sourceLineNo">463</span>     */<a name="line.463"></a>
+<span class="sourceLineNo">464</span>    public void print(Bitmap bitmap, int cutMode, IPinterListener listener);<a name="line.464"></a>
+<span class="sourceLineNo">465</span><a name="line.465"></a>
+<span class="sourceLineNo">466</span>    /**<a name="line.466"></a>
+<span class="sourceLineNo">467</span>     * &lt;div class="zh"&gt; 打印Bitmap时的监听器 &lt;/div&gt; &lt;div class="en"&gt;The listener to print Bitmap &lt;/div&gt;<a name="line.467"></a>
+<span class="sourceLineNo">468</span>     * <a name="line.468"></a>
+<span class="sourceLineNo">469</span>     */<a name="line.469"></a>
+<span class="sourceLineNo">470</span>    public interface IPinterListener {<a name="line.470"></a>
+<span class="sourceLineNo">471</span><a name="line.471"></a>
+<span class="sourceLineNo">472</span>        /**<a name="line.472"></a>
+<span class="sourceLineNo">473</span>         * &lt;div class="zh"&gt; 打印成功回调 &lt;/div&gt; &lt;div class="en"&gt; Print the success callback &lt;/div&gt;<a name="line.473"></a>
+<span class="sourceLineNo">474</span>         */<a name="line.474"></a>
+<span class="sourceLineNo">475</span>        public void onSucc();<a name="line.475"></a>
+<span class="sourceLineNo">476</span><a name="line.476"></a>
+<span class="sourceLineNo">477</span>        /**<a name="line.477"></a>
+<span class="sourceLineNo">478</span>         * &lt;div class="zh"&gt; 打印失败回调 &lt;/div&gt; &lt;div class="en"&gt; Print the error callback &lt;/div&gt;<a name="line.478"></a>
+<span class="sourceLineNo">479</span>         * <a name="line.479"></a>
+<span class="sourceLineNo">480</span>         * @param errCode<a name="line.480"></a>
+<span class="sourceLineNo">481</span>         *            &lt;div class="zh"&gt;<a name="line.481"></a>
+<span class="sourceLineNo">482</span>     *         &lt;ul&gt;<a name="line.482"></a>
+<span class="sourceLineNo">483</span>     *         &lt;li&gt;0: 正常&lt;/li&gt;<a name="line.483"></a>
+<span class="sourceLineNo">484</span>     *         &lt;li&gt;1: 打印机忙&lt;/li&gt;<a name="line.484"></a>
+<span class="sourceLineNo">485</span>     *         &lt;li&gt;2: 打印机缺纸&lt;/li&gt;<a name="line.485"></a>
+<span class="sourceLineNo">486</span>     *         &lt;li&gt;3: 打印数据包格式错&lt;/li&gt;<a name="line.486"></a>
+<span class="sourceLineNo">487</span>     *         &lt;li&gt;4: 打印机故障&lt;/li&gt;<a name="line.487"></a>
+<span class="sourceLineNo">488</span>     *         &lt;li&gt;8: 打印机过热&lt;/li&gt;<a name="line.488"></a>
+<span class="sourceLineNo">489</span>     *         &lt;li&gt;9: 打印机电压过低&lt;/li&gt;<a name="line.489"></a>
+<span class="sourceLineNo">490</span>     *         &lt;li&gt;-16:打印未完成&lt;/li&gt;<a name="line.490"></a>
+<span class="sourceLineNo">491</span>     *         &lt;li&gt;-6:切刀异常(支持E500,E800)&lt;/li&gt;<a name="line.491"></a>
+<span class="sourceLineNo">492</span>     *         &lt;li&gt;-5:开盖错误(支持E500,E800)&lt;/li&gt;<a name="line.492"></a>
+<span class="sourceLineNo">493</span>     *         &lt;li&gt;-4：打印机未安装字库&lt;/li&gt;<a name="line.493"></a>
+<span class="sourceLineNo">494</span>     *         &lt;li&gt;-2：数据包过长&lt;/li&gt;<a name="line.494"></a>
+<span class="sourceLineNo">495</span>     *         &lt;/ul&gt;<a name="line.495"></a>
+<span class="sourceLineNo">496</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.496"></a>
+<span class="sourceLineNo">497</span>     *         &lt;ul&gt;<a name="line.497"></a>
+<span class="sourceLineNo">498</span>     *         &lt;li&gt;0- Success&lt;/li&gt;<a name="line.498"></a>
+<span class="sourceLineNo">499</span>     *         &lt;li&gt;1- Printer is busy&lt;/li&gt;<a name="line.499"></a>
+<span class="sourceLineNo">500</span>     *         &lt;li&gt;2- Out of paper&lt;/li&gt;<a name="line.500"></a>
+<span class="sourceLineNo">501</span>     *         &lt;li&gt;3- The format of print data packet error&lt;/li&gt;<a name="line.501"></a>
+<span class="sourceLineNo">502</span>     *         &lt;li&gt;4- Printer malfunctions&lt;/li&gt;<a name="line.502"></a>
+<span class="sourceLineNo">503</span>     *         &lt;li&gt;8- Printer over heats&lt;/li&gt;<a name="line.503"></a>
+<span class="sourceLineNo">504</span>     *         &lt;li&gt;9- Printer voltage is too low&lt;/li&gt;<a name="line.504"></a>
+<span class="sourceLineNo">505</span>     *         &lt;li&gt;-16- Printing is unfinished&lt;/li&gt;<a name="line.505"></a>
+<span class="sourceLineNo">506</span>     *         &lt;li&gt;-6: cut jam error(only support:E500,E800)&lt;/li&gt;<a name="line.506"></a>
+<span class="sourceLineNo">507</span>     *         &lt;li&gt;-5: cover open error(only support:E500,E800)&lt;/li&gt;<a name="line.507"></a>
+<span class="sourceLineNo">508</span>     *         &lt;li&gt;-4- The printer has not installed font library&lt;/li&gt;<a name="line.508"></a>
+<span class="sourceLineNo">509</span>     *         &lt;li&gt;-2- Data package is too long&lt;/li&gt;<a name="line.509"></a>
+<span class="sourceLineNo">510</span>     *         &lt;/ul&gt;<a name="line.510"></a>
+<span class="sourceLineNo">511</span>     *         &lt;/div&gt;<a name="line.511"></a>
+<span class="sourceLineNo">512</span>         * <a name="line.512"></a>
+<span class="sourceLineNo">513</span>         */<a name="line.513"></a>
+<span class="sourceLineNo">514</span>        public void onError(int errCode);<a name="line.514"></a>
+<span class="sourceLineNo">515</span><a name="line.515"></a>
+<span class="sourceLineNo">516</span>    }<a name="line.516"></a>
+<span class="sourceLineNo">517</span>    <a name="line.517"></a>
+<span class="sourceLineNo">518</span>    /**<a name="line.518"></a>
+<span class="sourceLineNo">519</span>     * &lt;div class="zh"&gt;设置打印机字体&lt;/div&gt; &lt;div class="en"&gt;set ptinter font path.&lt;/div&gt;<a name="line.519"></a>
+<span class="sourceLineNo">520</span>     * <a name="line.520"></a>
+<span class="sourceLineNo">521</span>     * @param fontPath<a name="line.521"></a>
+<span class="sourceLineNo">522</span>     *            &lt;div class="zh"&gt;字库路径&lt;/div&gt; &lt;div class="en"&gt;font path&lt;/div&gt;<a name="line.522"></a>
+<span class="sourceLineNo">523</span>     * @throws PrinterDevException<a name="line.523"></a>
+<span class="sourceLineNo">524</span>     */<a name="line.524"></a>
+<span class="sourceLineNo">525</span>    void setFontPath(String fontPath) throws PrinterDevException;<a name="line.525"></a>
+<span class="sourceLineNo">526</span><a name="line.526"></a>
+<span class="sourceLineNo">527</span>    /**<a name="line.527"></a>
+<span class="sourceLineNo">528</span>     * &lt;div class="zh"&gt;设置切纸模式。打印完成后立刻切纸。提示: 请在{@link #start()}前调用该方法。&lt;/div&gt;<a name="line.528"></a>
+<span class="sourceLineNo">529</span>     * &lt;div class="en"&gt;Set the cutting mode. Cut the paper immediately after printing. Tip: Please call this method before {@link #start()}.&lt;/div&gt;<a name="line.529"></a>
+<span class="sourceLineNo">530</span>     *<a name="line.530"></a>
+<span class="sourceLineNo">531</span>     * @param mode &lt;div class="zh"&gt;切纸模式。<a name="line.531"></a>
+<span class="sourceLineNo">532</span>     *               &lt;ul&gt;<a name="line.532"></a>
+<span class="sourceLineNo">533</span>     *                 &lt;li&gt;-1: 不切纸。&lt;/li&gt;<a name="line.533"></a>
+<span class="sourceLineNo">534</span>     *                 &lt;li&gt;0: 全部切纸。&lt;/li&gt;<a name="line.534"></a>
+<span class="sourceLineNo">535</span>     *                 &lt;li&gt;1: 部分切纸。&lt;/li&gt;<a name="line.535"></a>
+<span class="sourceLineNo">536</span>     *               &lt;/ul&gt;<a name="line.536"></a>
+<span class="sourceLineNo">537</span>     *             &lt;/div&gt; &lt;div class="en"&gt;<a name="line.537"></a>
+<span class="sourceLineNo">538</span>     *               &lt;ul&gt;<a name="line.538"></a>
+<span class="sourceLineNo">539</span>     *                 &lt;li&gt;-1: Do not cut paper.&lt;/li&gt;<a name="line.539"></a>
+<span class="sourceLineNo">540</span>     *                 &lt;li&gt;0: Full paper cut.&lt;/li&gt;<a name="line.540"></a>
+<span class="sourceLineNo">541</span>     *                 &lt;li&gt;1: Partial paper cut.&lt;/li&gt;<a name="line.541"></a>
+<span class="sourceLineNo">542</span>     *               &lt;/ul&gt;<a name="line.542"></a>
+<span class="sourceLineNo">543</span>     *                 &lt;/div&gt;<a name="line.543"></a>
+<span class="sourceLineNo">544</span>     * @throws PrinterDevException PrinterDevException<a name="line.544"></a>
+<span class="sourceLineNo">545</span>     * @since V3.22.00<a name="line.545"></a>
+<span class="sourceLineNo">546</span>     */<a name="line.546"></a>
+<span class="sourceLineNo">547</span>    void presetCutPaper(int mode) throws PrinterDevException;<a name="line.547"></a>
+<span class="sourceLineNo">548</span><a name="line.548"></a>
+<span class="sourceLineNo">549</span>    /**<a name="line.549"></a>
+<span class="sourceLineNo">550</span>     * &lt;div class="zh"&gt;设置打印纸尺寸(目前SK700支持)注意：设置后需重启设备才能生效<a name="line.550"></a>
+<span class="sourceLineNo">551</span>     * &lt;/div&gt; &lt;div class="en"&gt;Set the paper size (currently supported by SK700) Note: After setting, you need to restart the device to take effect.&lt;/div&gt;<a name="line.551"></a>
+<span class="sourceLineNo">552</span>     *<a name="line.552"></a>
+<span class="sourceLineNo">553</span>     * @param size &lt;div class="zh"&gt;打印纸尺寸(支持2寸或3寸)&lt;/div&gt; &lt;div class="en"&gt;Printing paper size (support 2 inches or 3 inches)&lt;/div&gt;<a name="line.553"></a>
+<span class="sourceLineNo">554</span>     * @return &lt;div class="zh"&gt;true: 设置成功， false: 设置失败 &lt;/div&gt; &lt;div class="en"&gt;true: set successfully, false: set failed&lt;/div&gt;<a name="line.554"></a>
+<span class="sourceLineNo">555</span>     * @throws PrinterDevException<a name="line.555"></a>
+<span class="sourceLineNo">556</span>     */<a name="line.556"></a>
+<span class="sourceLineNo">557</span>    boolean setPrinterSize(int size) throws PrinterDevException;<a name="line.557"></a>
+<span class="sourceLineNo">558</span><a name="line.558"></a>
+<span class="sourceLineNo">559</span>    /**<a name="line.559"></a>
+<span class="sourceLineNo">560</span>     * &lt;div class="zh"&gt;获取打印纸尺寸(目前SK700支持)<a name="line.560"></a>
+<span class="sourceLineNo">561</span>     * &lt;/div&gt; &lt;div class="en"&gt;Get the paper size (currently supported by SK700)&lt;/div&gt;<a name="line.561"></a>
+<span class="sourceLineNo">562</span>     *<a name="line.562"></a>
+<span class="sourceLineNo">563</span>     * @return &lt;div class="zh"&gt;打印纸尺寸&lt;/div&gt; &lt;div class="en"&gt;paper size&lt;/div&gt;<a name="line.563"></a>
+<span class="sourceLineNo">564</span>     * @throws PrinterDevException<a name="line.564"></a>
+<span class="sourceLineNo">565</span>     */<a name="line.565"></a>
+<span class="sourceLineNo">566</span>    int getPrinterSize () throws PrinterDevException;<a name="line.566"></a>
+<span class="sourceLineNo">567</span><a name="line.567"></a>
+<span class="sourceLineNo">568</span>    /**<a name="line.568"></a>
+<span class="sourceLineNo">569</span>     * &lt;div class="zh"&gt;检查低功率打印是否开启<a name="line.569"></a>
+<span class="sourceLineNo">570</span>     * &lt;/div&gt; &lt;div class="en"&gt;Check whether low-power printing is enabled&lt;/div&gt;<a name="line.570"></a>
+<span class="sourceLineNo">571</span>     *<a name="line.571"></a>
+<span class="sourceLineNo">572</span>     * @return &lt;div class="zh"&gt;true:低功率打印已开启 false:低功率打印已关闭&lt;/div&gt; &lt;div class="en"&gt;true: Low-power printing is enabled. false: low-power printing is disabled&lt;/div&gt;<a name="line.572"></a>
+<span class="sourceLineNo">573</span>     * @throws PrinterDevException<a name="line.573"></a>
+<span class="sourceLineNo">574</span>     */<a name="line.574"></a>
+<span class="sourceLineNo">575</span>    boolean isLowPowerPrintEnabled () throws PrinterDevException;<a name="line.575"></a>
+<span class="sourceLineNo">576</span><a name="line.576"></a>
+<span class="sourceLineNo">577</span>    /**<a name="line.577"></a>
+<span class="sourceLineNo">578</span>     * &lt;div class="zh"&gt;开启或关闭低功率打印<a name="line.578"></a>
+<span class="sourceLineNo">579</span>     * &lt;/div&gt; &lt;div class="en"&gt;Enable or disable low-power printing&lt;/div&gt;<a name="line.579"></a>
+<span class="sourceLineNo">580</span>     *<a name="line.580"></a>
+<span class="sourceLineNo">581</span>     * @param enable  &lt;div class="zh"&gt;true:开启低功率打印功能 false:关闭低功率打印功能 &lt;/div&gt; &lt;div class="en"&gt;true: enables low-power printing. false: Disables low-power printing&lt;/div&gt;<a name="line.581"></a>
+<span class="sourceLineNo">582</span>     * @throws PrinterDevException<a name="line.582"></a>
+<span class="sourceLineNo">583</span>     */<a name="line.583"></a>
+<span class="sourceLineNo">584</span>    void enableLowPowerPrint (boolean enable) throws PrinterDevException;<a name="line.584"></a>
+<span class="sourceLineNo">585</span><a name="line.585"></a>
+<span class="sourceLineNo">586</span>    /**<a name="line.586"></a>
+<span class="sourceLineNo">587</span>     * &lt;div class="zh"&gt;设置打印对齐模式<a name="line.587"></a>
+<span class="sourceLineNo">588</span>     * &lt;/div&gt; &lt;div class="en"&gt;Set print alignment mode&lt;/div&gt;<a name="line.588"></a>
+<span class="sourceLineNo">589</span>     *<a name="line.589"></a>
+<span class="sourceLineNo">590</span>     * @param alignMode  &lt;div class="zh"&gt;打印对齐模式，0为左对齐，1为居中对齐，2为右对齐 &lt;/div&gt;<a name="line.590"></a>
+<span class="sourceLineNo">591</span>     *                   &lt;div class="en"&gt;Print alignment mode, 0 is left alignment, 1 is center alignment, 2 is right alignment&lt;/div&gt;<a name="line.591"></a>
+<span class="sourceLineNo">592</span>     * @throws PrinterDevException<a name="line.592"></a>
+<span class="sourceLineNo">593</span>     */<a name="line.593"></a>
+<span class="sourceLineNo">594</span>    void setAlignMode(short alignMode) throws PrinterDevException;<a name="line.594"></a>
+<span class="sourceLineNo">595</span><a name="line.595"></a>
+<span class="sourceLineNo">596</span>     /**<a name="line.596"></a>
+<span class="sourceLineNo">597</span>      * &lt;div class="zh"&gt;打印双色位图<a name="line.597"></a>
+<span class="sourceLineNo">598</span>      * &lt;/div&gt; &lt;div class="en"&gt;Print a two-color bitmap&lt;/div&gt;<a name="line.598"></a>
+<span class="sourceLineNo">599</span>      *<a name="line.599"></a>
+<span class="sourceLineNo">600</span>      * @param bitmap  &lt;div class="zh"&gt;打印双色位图的大小限制：如果位图的宽度超过打印机的限制，将会裁剪图片的右边 &lt;/div&gt;<a name="line.600"></a>
+<span class="sourceLineNo">601</span>      *                   &lt;div class="en"&gt;Size limit for printing a two-color bitmap: If the width of the bitmap exceeds the printer's limit, the right side of the picture will be cropped&lt;/div&gt;<a name="line.601"></a>
+<span class="sourceLineNo">602</span>      *<a name="line.602"></a>
+<span class="sourceLineNo">603</span>      * @param grayThreshold   &lt;div class="zh"&gt;图像灰度阀值 0-255&lt;/div&gt;<a name="line.603"></a>
+<span class="sourceLineNo">604</span>      *                   &lt;div class="en"&gt;Gray threshold . between 0 and 255&lt;/div&gt;<a name="line.604"></a>
+<span class="sourceLineNo">605</span>      * @throws PrinterDevException<a name="line.605"></a>
+<span class="sourceLineNo">606</span>      *<a name="line.606"></a>
+<span class="sourceLineNo">607</span>      * @since V4.09.00<a name="line.607"></a>
+<span class="sourceLineNo">608</span>      */<a name="line.608"></a>
+<span class="sourceLineNo">609</span>     void printColorBitmapWithMonoThreshold(Bitmap bitmap, int grayThreshold) throws PrinterDevException;<a name="line.609"></a>
+<span class="sourceLineNo">610</span><a name="line.610"></a>
+<span class="sourceLineNo">611</span>     /**<a name="line.611"></a>
+<span class="sourceLineNo">612</span>      * &lt;div class="zh"&gt;打印双色位图<a name="line.612"></a>
+<span class="sourceLineNo">613</span>      * &lt;/div&gt; &lt;div class="en"&gt;Print a two-color bitmap&lt;/div&gt;<a name="line.613"></a>
+<span class="sourceLineNo">614</span>      *<a name="line.614"></a>
+<span class="sourceLineNo">615</span>      * @param bitmap  &lt;div class="zh"&gt;打印双色位图的大小限制：如果位图的宽度超过打印机的限制，将会裁剪图片的右边 &lt;/div&gt;<a name="line.615"></a>
+<span class="sourceLineNo">616</span>      *                   &lt;div class="en"&gt;Size limit for printing a two-color bitmap: If the width of the bitmap exceeds the printer's limit, the right side of the picture will be cropped&lt;/div&gt;<a name="line.616"></a>
+<span class="sourceLineNo">617</span>      *<a name="line.617"></a>
+<span class="sourceLineNo">618</span>      * @throws PrinterDevException<a name="line.618"></a>
+<span class="sourceLineNo">619</span>      *<a name="line.619"></a>
+<span class="sourceLineNo">620</span>      * @since V4.09.00<a name="line.620"></a>
+<span class="sourceLineNo">621</span>      */<a name="line.621"></a>
+<span class="sourceLineNo">622</span>     void printColorBitmap(Bitmap bitmap) throws PrinterDevException;<a name="line.622"></a>
+<span class="sourceLineNo">623</span><a name="line.623"></a>
+<span class="sourceLineNo">624</span>     /**<a name="line.624"></a>
+<span class="sourceLineNo">625</span>      * &lt;div class="zh"&gt;设置彩色打印的黑值跟彩色值<a name="line.625"></a>
+<span class="sourceLineNo">626</span>      * &lt;/div&gt; &lt;div class="en"&gt;Set the black value and color value for color printing&lt;/div&gt;<a name="line.626"></a>
+<span class="sourceLineNo">627</span>      *<a name="line.627"></a>
+<span class="sourceLineNo">628</span>      * @param blackLevel  &lt;div class="zh"&gt;黑值&lt;/div&gt;<a name="line.628"></a>
+<span class="sourceLineNo">629</span>      *                   &lt;div class="en"&gt;Black number&lt;/div&gt;<a name="line.629"></a>
+<span class="sourceLineNo">630</span>      *<a name="line.630"></a>
+<span class="sourceLineNo">631</span>      * @param colorLevel  &lt;div class="zh"&gt;彩色值&lt;/div&gt;<a name="line.631"></a>
+<span class="sourceLineNo">632</span>      *                   &lt;div class="en"&gt;Chroma value&lt;/div&gt;<a name="line.632"></a>
+<span class="sourceLineNo">633</span>      * @throws PrinterDevException<a name="line.633"></a>
+<span class="sourceLineNo">634</span>      *<a name="line.634"></a>
+<span class="sourceLineNo">635</span>      * @since V4.09.00<a name="line.635"></a>
+<span class="sourceLineNo">636</span>      */<a name="line.636"></a>
+<span class="sourceLineNo">637</span>     void setColorGray(int blackLevel,int colorLevel) throws PrinterDevException;<a name="line.637"></a>
+<span class="sourceLineNo">638</span>}<a name="line.638"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

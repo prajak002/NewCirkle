@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span><a name="line.1"></a>
+<span class="sourceLineNo">002</span>package com.pax.dal;<a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.pax.dal.exceptions.WLAttackDevException;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>    /**<a name="line.5"></a>
+<span class="sourceLineNo">006</span>     *  &lt;div class="zh"&gt;关于税控/电子印章触发相关的API。&lt;/div&gt;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>     *  &lt;div class="en"&gt;Tax Control/Electronic Seal Attack API Documentation.&lt;/div&gt;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>     *  @since V4.11.00<a name="line.8"></a>
+<span class="sourceLineNo">009</span>     */<a name="line.9"></a>
+<span class="sourceLineNo">010</span>public interface IWLAttack {<a name="line.10"></a>
+<span class="sourceLineNo">011</span>    /**<a name="line.11"></a>
+<span class="sourceLineNo">012</span>     * &lt;div class="zh"&gt;税控mesh/电子印章触发广播 &lt;/div&gt;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>     * &lt;div class="en"&gt;Tax Control Mesh / Electronic Seal Attack Broadcast. &lt;/div&gt;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>     *<a name="line.14"></a>
+<span class="sourceLineNo">015</span>     * @return &lt;div class="zh"&gt; 0-没有触发; 2-税控模块触发; 8-电子印章触发; 10-同时触发;16-移除纽扣电池触发; other-保留。&lt;/div&gt;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>     *         &lt;div class="en"&gt; 0- No trigger; 2- Tax control module triggered; 8- Electronic seal trigger; 10- Trigger simultaneously; 16- Remove button battery trigger; other-reserved. &lt;/div&gt;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>     *<a name="line.17"></a>
+<span class="sourceLineNo">018</span>     * @throws WLAttackDevException<a name="line.18"></a>
+<span class="sourceLineNo">019</span>     *<a name="line.19"></a>
+<span class="sourceLineNo">020</span>     * @since V4.11.00<a name="line.20"></a>
+<span class="sourceLineNo">021</span>     */<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    int getAttackType()throws WLAttackDevException;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>     /**<a name="line.24"></a>
+<span class="sourceLineNo">025</span>      * &lt;div class="zh"&gt;获取触发时间 注意：如果没有触发event_data返回空值，否则返回最近一次触发时间。&lt;/div&gt;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>      * &lt;div class="en"&gt; Get the trigger time Note: If event_data is not triggered, return a null value; otherwise, return the latest trigger time &lt;/div&gt;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>      *<a name="line.27"></a>
+<span class="sourceLineNo">028</span>      * @param eventType<a name="line.28"></a>
+<span class="sourceLineNo">029</span>      *         &lt;div class="zh"&gt;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>      *         &lt;ul&gt;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>      *         &lt;li&gt;0-AP_MESH_ATTACK&lt;/li&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>      *         &lt;li&gt;1-AP_ELECTRONIC_SEAL&lt;/li&gt;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>      *         &lt;li&gt;2-移除纽扣电池触发&lt;/li&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>      *         &lt;/ul&gt;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>      *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>      *         &lt;ul&gt;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>      *         &lt;li&gt;0- Tax Control Mesh&lt;/li&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>      *         &lt;li&gt;1- Electronic Seal&lt;/li&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>      *         &lt;li&gt;2- Remove button battery trigger&lt;/li&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>      *         &lt;/ul&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>      *         &lt;/div&gt;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>      * @return &lt;div class="zh"&gt; Format: yyyyMMddHHmmss(比如:"20130606173737" = Thu Jun 06 17:37:37 CST 2013) &lt;/div&gt;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>      *         &lt;div class="en"&gt; Format: yyyyMMddHHmmss(for example, "20130606173737" = Thu Jun 06 17:37:37 CST 2013). &lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>      *<a name="line.44"></a>
+<span class="sourceLineNo">045</span>      * @throws WLAttackDevException<a name="line.45"></a>
+<span class="sourceLineNo">046</span>      *<a name="line.46"></a>
+<span class="sourceLineNo">047</span>      * @since V4.11.00<a name="line.47"></a>
+<span class="sourceLineNo">048</span>      */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    String getEventDate(int eventType)throws WLAttackDevException;<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>    /**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * &lt;div class="zh"&gt;清除触发事件。&lt;/div&gt; &lt;div class="en"&gt;Clear attack events. &lt;/div&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     *<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * @param eventType<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     *         &lt;div class="zh"&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     *         &lt;ul&gt;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     *         &lt;li&gt;0-AP_MESH_ATTACK&lt;/li&gt;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     *         &lt;li&gt;1-AP_ELECTRONIC_SEAL&lt;/li&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     *         &lt;li&gt;注：eventType参数设置无效，均是清除所有触发事件&lt;/li&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     *         &lt;/ul&gt;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     *         &lt;ul&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     *         &lt;li&gt;0-AP_MESH_ATTACK&lt;/li&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     *         &lt;li&gt;1-AP_ELECTRONIC_SEAL&lt;/li&gt;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     *         &lt;li&gt;Note: The eventType parameter is invalid. All triggered events are cleared&lt;/li&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     *         &lt;/ul&gt;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     *         &lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     *<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     * @throws WLAttackDevException<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     *<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * @since V4.11.00<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    void clearEventDate(int eventType)throws WLAttackDevException;<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>     /**<a name="line.75"></a>
+<span class="sourceLineNo">076</span>      * &lt;div class="zh"&gt;获取MH1701 monitor版本。&lt;/div&gt; &lt;div class="en"&gt;Retrieve the monitor version of MH1701. &lt;/div&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>      *<a name="line.77"></a>
+<span class="sourceLineNo">078</span>      * @return &lt;div class="zh"&gt;MH1701 monitor版本 &lt;/div&gt; &lt;div class="en"&gt;The monitor version of MH1701. &lt;/div&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>      *<a name="line.79"></a>
+<span class="sourceLineNo">080</span>      * @throws WLAttackDevException<a name="line.80"></a>
+<span class="sourceLineNo">081</span>      *<a name="line.81"></a>
+<span class="sourceLineNo">082</span>      * @since V4.11.00<a name="line.82"></a>
+<span class="sourceLineNo">083</span>      */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    String fiscalGetFwVer()throws WLAttackDevException;<a name="line.84"></a>
+<span class="sourceLineNo">085</span><a name="line.85"></a>
+<span class="sourceLineNo">086</span>    /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * &lt;div class="zh"&gt;获取MH1701 boot版本。&lt;/div&gt; &lt;div class="en"&gt;Retrieve the boot version of MH1701. &lt;/div&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     *<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * @return &lt;div class="zh"&gt; MH1701 boot版本 &lt;/div&gt; &lt;div class="en"&gt;The boot version of MH1701. &lt;/div&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     *<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * @throws WLAttackDevException<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     *<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     * @since V4.11.00<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     */<a name="line.94"></a>
+<span class="sourceLineNo">095</span>    String fiscalGetBootVer()throws WLAttackDevException;<a name="line.95"></a>
+<span class="sourceLineNo">096</span><a name="line.96"></a>
+<span class="sourceLineNo">097</span>}<a name="line.97"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

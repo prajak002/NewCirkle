@@ -1,0 +1,925 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.entity.ECheckMode;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.pax.dal.entity.EPedMacMode;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pax.dal.entity.RSAKeyInfo;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.pax.dal.exceptions.PedDevException;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>/**<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * &lt;pre&gt;<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * &lt;div class="zh"&gt; 获取途径：NeptuneLiteUser.getInstance().getDal(getApplicationContext()).getPedNp()&lt;/div&gt;<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * <a name="line.27"></a>
+<span class="sourceLineNo">028</span> * &lt;pre&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * &lt;div class="en"&gt; Acquisition approach:NeptuneLiteUser.getInstance().getDal(getApplicationContext()).getPedNp()&lt;/div&gt;<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * <a name="line.30"></a>
+<span class="sourceLineNo">031</span> */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>public interface IPedNp {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    /**<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * &lt;div class="zh"&gt; 种子密钥&lt;/div&gt; &lt;div class="en"&gt; Seed Key &lt;/div&gt;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    public static final int PED_TSK = 0x40;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    /**<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     * &lt;div class="zh"&gt; 私密数据 &lt;/div&gt; &lt;div class="en"&gt; Secret Data &lt;/div&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     */<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    public static final int PED_TSD = 0x41;<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>    /**<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * &lt;div class="zh"&gt; 使用RsaKey加密指定的数据，数据格式如下: [Header data +TSK+ TSD + Random padded<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * data];说明:指定的数据应小于公钥模量;否则,加密可能会失败。所以Header建议为null &lt;/div&gt; &lt;div class="en"&gt; Uses public key RsaKey to encrypt<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * specified data. The specified data format is as followed: [Header data + TSK + TSD + Random padded data]; The<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     * specified data to be encrypted should be less than public key modulus; otherwise, the encryption may fail. So the<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * Header data is suggested to be null.&lt;/div&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     * <a name="line.48"></a>
+<span class="sourceLineNo">049</span>     * @param rsaKey<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     *            &lt;div class="zh"&gt; Rsa 公钥&lt;/div&gt; &lt;div class="en"&gt; RSA public key &lt;/div&gt;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * @param header<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     *            &lt;div class="zh"&gt; 头部数据 &lt;/div&gt; &lt;div class="en"&gt;The header data &lt;/div&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * @param TskIdx<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     *            &lt;div class="zh"&gt; Tsk索引 &lt;/div&gt; &lt;div class="en"&gt; Tsk slot &lt;/div&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * @param TsdIdx<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     *            &lt;div class="zh"&gt; Tsd索引 &lt;/div&gt; &lt;div class="en"&gt; Tsd slot &lt;/div&gt;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     * @return &lt;div class="zh"&gt; 待输出密文密钥,缓冲区大小为RsaKey的模长 &lt;/div&gt; &lt;div class="en"&gt; return the cipher key, the buffer size<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     *         is the modulus length of RsaKey &lt;/div&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * @throws PedDevException<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    byte[] exportKey(RSAKeyInfo rsaKey, String header, int TskIdx, int TsdIdx) throws PedDevException;<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>    /**<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * &lt;div class="zh"&gt; 生成一个随机密钥 &lt;/div&gt; &lt;div class="en"&gt; Generate a random key. &lt;/div&gt;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * <a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * @param keyIdx<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     *            &lt;div class="zh"&gt;密钥索引[1~100]&lt;/div&gt; &lt;div class="en"&gt; 1~100: Index of key. &lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     * @param keyType<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     *            &lt;div class="zh"&gt; PED_TSK:用于发散的密钥种子&lt;/div&gt; &lt;div class="en"&gt; PED_TSK:Seed key for diversification &lt;/div&gt;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * @param keyLen<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     *            &lt;div class="zh"&gt; 8/16/24 &lt;/div&gt; &lt;div class="en"&gt; 8/16/24 &lt;/div&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * @throws PedDevException<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     */<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    void genRandomKey(int keyIdx, int keyType, int keyLen) throws PedDevException;<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>    /**<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * &lt;div class="zh"&gt; 写入一个由PED_TDK或PED_TAESK派生出的PED_TSD、PED_TDK、PED_TAESK、PED_TIK密钥。 &lt;/div&gt; <a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * &lt;div class="en"&gt; Write a PED_TSD, PED_TDK, PED_TAESK, PED_TIK derived by PED_TDK or PED_TAESK. &lt;/div&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * <a name="line.79"></a>
+<span class="sourceLineNo">080</span>     * @param srcKeyType<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     *            &lt;div class="zh"&gt;源秘钥类型。<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     *              &lt;ul&gt;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TDK}&lt;/li&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAESK}&lt;/li&gt;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     *                  &lt;li&gt;{@link #PED_TSK}&lt;/li&gt;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     *              &lt;/ul&gt;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     *<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     *            &lt;/div&gt;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     *            &lt;div class="en"&gt; Source key type.<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     *              &lt;ul&gt;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TDK}&lt;/li&gt;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAESK}&lt;/li&gt;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     *                  &lt;li&gt;{@link #PED_TSK}&lt;/li&gt;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     *              &lt;/ul&gt;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     *            &lt;/div&gt;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     * @param scrKeyIdx<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     *            &lt;div class="zh"&gt; 源秘钥索引[1-100] &lt;/div&gt; &lt;div class="en"&gt; Source key index, the valid range is 1~100.<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     *            &lt;/div&gt;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     * @param dstKeyType<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     *            &lt;div class="zh"&gt; 目的密钥类型。<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     *              &lt;ul&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TDK}&lt;/li&gt;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     *                  &lt;li&gt;{@link #PED_TSD}&lt;/li&gt;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAESK}&lt;/li&gt;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TIK}&lt;/li&gt;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAK}&lt;/li&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TPK}&lt;/li&gt;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     *              &lt;/ul&gt;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     *            &lt;/div&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     *            &lt;div class="en"&gt; Destination key type.<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     *              &lt;ul&gt;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TDK}&lt;/li&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     *                  &lt;li&gt;{@link #PED_TSD}&lt;/li&gt;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAESK}&lt;/li&gt;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TIK}&lt;/li&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAK}&lt;/li&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TPK}&lt;/li&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     *              &lt;/ul&gt;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>     *            &lt;/div&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     * @param dstKeyIdx<a name="line.120"></a>
+<span class="sourceLineNo">121</span>     *            &lt;div class="zh"&gt; 目的密钥索引[1-100] &lt;/div&gt; &lt;div class="en"&gt; Destination key index, the valid range is<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     *            1~100. &lt;/div&gt;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>     * @param dstKeyLen<a name="line.123"></a>
+<span class="sourceLineNo">124</span>     *            &lt;div class="zh"&gt; 目的密钥长度,16/24 &lt;/div&gt; &lt;div class="en"&gt; Destination key length,16/24 &lt;/div&gt;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>     * @param dataIn<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     *            &lt;div class="zh"&gt;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     *              &lt;ul&gt;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>     *                  &lt;li&gt;当srcKeyType为{@link com.pax.dal.entity.EPedKeyType#TAESK}时，dataIn的长度为16或者32字节。&lt;/li&gt;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     *                  &lt;li&gt;当dstKeyType为{@link com.pax.dal.entity.EPedKeyType#TIK}时，dataIn必须是42字节。32字节密码密钥数据(如果密钥数据是16字节，您可以填充任何数据到32字节) + 10字节KSN。&lt;/li&gt;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     *                  &lt;li&gt;否则，dataIn长度为16或24字节。如果解密后数据的长度大于dstKeyLen，解密数据前dstKeyLen字节被用作密钥值。&lt;/li&gt;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     *              &lt;/ul&gt;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     *            &lt;/div&gt;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     *            &lt;div class="en"&gt;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     *              &lt;ul&gt;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     *                  &lt;li&gt;When srcKeyType {@link com.pax.dal.entity.EPedKeyType#TAESK}, the length of the dataIn is 16 or 32 bytes.&lt;/li&gt;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     *                  &lt;li&gt;When dstKeyType {@link com.pax.dal.entity.EPedKeyType#TIK}, dataIn byte must be 42 bytes. 32 bytes of key value (if the key value is 16 bytes, you can populate any data up to 32 bytes) + 10 bytes of KSN.&lt;/li&gt;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     *                  &lt;li&gt;Otherwise, the dataIn is 16 or 24 bytes, if the length of decrypted data is larger than dstKeyLen, only the first dstKeyLen of decrypted data will be used as key value.&lt;/li&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     *              &lt;/ul&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     *            &lt;/div&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     * @param encType<a name="line.140"></a>
+<span class="sourceLineNo">141</span>     *            &lt;div class="zh"&gt;<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     *              &lt;ul&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     *                  &lt;li&gt;如果encType=0，CBC TDES/AES算法使用源密钥解密密文文本数据，并储存为目的密钥。&lt;/li&gt;<a name="line.143"></a>
+<span class="sourceLineNo">144</span>     *                  &lt;li&gt;如果encType=1，则CBC TDES/AES算法使用指定源密钥对普通文本数据进行加密，并将结果储存为目的密钥。&lt;/li&gt;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>     *                  &lt;li&gt;如果encType=2，ECB TDES/AES算法使用源密钥解密密文文本数据，并储存为目的密钥。&lt;/li&gt;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>     *                  &lt;li&gt;如果encType=3，则ECB TDES/AES算法使用指定源密钥对普通文本数据进行加密，并将结果储存为目的密钥。&lt;/li&gt;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>     *              &lt;/ul&gt;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     *            &lt;/div&gt;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     *            &lt;div class="en"&gt;<a name="line.149"></a>
+<span class="sourceLineNo">150</span>     *              &lt;ul&gt;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     *                  &lt;li&gt;If EncType=0,it is the cipher text data which will be decrypted with CBC TDES/AES algorithm by the source key and stored as destination key.&lt;/li&gt;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     *                  &lt;li&gt;If EncType=1, it is the plain text data which will be encrypted with CBC TDES/AES algorithm by a specified source key and stored as destination key.&lt;/li&gt;<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     *                  &lt;li&gt;If EncType=2, it is the cipher text data which will be decrypted with ECB TDES/AES algorithm by the source key and stored as destination key.&lt;/li&gt;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     *                  &lt;li&gt;If EncType=3, it is the plain text data which will be encrypted with ECB TDES/AES algorithm by a specified source key and stored as destination key.&lt;/li&gt;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     *              &lt;/ul&gt;<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     *            &lt;/div&gt;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     * @param vector<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     *            &lt;div class="zh"&gt;<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     *              &lt;ul&gt;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>     *                  &lt;li&gt;当srcKeyType为{@link com.pax.dal.entity.EPedKeyType#TAESK}时，16字节CBC初始化向量。&lt;/li&gt;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     *                  &lt;li&gt;否则，vector为8字节CBC初始化向量。如果vector被设置为NULL，CBC算法将“\x00\x00\x00\x00\x00\x00\x00\x00”当做初始化向量。&lt;/li&gt;<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     *              &lt;/ul&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     *            &lt;/div&gt;<a name="line.163"></a>
+<span class="sourceLineNo">164</span>     *            &lt;div class="en"&gt;<a name="line.164"></a>
+<span class="sourceLineNo">165</span>     *              &lt;ul&gt;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     *                  &lt;li&gt;When srcKeyType {@link com.pax.dal.entity.EPedKeyType#TAESK}, vector is 16 bytes CBC initialization vector.&lt;/li&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     *                  &lt;li&gt;Otherwise, the vector is 8 bytes CBC init vector. If the Vector is set to NULL, the CBC algorithm treats "\x00\x00\x00\x00\x00\x00\x00\x00" as the initialization vector.&lt;/li&gt;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     *              &lt;/ul&gt;<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     *            &lt;/div&gt;<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     * @throws PedDevException<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     */<a name="line.171"></a>
+<span class="sourceLineNo">172</span>    void writeKey(byte srcKeyType, byte scrKeyIdx, byte dstKeyType, byte dstKeyIdx, byte dstKeyLen, byte[] dataIn,<a name="line.172"></a>
+<span class="sourceLineNo">173</span>            byte encType, byte[] vector) throws PedDevException;<a name="line.173"></a>
+<span class="sourceLineNo">174</span><a name="line.174"></a>
+<span class="sourceLineNo">175</span>    /**<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     * &lt;div class="zh"&gt;将srcKeyType指定的源密钥与keyVar异或生成一个新的dstKeyIdx类型的密钥，并将新的密钥保存到dstKeyType。&lt;/div&gt; &lt;div class="en"&gt; Generate<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     * a new dstKeyType key by XOR-ing keyVar using the source key specified by srcKeyType and store the new key to<a name="line.177"></a>
+<span class="sourceLineNo">178</span>     * dstKeyIdx. &lt;/div&gt;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>     * <a name="line.179"></a>
+<span class="sourceLineNo">180</span>     * @param srcKeyType<a name="line.180"></a>
+<span class="sourceLineNo">181</span>     *            &lt;div class="zh"&gt; 源密钥类型。{@link #PED_TSK}。 &lt;/div&gt; &lt;div class="en"&gt; The source key type. {@link #PED_TSK}.&lt;/div&gt;<a name="line.181"></a>
+<span class="sourceLineNo">182</span>     * @param srcKeyIdx<a name="line.182"></a>
+<span class="sourceLineNo">183</span>     *            &lt;div class="zh"&gt; 源密钥索引[1~100] &lt;/div&gt; &lt;div class="en"&gt; The source key index, the valid range is 1~100.<a name="line.183"></a>
+<span class="sourceLineNo">184</span>     *            &lt;/div&gt;<a name="line.184"></a>
+<span class="sourceLineNo">185</span>     * @param dstKeyType<a name="line.185"></a>
+<span class="sourceLineNo">186</span>     *            &lt;div class="zh"&gt; 目的密钥类型。<a name="line.186"></a>
+<span class="sourceLineNo">187</span>     *              &lt;ul&gt;<a name="line.187"></a>
+<span class="sourceLineNo">188</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAK}&lt;/li&gt;<a name="line.188"></a>
+<span class="sourceLineNo">189</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAESK}&lt;/li&gt;<a name="line.189"></a>
+<span class="sourceLineNo">190</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TDK}&lt;/li&gt;<a name="line.190"></a>
+<span class="sourceLineNo">191</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TPK}&lt;/li&gt;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>     *              &lt;/ul&gt;<a name="line.192"></a>
+<span class="sourceLineNo">193</span>     *            &lt;/div&gt;<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     *            &lt;div class="en"&gt; The destination key.<a name="line.194"></a>
+<span class="sourceLineNo">195</span>     *              &lt;ul&gt;<a name="line.195"></a>
+<span class="sourceLineNo">196</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAK}&lt;/li&gt;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TAESK}&lt;/li&gt;<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TDK}&lt;/li&gt;<a name="line.198"></a>
+<span class="sourceLineNo">199</span>     *                  &lt;li&gt;{@link com.pax.dal.entity.EPedKeyType#TPK}&lt;/li&gt;<a name="line.199"></a>
+<span class="sourceLineNo">200</span>     *              &lt;/ul&gt;<a name="line.200"></a>
+<span class="sourceLineNo">201</span>     *            &lt;/div&gt;<a name="line.201"></a>
+<span class="sourceLineNo">202</span>     * @param dstKeyIdx<a name="line.202"></a>
+<span class="sourceLineNo">203</span>     *            &lt;div class="zh"&gt; 目的密钥索引[1~100] &lt;/div&gt; &lt;div class="en"&gt; The destination key index, the valid range is<a name="line.203"></a>
+<span class="sourceLineNo">204</span>     *            1~100. &lt;/div&gt;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>     * @param keyVar<a name="line.205"></a>
+<span class="sourceLineNo">206</span>     *            &lt;div class="zh"&gt; 与{@link #PED_TSK}异或的常量值，长度与{@link #PED_TSK}相同。<a name="line.206"></a>
+<span class="sourceLineNo">207</span>     *              &lt;ul&gt;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>     *                  &lt;li&gt;当dstKeyType为{@link com.pax.dal.entity.EPedKeyType#TAESK}时，{@link #PED_TSK}的长度为16或者24字节。&lt;/li&gt;<a name="line.208"></a>
+<span class="sourceLineNo">209</span>     *                  &lt;li&gt;否则，{@link #PED_TSK}的长度为24字节。&lt;/li&gt;<a name="line.209"></a>
+<span class="sourceLineNo">210</span>     *              &lt;/ul&gt;<a name="line.210"></a>
+<span class="sourceLineNo">211</span>     *            &lt;/div&gt;<a name="line.211"></a>
+<span class="sourceLineNo">212</span>     *            &lt;div class="en"&gt; The constant value to be XORed by {@link #PED_TSK}. and length is the same as {@link #PED_TSK}.<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     *              &lt;ul&gt;<a name="line.213"></a>
+<span class="sourceLineNo">214</span>     *                  &lt;li&gt;When dstKeyType {@link com.pax.dal.entity.EPedKeyType#TAESK}, {@link #PED_TSK} length is 16 or 24 bytes.&lt;/li&gt;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     *                  &lt;li&gt;Otherwise, {@link #PED_TSK} length is 24 bytes.&lt;/li&gt;<a name="line.215"></a>
+<span class="sourceLineNo">216</span>     *              &lt;/ul&gt;<a name="line.216"></a>
+<span class="sourceLineNo">217</span>     *            &lt;/div&gt;<a name="line.217"></a>
+<span class="sourceLineNo">218</span>     * @throws PedDevException<a name="line.218"></a>
+<span class="sourceLineNo">219</span>     */<a name="line.219"></a>
+<span class="sourceLineNo">220</span>    void writeKeyVar(int srcKeyType, int srcKeyIdx, int dstKeyType, int dstKeyIdx, byte[] keyVar)<a name="line.220"></a>
+<span class="sourceLineNo">221</span>            throws PedDevException;<a name="line.221"></a>
+<span class="sourceLineNo">222</span>    <a name="line.222"></a>
+<span class="sourceLineNo">223</span>    /**<a name="line.223"></a>
+<span class="sourceLineNo">224</span>     * &lt;div class="zh"&gt; 通过使用公钥加密密钥来导出密钥 &lt;/div&gt; &lt;div class="en"&gt; export the key encrypt by RSA public key &lt;/div&gt;<a name="line.224"></a>
+<span class="sourceLineNo">225</span>     * <a name="line.225"></a>
+<span class="sourceLineNo">226</span>     * @param pubKeyIdx<a name="line.226"></a>
+<span class="sourceLineNo">227</span>     *            &lt;div class="zh"&gt; RSA公钥索引, 1~10 &lt;/div&gt; &lt;div class="en"&gt; RSA public key index, 1~10 &lt;/div&gt;<a name="line.227"></a>
+<span class="sourceLineNo">228</span>     * @param keyType<a name="line.228"></a>
+<span class="sourceLineNo">229</span>     *            &lt;div class="zh"&gt; 导出秘钥类型，只能是PED_TSK &lt;/div&gt; &lt;div class="en"&gt; export key type，only PED_TSK &lt;/div&gt;<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     * @param keyIdx<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     *            &lt;div class="zh"&gt; 导出秘钥的索引，1~100 &lt;/div&gt; &lt;div class="en"&gt; export key index,1-100&lt;/div&gt;<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     * @param dataOutFormat<a name="line.232"></a>
+<span class="sourceLineNo">233</span>     *            &lt;div class="zh"&gt; 只能是0x00 &lt;/div&gt; &lt;div class="en"&gt; only can be 0x00&lt;/div&gt;<a name="line.233"></a>
+<span class="sourceLineNo">234</span>     * @return &lt;div class="zh"&gt; format: '0x00' + key length (1 bytes)+ key value + (modulus len - 2 - key length) bytes<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     *         padding &lt;/div&gt; &lt;div class="en"&gt; format: '0x00' + key length (1 bytes)+ key value + (modulus len - 2 - key<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     *         length) bytes padding &lt;/div&gt;<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     * @throws PedDevException<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     */<a name="line.238"></a>
+<span class="sourceLineNo">239</span>    byte[] exportKeyEncByRsa(int pubKeyIdx, int keyType, int keyIdx, byte dataOutFormat) throws PedDevException;<a name="line.239"></a>
+<span class="sourceLineNo">240</span>    <a name="line.240"></a>
+<span class="sourceLineNo">241</span><a name="line.241"></a>
+<span class="sourceLineNo">242</span>    /**<a name="line.242"></a>
+<span class="sourceLineNo">243</span>     * &lt;div class="zh"&gt; 生成RSA密钥对并注入PED &lt;/div&gt; &lt;div class="en"&gt; Generate RSA key pairs then inject into PED &lt;/div&gt;<a name="line.243"></a>
+<span class="sourceLineNo">244</span>     * <a name="line.244"></a>
+<span class="sourceLineNo">245</span>     * @param prvKeyIdx<a name="line.245"></a>
+<span class="sourceLineNo">246</span>     *            &lt;div class="zh"&gt;私钥索引1-10&lt;/div&gt; &lt;div class="en"&gt; Private key index 1-10 &lt;/div&gt;<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     * @param pubKeyIdx<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     *            &lt;div class="zh"&gt;公钥索引1-10&lt;/div&gt; &lt;div class="en"&gt;Public key index 1-10&lt;/div&gt;<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     * @param modLenBit<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     *            &lt;div class="zh"&gt; 模长，支持512,1024,2048。 &lt;/div&gt; &lt;div class="en"&gt; Modulus len,support 512,1024,2048. &lt;/div&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>     * @param pubExpType<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     *            &lt;div class="zh"&gt; 公共指数类型：0:3 1:65537 &lt;/div&gt; &lt;div class="en"&gt; Public exponent type: 0:3 1:65537 &lt;/div&gt;<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     * @throws PedDevException<a name="line.253"></a>
+<span class="sourceLineNo">254</span>     * <a name="line.254"></a>
+<span class="sourceLineNo">255</span>     * @since V3.06.00<a name="line.255"></a>
+<span class="sourceLineNo">256</span>     */<a name="line.256"></a>
+<span class="sourceLineNo">257</span>    void genRsaKey(byte prvKeyIdx, byte pubKeyIdx, int modLenBit, int pubExpType ) throws PedDevException;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>    <a name="line.258"></a>
+<span class="sourceLineNo">259</span>    /**<a name="line.259"></a>
+<span class="sourceLineNo">260</span>     * &lt;div class = "zh"&gt;注入由RSA公钥加密的密钥。&lt;/div&gt; &lt;div class = "en"&gt;Inject the key which is encrypted by RSA public key.&lt;/div&gt;<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     * <a name="line.261"></a>
+<span class="sourceLineNo">262</span>     * @param dataIn &lt;div class = "zh"&gt;由RSA公钥加密的密文,长度为64,128或256 bytes &lt;/div&gt; <a name="line.262"></a>
+<span class="sourceLineNo">263</span>     *               &lt;div class = "en"&gt;The ciphertext encrypted with RSA public key is 64,128 or 256 bytes&lt;/div&gt;<a name="line.263"></a>
+<span class="sourceLineNo">264</span>     * <a name="line.264"></a>
+<span class="sourceLineNo">265</span>     * @param prvKeyIdx &lt;div class = "zh"&gt;RSA私钥索引。取值范围: 1~10。&lt;/div&gt; &lt;div class = "en"&gt;The index of RSA private key. value Range:1~10&lt;/div&gt;<a name="line.265"></a>
+<span class="sourceLineNo">266</span>     * <a name="line.266"></a>
+<span class="sourceLineNo">267</span>     * @param dstKeyType &lt;div class = "zh"&gt;目的密钥类型。{@link #PED_TSK} &lt;/div&gt;<a name="line.267"></a>
+<span class="sourceLineNo">268</span>     * &lt;div class = "en"&gt;Destination key type. {@link #PED_TSK} &lt;/div&gt;<a name="line.268"></a>
+<span class="sourceLineNo">269</span>     * <a name="line.269"></a>
+<span class="sourceLineNo">270</span>     * @param dstKeyIdx &lt;div class = "zh"&gt;目的密钥索引。&lt;/div&gt; &lt;div class = "en"&gt;The destination key index.&lt;/div&gt;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     * <a name="line.271"></a>
+<span class="sourceLineNo">272</span>     * @param ksnIn &lt;div class = "zh"&gt;预留。 &lt;/div&gt;<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     * &lt;div class = "en"&gt;Reserve.&lt;/div&gt;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>     * <a name="line.274"></a>
+<span class="sourceLineNo">275</span>     * @param checkMode {@link ECheckMode} &lt;div class="zh"&gt;<a name="line.275"></a>
+<span class="sourceLineNo">276</span>     *                  &lt;p&gt;校验模式&lt;/&gt;<a name="line.276"></a>
+<span class="sourceLineNo">277</span>     *                  &lt;ul&gt;<a name="line.277"></a>
+<span class="sourceLineNo">278</span>     *                  &lt;li&gt;{@link ECheckMode#KCV_NONE}&lt;/li&gt;<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     *                  &lt;li&gt;{@link ECheckMode#KCV_ENCRYPT_0}&lt;/li&gt;<a name="line.279"></a>
+<span class="sourceLineNo">280</span>     *                  &lt;li&gt;{@link ECheckMode#KCV_ENCRYPT_FIX_DATA}&lt;/li&gt;<a name="line.280"></a>
+<span class="sourceLineNo">281</span>     *                  &lt;li&gt;{@link ECheckMode#KCV_MAC_INPUT_DATA}&lt;/li&gt;<a name="line.281"></a>
+<span class="sourceLineNo">282</span>     *                  &lt;li&gt;{@link ECheckMode#KCV_SM4_ENCRYPT_0}&lt;/li&gt;<a name="line.282"></a>
+<span class="sourceLineNo">283</span>     *                  &lt;/ul&gt;<a name="line.283"></a>
+<span class="sourceLineNo">284</span>     *                  &lt;/div&gt;<a name="line.284"></a>
+<span class="sourceLineNo">285</span>     *                  &lt;div class="en"&gt;<a name="line.285"></a>
+<span class="sourceLineNo">286</span>     *                  &lt;p&gt;Check Mode&lt;/p&gt;<a name="line.286"></a>
+<span class="sourceLineNo">287</span>     *                  &lt;ul&gt;<a name="line.287"></a>
+<span class="sourceLineNo">288</span>     *                  &lt;li&gt;When checkMode=KCV_NONE -No Check&lt;/li&gt;<a name="line.288"></a>
+<span class="sourceLineNo">289</span>     *                  &lt;li&gt;When checkMode=KCV_ENCRYPT_0 -Perform DES/TDES encryption on 8 bytes 0x00, and use first 4 bytes<a name="line.289"></a>
+<span class="sourceLineNo">290</span>     *                      as KCV.&lt;/li&gt;<a name="line.290"></a>
+<span class="sourceLineNo">291</span>     *                  &lt;li&gt;When checkMode=KCV_ENCRYPT_FIX_DATA -Perform parity check first, then perform DES/TDES encryption<a name="line.291"></a>
+<span class="sourceLineNo">292</span>     *                      on 8 bytes―\x12\x34\x56\x78\x90\x12\x34\x56, and use first 4 bytes as KCV.&lt;/li&gt;<a name="line.292"></a>
+<span class="sourceLineNo">293</span>     *                  &lt;li&gt;When iCheckMode=KCV_MAC_INPUT_DATA -Send in data KcvData, use source key to perform specified mode<a name="line.293"></a>
+<span class="sourceLineNo">294</span>     *                      of MAC on [aucDesKeyValue +KcvData], and use the 8 bytes result as KCV.&lt;/li&gt;<a name="line.294"></a>
+<span class="sourceLineNo">295</span>     *                  &lt;li&gt;When iCheckMode=KCV_SM4_ENCRYPT_0 -Perform TDES encryption on 16 bytes 0x00 by SM4, and use first<a name="line.295"></a>
+<span class="sourceLineNo">296</span>     *                      4 bytes as KCV.&lt;/li&gt;<a name="line.296"></a>
+<span class="sourceLineNo">297</span>     *                  &lt;/ul&gt;<a name="line.297"></a>
+<span class="sourceLineNo">298</span>     *                  &lt;/div&gt;<a name="line.298"></a>
+<span class="sourceLineNo">299</span>     * <a name="line.299"></a>
+<span class="sourceLineNo">300</span>     * @param checkBuf &lt;div class="zh"&gt;<a name="line.300"></a>
+<span class="sourceLineNo">301</span>     *            &lt;p&gt;<a name="line.301"></a>
+<span class="sourceLineNo">302</span>     *            校验数据缓冲区<a name="line.302"></a>
+<span class="sourceLineNo">303</span>     *            &lt;/p&gt;<a name="line.303"></a>
+<span class="sourceLineNo">304</span>     *            &lt;ul&gt;<a name="line.304"></a>
+<span class="sourceLineNo">305</span>     *            &lt;li&gt;当checkMode={@link ECheckMode#KCV_NONE}时 checkBuf的值无效,系统认为不验证KCV,可以为null&lt;/li&gt;<a name="line.305"></a>
+<span class="sourceLineNo">306</span>     *            &lt;li&gt;当checkMode={@link ECheckMode#KCV_ENCRYPT_0},4字节的kcv&lt;/li&gt;<a name="line.306"></a>
+<span class="sourceLineNo">307</span>     *            &lt;li&gt;当checkMode={@link ECheckMode#KCV_ENCRYPT_FIX_DATA},4字节的kcv&lt;/li&gt;<a name="line.307"></a>
+<span class="sourceLineNo">308</span>     *            &lt;li&gt;当iCheckMode={@link ECheckMode#KCV_MAC_INPUT_DATA}时按以下规则提供checkBuf:<a name="line.308"></a>
+<span class="sourceLineNo">309</span>     *            &lt;p&gt;<a name="line.309"></a>
+<span class="sourceLineNo">310</span>     *            checkBuf[0]= KcvData长度(KcvDataLen)<a name="line.310"></a>
+<span class="sourceLineNo">311</span>     *            &lt;/p&gt;<a name="line.311"></a>
+<span class="sourceLineNo">312</span>     *            &lt;p&gt;<a name="line.312"></a>
+<span class="sourceLineNo">313</span>     *            checkBuf+1: KcvData<a name="line.313"></a>
+<span class="sourceLineNo">314</span>     *            &lt;/p&gt;<a name="line.314"></a>
+<span class="sourceLineNo">315</span>     *            &lt;p&gt;<a name="line.315"></a>
+<span class="sourceLineNo">316</span>     *            checkBuf[1+KcvDataLen]=MAC运算模式,参考{@link IPed#getMac(byte, byte[], EPedMacMode)}中的mode参数<a name="line.316"></a>
+<span class="sourceLineNo">317</span>     *            &lt;/p&gt;<a name="line.317"></a>
+<span class="sourceLineNo">318</span>     *            &lt;p&gt;<a name="line.318"></a>
+<span class="sourceLineNo">319</span>     *            checkBuf[2+KcvDataLen]=KCV长度<a name="line.319"></a>
+<span class="sourceLineNo">320</span>     *            &lt;/p&gt;<a name="line.320"></a>
+<span class="sourceLineNo">321</span>     *            &lt;p&gt;<a name="line.321"></a>
+<span class="sourceLineNo">322</span>     *            checkBuf[3+KcvDataLen]是KCV的值<a name="line.322"></a>
+<span class="sourceLineNo">323</span>     *            &lt;/p&gt;<a name="line.323"></a>
+<span class="sourceLineNo">324</span>     *            &lt;/li&gt;<a name="line.324"></a>
+<span class="sourceLineNo">325</span>     *            &lt;li&gt;当checkMode={@link ECheckMode#KCV_SM4_ENCRYPT_0},4字节的kcv&lt;/li&gt;<a name="line.325"></a>
+<span class="sourceLineNo">326</span>     *            &lt;/ul&gt;<a name="line.326"></a>
+<span class="sourceLineNo">327</span>     *            &lt;/div&gt; &lt;div class="en"&gt;<a name="line.327"></a>
+<span class="sourceLineNo">328</span>     *            &lt;p&gt;<a name="line.328"></a>
+<span class="sourceLineNo">329</span>     *            Check Data Buffer<a name="line.329"></a>
+<span class="sourceLineNo">330</span>     *            &lt;/p&gt;<a name="line.330"></a>
+<span class="sourceLineNo">331</span>     *            &lt;ul&gt;<a name="line.331"></a>
+<span class="sourceLineNo">332</span>     *            &lt;li&gt;When checkMode=KCV_NONE -PED wont check KCV, this data is no meaning.&lt;/li&gt;<a name="line.332"></a>
+<span class="sourceLineNo">333</span>     *            &lt;li&gt;When checkMode=KCV_ENCRYPT_0 -4 bytes key check value&lt;/li&gt;<a name="line.333"></a>
+<span class="sourceLineNo">334</span>     *            &lt;li&gt;When checkMode=KCV_ENCRYPT_FIX_DATA -4 bytes key check value&lt;/li&gt;<a name="line.334"></a>
+<span class="sourceLineNo">335</span>     *            &lt;li&gt;When iCheckMode=KCV_MAC_INPUT_DATA - checkBuf as follows: checkBuf[0] = length of KcvData<a name="line.335"></a>
+<span class="sourceLineNo">336</span>     *            checkBuf+1: kcvData checkBuf[1+kcvDataLen]: MAC computation mode<a name="line.336"></a>
+<span class="sourceLineNo">337</span>     *            {@link IPed#getMac(byte, byte[], EPedMacMode)} checkBuf[2+kcvDataLen]:KCV length<a name="line.337"></a>
+<span class="sourceLineNo">338</span>     *            checkBuf[3+kcvDataLen]:KCV Value&lt;/li&gt;<a name="line.338"></a>
+<span class="sourceLineNo">339</span>     *            &lt;li&gt;When checkMode=KCV_SM4_ENCRYPT_0 -4 bytes key check value&lt;/li&gt;<a name="line.339"></a>
+<span class="sourceLineNo">340</span>     *            &lt;/ul&gt;<a name="line.340"></a>
+<span class="sourceLineNo">341</span>     *            &lt;/div&gt;<a name="line.341"></a>
+<span class="sourceLineNo">342</span>     * <a name="line.342"></a>
+<span class="sourceLineNo">343</span>     * @throws PedDevException <a name="line.343"></a>
+<span class="sourceLineNo">344</span>     * <a name="line.344"></a>
+<span class="sourceLineNo">345</span>     * @since V3.06.00<a name="line.345"></a>
+<span class="sourceLineNo">346</span>     */<a name="line.346"></a>
+<span class="sourceLineNo">347</span>    void writeKeyEncByRsa(byte[] dataIn, byte prvKeyIdx, byte dstKeyType, byte dstKeyIdx, byte[] ksnIn,<a name="line.347"></a>
+<span class="sourceLineNo">348</span>            ECheckMode checkMode, byte[] checkBuf) throws PedDevException;<a name="line.348"></a>
+<span class="sourceLineNo">349</span>    <a name="line.349"></a>
+<span class="sourceLineNo">350</span>    /**<a name="line.350"></a>
+<span class="sourceLineNo">351</span>     * &lt;div class="zh"&gt; 清除PED里的所有密钥信息 &lt;/div&gt; &lt;div class="en"&gt; Clear all key information of PED. &lt;/div&gt;<a name="line.351"></a>
+<span class="sourceLineNo">352</span>     * <a name="line.352"></a>
+<span class="sourceLineNo">353</span>     * @return &lt;div class="zh"&gt;<a name="line.353"></a>
+<span class="sourceLineNo">354</span>     *         &lt;ul&gt;<a name="line.354"></a>
+<span class="sourceLineNo">355</span>     *         &lt;li&gt;true-擦除成功&lt;/li&gt;<a name="line.355"></a>
+<span class="sourceLineNo">356</span>     *         &lt;li&gt;false-擦除失败&lt;/li&gt;<a name="line.356"></a>
+<span class="sourceLineNo">357</span>     *         &lt;/ul&gt;<a name="line.357"></a>
+<span class="sourceLineNo">358</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.358"></a>
+<span class="sourceLineNo">359</span>     *         &lt;ul&gt;<a name="line.359"></a>
+<span class="sourceLineNo">360</span>     *         &lt;li&gt;true -- Clear success&lt;/li&gt;<a name="line.360"></a>
+<span class="sourceLineNo">361</span>     *         &lt;li&gt;false -- Clear failure&lt;/li&gt;<a name="line.361"></a>
+<span class="sourceLineNo">362</span>     *         &lt;/ul&gt;<a name="line.362"></a>
+<span class="sourceLineNo">363</span>     *         &lt;/div&gt;<a name="line.363"></a>
+<span class="sourceLineNo">364</span>     * <a name="line.364"></a>
+<span class="sourceLineNo">365</span>     * @throws PedDevException<a name="line.365"></a>
+<span class="sourceLineNo">366</span>     * <a name="line.366"></a>
+<span class="sourceLineNo">367</span>     * @since V3.06.00<a name="line.367"></a>
+<span class="sourceLineNo">368</span>     */<a name="line.368"></a>
+<span class="sourceLineNo">369</span>    boolean erase() throws PedDevException;<a name="line.369"></a>
+<span class="sourceLineNo">370</span>    <a name="line.370"></a>
+<span class="sourceLineNo">371</span>    /**<a name="line.371"></a>
+<span class="sourceLineNo">372</span>     * &lt;div class="zh"&gt; 使用RsaKey加密指定的数据，数据格式如下: [Header data +TSK+ TSD + Random padded<a name="line.372"></a>
+<span class="sourceLineNo">373</span>     * data];说明:指定的数据应小于公钥模量;否则,加密可能会失败。所以Header建议为null。&lt;/div&gt; &lt;div class="en"&gt; Uses public key RsaKey to encrypt<a name="line.373"></a>
+<span class="sourceLineNo">374</span>     * specified data. The specified data format is as followed: [Header data + TSK + TSD + Random padded data]; The<a name="line.374"></a>
+<span class="sourceLineNo">375</span>     * specified data to be encrypted should be less than public key modulus; otherwise, the encryption may fail. So the<a name="line.375"></a>
+<span class="sourceLineNo">376</span>     * Header data is suggested to be null. &lt;/div&gt;<a name="line.376"></a>
+<span class="sourceLineNo">377</span>     * <a name="line.377"></a>
+<span class="sourceLineNo">378</span>     * @param rsaKeyInfo<a name="line.378"></a>
+<span class="sourceLineNo">379</span>     *            &lt;div class="zh"&gt; Rsa 公钥。&lt;/div&gt; &lt;div class="en"&gt; RSA public key. &lt;/div&gt;<a name="line.379"></a>
+<span class="sourceLineNo">380</span>     * @param header<a name="line.380"></a>
+<span class="sourceLineNo">381</span>     *            &lt;div class="zh"&gt; 头部数据。 &lt;/div&gt; &lt;div class="en"&gt;The header data. &lt;/div&gt;<a name="line.381"></a>
+<span class="sourceLineNo">382</span>     * @param tskIndex<a name="line.382"></a>
+<span class="sourceLineNo">383</span>     *            &lt;div class="zh"&gt; Tsk索引。 &lt;/div&gt; &lt;div class="en"&gt; Tsk slot. &lt;/div&gt;<a name="line.383"></a>
+<span class="sourceLineNo">384</span>     * @param tsdIndex<a name="line.384"></a>
+<span class="sourceLineNo">385</span>     *            &lt;div class="zh"&gt; Tsd索引 。&lt;/div&gt; &lt;div class="en"&gt; Tsd slot. &lt;/div&gt;<a name="line.385"></a>
+<span class="sourceLineNo">386</span>     * @return &lt;div class="zh"&gt; 待输出密文密钥,缓冲区大小为RsaKey的模长。 &lt;/div&gt; &lt;div class="en"&gt; return the cipher key, the buffer size<a name="line.386"></a>
+<span class="sourceLineNo">387</span>     *         is the modulus length of RsaKey. &lt;/div&gt;<a name="line.387"></a>
+<span class="sourceLineNo">388</span>     * @throws PedDevException<a name="line.388"></a>
+<span class="sourceLineNo">389</span>     * @since V3.08.00<a name="line.389"></a>
+<span class="sourceLineNo">390</span>     */<a name="line.390"></a>
+<span class="sourceLineNo">391</span>    byte[] exportKeyOAEP(RSAKeyInfo rsaKeyInfo, byte[] header, int tskIndex, int tsdIndex) throws PedDevException;<a name="line.391"></a>
+<span class="sourceLineNo">392</span>    <a name="line.392"></a>
+<span class="sourceLineNo">393</span>    /**<a name="line.393"></a>
+<span class="sourceLineNo">394</span>     * &lt;div class="zh"&gt;导出事务密钥和初始mac密钥。&lt;/div&gt; &lt;div class="en"&gt;Export the transaction key and the original MAC key.&lt;/div&gt;<a name="line.394"></a>
+<span class="sourceLineNo">395</span>     * <a name="line.395"></a>
+<span class="sourceLineNo">396</span>     * @param srcKeyType &lt;div class="zh"&gt;源密钥类型。<a name="line.396"></a>
+<span class="sourceLineNo">397</span>     * &lt;ul&gt;<a name="line.397"></a>
+<span class="sourceLineNo">398</span>     * &lt;li&gt;0x01:KCA(KIA)&lt;/li&gt;<a name="line.398"></a>
+<span class="sourceLineNo">399</span>     * &lt;li&gt;0x02:KEK&lt;/li&gt;<a name="line.399"></a>
+<span class="sourceLineNo">400</span>     * &lt;/ul&gt;&lt;/div&gt; <a name="line.400"></a>
+<span class="sourceLineNo">401</span>     * &lt;div class="en"&gt;Type of source key. <a name="line.401"></a>
+<span class="sourceLineNo">402</span>     * &lt;ul&gt;<a name="line.402"></a>
+<span class="sourceLineNo">403</span>     * &lt;li&gt;0x01:KCA(KIA)&lt;/li&gt;<a name="line.403"></a>
+<span class="sourceLineNo">404</span>     * &lt;li&gt;0x02:KEK&lt;/li&gt;<a name="line.404"></a>
+<span class="sourceLineNo">405</span>     * &lt;/ul&gt;&lt;/div&gt;<a name="line.405"></a>
+<span class="sourceLineNo">406</span>     * <a name="line.406"></a>
+<span class="sourceLineNo">407</span>     * @param srcKeyIndex &lt;div class="zh"&gt;源密钥索引。&lt;/div&gt; &lt;div class="en"&gt;Index of source index.&lt;/div&gt;<a name="line.407"></a>
+<span class="sourceLineNo">408</span>     * <a name="line.408"></a>
+<span class="sourceLineNo">409</span>     * @param dstKeyType &lt;div class="zh"&gt;目的密钥类型。<a name="line.409"></a>
+<span class="sourceLineNo">410</span>     * &lt;ul&gt;<a name="line.410"></a>
+<span class="sourceLineNo">411</span>     * &lt;li&gt;当srcKeyIndex=0x01，则dstKeyType可以为KCA(KIA)、KEK、TAK、TPK、TDK。&lt;/li&gt;<a name="line.411"></a>
+<span class="sourceLineNo">412</span>     * &lt;li&gt;当srcKeyIndex=0x02，则dstKeyType可以为KEK、TAK、TPK、TDK。&lt;/li&gt;<a name="line.412"></a>
+<span class="sourceLineNo">413</span>     * &lt;/ul&gt;&lt;/div&gt; <a name="line.413"></a>
+<span class="sourceLineNo">414</span>     * &lt;div class="en"&gt;Type of destination key.<a name="line.414"></a>
+<span class="sourceLineNo">415</span>     * &lt;ul&gt;<a name="line.415"></a>
+<span class="sourceLineNo">416</span>     * &lt;li&gt;When srcKeyIndex=0x01, dstKeyType can be KCA(KIA), KEK, TAK, TPK, and TDK.&lt;/li&gt;<a name="line.416"></a>
+<span class="sourceLineNo">417</span>     * &lt;li&gt;When srcKeyIndex=0x02, dstKeyType can be KEK, TAK, TPK, and TDK.&lt;/li&gt;<a name="line.417"></a>
+<span class="sourceLineNo">418</span>     * &lt;/ul&gt;&lt;/div&gt;<a name="line.418"></a>
+<span class="sourceLineNo">419</span>     * <a name="line.419"></a>
+<span class="sourceLineNo">420</span>     * @param dstKeyIndex &lt;div class="zh"&gt;目的密钥索引。&lt;/div&gt; &lt;div class="en"&gt;Index of destination key.&lt;/div&gt;<a name="line.420"></a>
+<span class="sourceLineNo">421</span>     * <a name="line.421"></a>
+<span class="sourceLineNo">422</span>     * @param dataIn &lt;div class="zh"&gt;用于派生16字节数据。&lt;/div&gt; &lt;div class="en"&gt;Used to derive 16 bytes of data.&lt;/div&gt;<a name="line.422"></a>
+<span class="sourceLineNo">423</span>     * <a name="line.423"></a>
+<span class="sourceLineNo">424</span>     * @param keyVar &lt;div class="zh"&gt;16字节的xor值。如果不存在就设为null，此时无需调用{@link #writeKeyVar(int, int, int, int, byte[])}。 &lt;/div&gt; <a name="line.424"></a>
+<span class="sourceLineNo">425</span>     * &lt;div class="en"&gt;A 16-byte xor value.Set it to null if it doesn't exist, and don't need to call {@link #writeKeyVar(int, int, int, int, byte[])}.&lt;/div&gt;<a name="line.425"></a>
+<span class="sourceLineNo">426</span>     * <a name="line.426"></a>
+<span class="sourceLineNo">427</span>     * @param iv &lt;div class="zh"&gt;<a name="line.427"></a>
+<span class="sourceLineNo">428</span>     * &lt;ul&gt;<a name="line.428"></a>
+<span class="sourceLineNo">429</span>     * &lt;li&gt;当mode=0时:为null。&lt;/li&gt;<a name="line.429"></a>
+<span class="sourceLineNo">430</span>     * &lt;li&gt;当mode=1时:8字节的IV值。&lt;/li&gt;<a name="line.430"></a>
+<span class="sourceLineNo">431</span>     * &lt;/ul&gt;&lt;/div&gt; <a name="line.431"></a>
+<span class="sourceLineNo">432</span>     * &lt;div class="en"&gt;<a name="line.432"></a>
+<span class="sourceLineNo">433</span>     * &lt;ul&gt;<a name="line.433"></a>
+<span class="sourceLineNo">434</span>     * &lt;li&gt;When mode=0: is null.&lt;/li&gt;<a name="line.434"></a>
+<span class="sourceLineNo">435</span>     * &lt;li&gt;When mode=1: 8 bytes of IV value.&lt;/li&gt;<a name="line.435"></a>
+<span class="sourceLineNo">436</span>     * &lt;/ul&gt;&lt;/div&gt;<a name="line.436"></a>
+<span class="sourceLineNo">437</span>     * <a name="line.437"></a>
+<span class="sourceLineNo">438</span>     * @param mode &lt;div class="zh"&gt;<a name="line.438"></a>
+<span class="sourceLineNo">439</span>     * &lt;ul&gt;<a name="line.439"></a>
+<span class="sourceLineNo">440</span>     * &lt;li&gt;0:OWF发散。&lt;/li&gt;<a name="line.440"></a>
+<span class="sourceLineNo">441</span>     * &lt;li&gt;1:CBC发散。&lt;/li&gt;<a name="line.441"></a>
+<span class="sourceLineNo">442</span>     * &lt;/ul&gt;&lt;/div&gt; <a name="line.442"></a>
+<span class="sourceLineNo">443</span>     * &lt;div class="en"&gt;<a name="line.443"></a>
+<span class="sourceLineNo">444</span>     * &lt;ul&gt;<a name="line.444"></a>
+<span class="sourceLineNo">445</span>     * &lt;li&gt;0:OWF divergence.&lt;/li&gt;<a name="line.445"></a>
+<span class="sourceLineNo">446</span>     * &lt;li&gt;1:CBC divergence.&lt;/li&gt;<a name="line.446"></a>
+<span class="sourceLineNo">447</span>     * &lt;/ul&gt;&lt;/div&gt;<a name="line.447"></a>
+<span class="sourceLineNo">448</span>     * <a name="line.448"></a>
+<span class="sourceLineNo">449</span>     * @throws PedDevException<a name="line.449"></a>
+<span class="sourceLineNo">450</span>     * @since V3.11.00<a name="line.450"></a>
+<span class="sourceLineNo">451</span>     * @deprecated<a name="line.451"></a>
+<span class="sourceLineNo">452</span>     * @see IPedBg#asDeriveKey(byte, byte, byte, byte, byte[], byte[], byte[], byte)<a name="line.452"></a>
+<span class="sourceLineNo">453</span>     */<a name="line.453"></a>
+<span class="sourceLineNo">454</span>    void asDeriveKey(byte srcKeyType, byte srcKeyIndex, byte dstKeyType, byte dstKeyIndex, byte[] dataIn, byte[] keyVar, byte[] iv, byte mode) throws PedDevException;<a name="line.454"></a>
+<span class="sourceLineNo">455</span>    <a name="line.455"></a>
+<span class="sourceLineNo">456</span>    /**<a name="line.456"></a>
+<span class="sourceLineNo">457</span>     * &lt;div class="zh"&gt;加载Key到PED。&lt;/div&gt; &lt;div class="en"&gt;Load the key into the PED.&lt;/div&gt;<a name="line.457"></a>
+<span class="sourceLineNo">458</span>     * <a name="line.458"></a>
+<span class="sourceLineNo">459</span>     * @param tcuIndex &lt;div class="zh"&gt;tcu RSA私钥索引。&lt;/div&gt; &lt;div class="en"&gt;Index of tcu RSA private key.&lt;/div&gt;<a name="line.459"></a>
+<span class="sourceLineNo">460</span>     * <a name="line.460"></a>
+<span class="sourceLineNo">461</span>     * @param keyIndex &lt;div class="zh"&gt;Key索引。&lt;/div&gt; &lt;div class="en"&gt;Index of key.&lt;/div&gt; <a name="line.461"></a>
+<span class="sourceLineNo">462</span>     * <a name="line.462"></a>
+<span class="sourceLineNo">463</span>     * @param dataEncrypted &lt;div class="zh"&gt;用tcu RSA私钥加密的输入数据(256字节)。&lt;/div&gt; &lt;div class="en"&gt;Input data encrypted with the tcu RSA private key (256 bytes).&lt;/div&gt;<a name="line.463"></a>
+<span class="sourceLineNo">464</span>     * <a name="line.464"></a>
+<span class="sourceLineNo">465</span>     * @param mode &lt;div class="zh"&gt;<a name="line.465"></a>
+<span class="sourceLineNo">466</span>     * &lt;ul&gt;<a name="line.466"></a>
+<span class="sourceLineNo">467</span>     * &lt;li&gt;0:keyIndex为KCA索引。&lt;/li&gt;<a name="line.467"></a>
+<span class="sourceLineNo">468</span>     * &lt;li&gt;1:keyIndex为TAK索引。&lt;/li&gt;<a name="line.468"></a>
+<span class="sourceLineNo">469</span>     * &lt;/ul&gt;&lt;/div&gt; <a name="line.469"></a>
+<span class="sourceLineNo">470</span>     * &lt;div class="en"&gt;<a name="line.470"></a>
+<span class="sourceLineNo">471</span>     * &lt;ul&gt;<a name="line.471"></a>
+<span class="sourceLineNo">472</span>     * &lt;li&gt;0:keyIndex is index of KCA.&lt;/li&gt;<a name="line.472"></a>
+<span class="sourceLineNo">473</span>     * &lt;li&gt;1:keyIndex is index of TAK.&lt;/li&gt;<a name="line.473"></a>
+<span class="sourceLineNo">474</span>     * &lt;/ul&gt;&lt;/div&gt;<a name="line.474"></a>
+<span class="sourceLineNo">475</span>     * <a name="line.475"></a>
+<span class="sourceLineNo">476</span>     * @return &lt;div class="zh"&gt;输出RNtcu数据，8字节。&lt;/div&gt; &lt;div class="en"&gt;Output RNtcu data, 8 bytes.&lt;/div&gt;<a name="line.476"></a>
+<span class="sourceLineNo">477</span>     * <a name="line.477"></a>
+<span class="sourceLineNo">478</span>     * @throws PedDevException<a name="line.478"></a>
+<span class="sourceLineNo">479</span>     * @since V3.11.00<a name="line.479"></a>
+<span class="sourceLineNo">480</span>     * @deprecated<a name="line.480"></a>
+<span class="sourceLineNo">481</span>     * @see IPedBg#asLoadKeyAsym(byte, byte, byte[], byte)<a name="line.481"></a>
+<span class="sourceLineNo">482</span>     */<a name="line.482"></a>
+<span class="sourceLineNo">483</span>    byte[] asLoadKeyAsym(byte tcuIndex, byte keyIndex, byte[] dataEncrypted, byte mode) throws PedDevException;<a name="line.483"></a>
+<span class="sourceLineNo">484</span>    <a name="line.484"></a>
+<span class="sourceLineNo">485</span>    /**<a name="line.485"></a>
+<span class="sourceLineNo">486</span>     * &lt;div class="zh"&gt;将KEK1/KEK2/PPASN加载到PED。&lt;/div&gt; &lt;div class="en"&gt;Load KEK1/KEK2/PPASN into PED.&lt;/div&gt;<a name="line.486"></a>
+<span class="sourceLineNo">487</span>     * <a name="line.487"></a>
+<span class="sourceLineNo">488</span>     * @param kiaIndex &lt;div class="zh"&gt;KIA索引[1~10]。&lt;/div&gt; &lt;div class="en"&gt;Index of KIA [1~10].&lt;/div&gt;<a name="line.488"></a>
+<span class="sourceLineNo">489</span>     * <a name="line.489"></a>
+<span class="sourceLineNo">490</span>     * @param kek1Index &lt;div class="zh"&gt;KEK1索引[1~10]。&lt;/div&gt; &lt;div class="en"&gt;Index of KEK1 [1~10].&lt;/div&gt;<a name="line.490"></a>
+<span class="sourceLineNo">491</span>     * <a name="line.491"></a>
+<span class="sourceLineNo">492</span>     * @param kek2Index &lt;div class="zh"&gt;KEK2索引[1~10]。&lt;/div&gt; &lt;div class="en"&gt;Index of KEK2 [1~10].&lt;/div&gt;<a name="line.492"></a>
+<span class="sourceLineNo">493</span>     * <a name="line.493"></a>
+<span class="sourceLineNo">494</span>     * @param ppasnIndex &lt;div class="zh"&gt;PPASN索引[1~5]。&lt;/div&gt; &lt;div class="en"&gt;Index of PPASN [1~5].&lt;/div&gt;<a name="line.494"></a>
+<span class="sourceLineNo">495</span>     * <a name="line.495"></a>
+<span class="sourceLineNo">496</span>     * @param keyVar &lt;div class="zh"&gt;用于生成KIA变量密钥的变量，16字节，这个变量用于解密PPASN。&lt;/div&gt; <a name="line.496"></a>
+<span class="sourceLineNo">497</span>     * &lt;div class="en"&gt;The variable used to generate the key for the KIA variable, 16 bytes, which is used to decrypt the PPASN.&lt;/div&gt;<a name="line.497"></a>
+<span class="sourceLineNo">498</span>     * <a name="line.498"></a>
+<span class="sourceLineNo">499</span>     * @param fmtAiicBlk &lt;div class="zh"&gt;16字节 AIIC。&lt;/div&gt; &lt;div class="en"&gt;AIIC, 16 bytes.&lt;/div&gt;<a name="line.499"></a>
+<span class="sourceLineNo">500</span>     * <a name="line.500"></a>
+<span class="sourceLineNo">501</span>     * @param cipherKeyIn &lt;div class="zh"&gt;密文格式。<a name="line.501"></a>
+<span class="sourceLineNo">502</span>     * &lt;table border="1"&gt;<a name="line.502"></a>
+<span class="sourceLineNo">503</span>     *  &lt;tr&gt;<a name="line.503"></a>
+<span class="sourceLineNo">504</span>     *   &lt;th&gt;Name&lt;/th&gt;<a name="line.504"></a>
+<span class="sourceLineNo">505</span>     *   &lt;th&gt;Contents&lt;/th&gt;<a name="line.505"></a>
+<span class="sourceLineNo">506</span>     *   &lt;th&gt;Length&lt;/th&gt;<a name="line.506"></a>
+<span class="sourceLineNo">507</span>     *   &lt;th&gt;Attribute&lt;/th&gt;<a name="line.507"></a>
+<span class="sourceLineNo">508</span>     *   &lt;th&gt;Bytes&lt;/th&gt;<a name="line.508"></a>
+<span class="sourceLineNo">509</span>     *  &lt;/tr&gt;<a name="line.509"></a>
+<span class="sourceLineNo">510</span>     *  &lt;tr&gt;<a name="line.510"></a>
+<span class="sourceLineNo">511</span>     *   &lt;td&gt;eKIA(KEK1)&lt;/td&gt;<a name="line.511"></a>
+<span class="sourceLineNo">512</span>     *   &lt;td&gt;Terminal master key 1 encrypted by Acquirer Initialisation key.&lt;/td&gt;<a name="line.512"></a>
+<span class="sourceLineNo">513</span>     *   &lt;td&gt;128&lt;/td&gt;<a name="line.513"></a>
+<span class="sourceLineNo">514</span>     *   &lt;td&gt;b&lt;/td&gt;<a name="line.514"></a>
+<span class="sourceLineNo">515</span>     *   &lt;td&gt;16&lt;/td&gt;<a name="line.515"></a>
+<span class="sourceLineNo">516</span>     *  &lt;/tr&gt;<a name="line.516"></a>
+<span class="sourceLineNo">517</span>     *  &lt;tr&gt;<a name="line.517"></a>
+<span class="sourceLineNo">518</span>     *   &lt;td&gt;eKIA(KEK2)&lt;/td&gt;<a name="line.518"></a>
+<span class="sourceLineNo">519</span>     *   &lt;td&gt;Terminal master key 2 encrypted by Acquirer Initialisation key.&lt;/td&gt;<a name="line.519"></a>
+<span class="sourceLineNo">520</span>     *   &lt;td&gt;128&lt;/td&gt;<a name="line.520"></a>
+<span class="sourceLineNo">521</span>     *   &lt;td&gt;b&lt;/td&gt;<a name="line.521"></a>
+<span class="sourceLineNo">522</span>     *   &lt;td&gt;16&lt;/td&gt;<a name="line.522"></a>
+<span class="sourceLineNo">523</span>     *  &lt;/tr&gt;<a name="line.523"></a>
+<span class="sourceLineNo">524</span>     *  &lt;tr&gt;<a name="line.524"></a>
+<span class="sourceLineNo">525</span>     *   &lt;td&gt;eKIA(PPASN)&lt;/td&gt;<a name="line.525"></a>
+<span class="sourceLineNo">526</span>     *   &lt;td&gt;PIN Pad assigned secret number encrypted by variant 88 of the Acquirer Initialisation key.&lt;/td&gt;<a name="line.526"></a>
+<span class="sourceLineNo">527</span>     *   &lt;td&gt;64&lt;/td&gt;<a name="line.527"></a>
+<span class="sourceLineNo">528</span>     *   &lt;td&gt;b&lt;/td&gt;<a name="line.528"></a>
+<span class="sourceLineNo">529</span>     *   &lt;td&gt;8&lt;/td&gt;<a name="line.529"></a>
+<span class="sourceLineNo">530</span>     *  &lt;/tr&gt;<a name="line.530"></a>
+<span class="sourceLineNo">531</span>     * &lt;/table&gt;<a name="line.531"></a>
+<span class="sourceLineNo">532</span>     * &lt;/div&gt; &lt;div class="en"&gt;Ciphertext format.<a name="line.532"></a>
+<span class="sourceLineNo">533</span>     * &lt;table border="1"&gt;<a name="line.533"></a>
+<span class="sourceLineNo">534</span>     *  &lt;tr&gt;<a name="line.534"></a>
+<span class="sourceLineNo">535</span>     *   &lt;th&gt;Name&lt;/th&gt;<a name="line.535"></a>
+<span class="sourceLineNo">536</span>     *   &lt;th&gt;Contents&lt;/th&gt;<a name="line.536"></a>
+<span class="sourceLineNo">537</span>     *   &lt;th&gt;Length&lt;/th&gt;<a name="line.537"></a>
+<span class="sourceLineNo">538</span>     *   &lt;th&gt;Attribute&lt;/th&gt;<a name="line.538"></a>
+<span class="sourceLineNo">539</span>     *   &lt;th&gt;Bytes&lt;/th&gt;<a name="line.539"></a>
+<span class="sourceLineNo">540</span>     *  &lt;/tr&gt;<a name="line.540"></a>
+<span class="sourceLineNo">541</span>     *  &lt;tr&gt;<a name="line.541"></a>
+<span class="sourceLineNo">542</span>     *   &lt;td&gt;eKIA(KEK1)&lt;/td&gt;<a name="line.542"></a>
+<span class="sourceLineNo">543</span>     *   &lt;td&gt;Terminal master key 1 encrypted by Acquirer Initialisation key.&lt;/td&gt;<a name="line.543"></a>
+<span class="sourceLineNo">544</span>     *   &lt;td&gt;128&lt;/td&gt;<a name="line.544"></a>
+<span class="sourceLineNo">545</span>     *   &lt;td&gt;b&lt;/td&gt;<a name="line.545"></a>
+<span class="sourceLineNo">546</span>     *   &lt;td&gt;16&lt;/td&gt;<a name="line.546"></a>
+<span class="sourceLineNo">547</span>     *  &lt;/tr&gt;<a name="line.547"></a>
+<span class="sourceLineNo">548</span>     *  &lt;tr&gt;<a name="line.548"></a>
+<span class="sourceLineNo">549</span>     *   &lt;td&gt;eKIA(KEK2)&lt;/td&gt;<a name="line.549"></a>
+<span class="sourceLineNo">550</span>     *   &lt;td&gt;Terminal master key 2 encrypted by Acquirer Initialisation key.&lt;/td&gt;<a name="line.550"></a>
+<span class="sourceLineNo">551</span>     *   &lt;td&gt;128&lt;/td&gt;<a name="line.551"></a>
+<span class="sourceLineNo">552</span>     *   &lt;td&gt;b&lt;/td&gt;<a name="line.552"></a>
+<span class="sourceLineNo">553</span>     *   &lt;td&gt;16&lt;/td&gt;<a name="line.553"></a>
+<span class="sourceLineNo">554</span>     *  &lt;/tr&gt;<a name="line.554"></a>
+<span class="sourceLineNo">555</span>     *  &lt;tr&gt;<a name="line.555"></a>
+<span class="sourceLineNo">556</span>     *   &lt;td&gt;eKIA(PPASN)&lt;/td&gt;<a name="line.556"></a>
+<span class="sourceLineNo">557</span>     *   &lt;td&gt;PIN Pad assigned secret number encrypted by variant 88 of the Acquirer Initialisation key.&lt;/td&gt;<a name="line.557"></a>
+<span class="sourceLineNo">558</span>     *   &lt;td&gt;64&lt;/td&gt;<a name="line.558"></a>
+<span class="sourceLineNo">559</span>     *   &lt;td&gt;b&lt;/td&gt;<a name="line.559"></a>
+<span class="sourceLineNo">560</span>     *   &lt;td&gt;8&lt;/td&gt;<a name="line.560"></a>
+<span class="sourceLineNo">561</span>     *  &lt;/tr&gt;<a name="line.561"></a>
+<span class="sourceLineNo">562</span>     * &lt;/table&gt;<a name="line.562"></a>
+<span class="sourceLineNo">563</span>     * &lt;/div&gt;<a name="line.563"></a>
+<span class="sourceLineNo">564</span>     * <a name="line.564"></a>
+<span class="sourceLineNo">565</span>     * @param mode &lt;div class="zh"&gt;仅支持0。&lt;/div&gt; &lt;div class="en"&gt;Only 0 is supported.&lt;/div&gt;<a name="line.565"></a>
+<span class="sourceLineNo">566</span>     * <a name="line.566"></a>
+<span class="sourceLineNo">567</span>     * @throws PedDevException<a name="line.567"></a>
+<span class="sourceLineNo">568</span>     * @since V3.11.00<a name="line.568"></a>
+<span class="sourceLineNo">569</span>     * @deprecated<a name="line.569"></a>
+<span class="sourceLineNo">570</span>     * @see IPedBg#asLoadKEK(byte, byte, byte, byte, byte[], byte[], byte[], byte)<a name="line.570"></a>
+<span class="sourceLineNo">571</span>     */<a name="line.571"></a>
+<span class="sourceLineNo">572</span>    void asLoadKEK(byte kiaIndex, byte kek1Index, byte kek2Index, byte ppasnIndex, byte[] keyVar, byte[] fmtAiicBlk, byte[] cipherKeyIn, byte mode) throws PedDevException;<a name="line.572"></a>
+<span class="sourceLineNo">573</span>    <a name="line.573"></a>
+<span class="sourceLineNo">574</span>    /**<a name="line.574"></a>
+<span class="sourceLineNo">575</span>     * &lt;div class="zh"&gt;翻转KEK1/KEK2。&lt;/div&gt; &lt;div class="en"&gt;Roll KEK1/KEK2.&lt;/div&gt;<a name="line.575"></a>
+<span class="sourceLineNo">576</span>     * <a name="line.576"></a>
+<span class="sourceLineNo">577</span>     * @param kekFlag &lt;div class="zh"&gt;&lt;ul&gt;<a name="line.577"></a>
+<span class="sourceLineNo">578</span>     * &lt;li&gt;0x31:KEK1。&lt;/li&gt;<a name="line.578"></a>
+<span class="sourceLineNo">579</span>     * &lt;li&gt;0x32:KEK2。&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt; <a name="line.579"></a>
+<span class="sourceLineNo">580</span>     * &lt;div class="en"&gt;&lt;ul&gt;<a name="line.580"></a>
+<span class="sourceLineNo">581</span>     * &lt;li&gt;0x31:KEK1.&lt;/li&gt;<a name="line.581"></a>
+<span class="sourceLineNo">582</span>     * &lt;li&gt;0x32:KEK2.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;<a name="line.582"></a>
+<span class="sourceLineNo">583</span>     * <a name="line.583"></a>
+<span class="sourceLineNo">584</span>     * @param kek1Index &lt;div class="zh"&gt;KEK1索引[1~10]。&lt;/div&gt; &lt;div class="en"&gt;Index of KEK1 [1~10].&lt;/div&gt;<a name="line.584"></a>
+<span class="sourceLineNo">585</span>     * <a name="line.585"></a>
+<span class="sourceLineNo">586</span>     * @param kek2Index &lt;div class="zh"&gt;KEK2索引[1~10]。&lt;/div&gt; &lt;div class="en"&gt;Index of KEK2 [1~10].&lt;/div&gt;<a name="line.586"></a>
+<span class="sourceLineNo">587</span>     * <a name="line.587"></a>
+<span class="sourceLineNo">588</span>     * @param ppasnIndex &lt;div class="zh"&gt;PPASN索引[1~5]。&lt;/div&gt; &lt;div class="en"&gt;Index of PPASN [1~10].&lt;/div&gt; <a name="line.588"></a>
+<span class="sourceLineNo">589</span>     * <a name="line.589"></a>
+<span class="sourceLineNo">590</span>     * @throws PedDevException<a name="line.590"></a>
+<span class="sourceLineNo">591</span>     * @since V3.11.00<a name="line.591"></a>
+<span class="sourceLineNo">592</span>     * @deprecated<a name="line.592"></a>
+<span class="sourceLineNo">593</span>     * @see IPedBg#asRollKeys(byte, byte, byte, byte)<a name="line.593"></a>
+<span class="sourceLineNo">594</span>     */<a name="line.594"></a>
+<span class="sourceLineNo">595</span>    void asRollKeys(byte kekFlag, byte kek1Index, byte kek2Index, byte ppasnIndex) throws PedDevException;<a name="line.595"></a>
+<span class="sourceLineNo">596</span>    <a name="line.596"></a>
+<span class="sourceLineNo">597</span>    /**<a name="line.597"></a>
+<span class="sourceLineNo">598</span>     * &lt;div class="zh"&gt;设置脱机PIN模式，并为外部PINPAD提供一些参数。&lt;/div&gt; <a name="line.598"></a>
+<span class="sourceLineNo">599</span>     * &lt;div class="en"&gt;Set offline PIN mode and provide some parameters for external PINPAD.&lt;/div&gt;<a name="line.599"></a>
+<span class="sourceLineNo">600</span>     * <a name="line.600"></a>
+<span class="sourceLineNo">601</span>     * @param mode &lt;div class="zh"&gt;<a name="line.601"></a>
+<span class="sourceLineNo">602</span>     *  &lt;ul&gt;<a name="line.602"></a>
+<span class="sourceLineNo">603</span>     *   &lt;li&gt;0x00:内部PINPAD，默认模式。&lt;/li&gt;<a name="line.603"></a>
+<span class="sourceLineNo">604</span>     *   &lt;li&gt;0x01:外部PINPAD。&lt;/li&gt;<a name="line.604"></a>
+<span class="sourceLineNo">605</span>     *  &lt;/ul&gt;<a name="line.605"></a>
+<span class="sourceLineNo">606</span>     * &lt;/div&gt; <a name="line.606"></a>
+<span class="sourceLineNo">607</span>     * &lt;div class="en"&gt;<a name="line.607"></a>
+<span class="sourceLineNo">608</span>     *  &lt;ul&gt;<a name="line.608"></a>
+<span class="sourceLineNo">609</span>     *   &lt;li&gt;0x00:Built-in PINPAD, default mode.&lt;/li&gt;<a name="line.609"></a>
+<span class="sourceLineNo">610</span>     *   &lt;li&gt;0x01:External PINPAD.&lt;/li&gt;<a name="line.610"></a>
+<span class="sourceLineNo">611</span>     *  &lt;/ul&gt;<a name="line.611"></a>
+<span class="sourceLineNo">612</span>     * &lt;/div&gt;<a name="line.612"></a>
+<span class="sourceLineNo">613</span>     * <a name="line.613"></a>
+<span class="sourceLineNo">614</span>     * @param tpkIndex &lt;div class="zh"&gt;TPK秘钥索引。 &lt;/div&gt; &lt;div class="en"&gt;The index of TPK.&lt;/div&gt;<a name="line.614"></a>
+<span class="sourceLineNo">615</span>     * <a name="line.615"></a>
+<span class="sourceLineNo">616</span>     * @param pinBlock &lt;div class="zh"&gt;8字节ISO9564格式1的加密 PINBLOCK。&lt;/div&gt; &lt;div class="en"&gt;8-byte Cipher PINBLOCK with ISO9564 Format 1.&lt;/div&gt;<a name="line.616"></a>
+<span class="sourceLineNo">617</span>     * <a name="line.617"></a>
+<span class="sourceLineNo">618</span>     * @throws PedDevException<a name="line.618"></a>
+<span class="sourceLineNo">619</span>     * @since V3.17.00<a name="line.619"></a>
+<span class="sourceLineNo">620</span>     */<a name="line.620"></a>
+<span class="sourceLineNo">621</span>    void setOfflinePinMode(byte mode, byte tpkIndex, byte[] pinBlock) throws PedDevException;<a name="line.621"></a>
+<span class="sourceLineNo">622</span>    <a name="line.622"></a>
+<span class="sourceLineNo">623</span>    /**<a name="line.623"></a>
+<span class="sourceLineNo">624</span>     * &lt;div class="zh"&gt;使用保护密钥加密指定的密钥并输出加密密钥。&lt;/div&gt; <a name="line.624"></a>
+<span class="sourceLineNo">625</span>     * &lt;div class="en"&gt;Use key protection key to encrypt the specified key and output the cipher key block.&lt;/div&gt;<a name="line.625"></a>
+<span class="sourceLineNo">626</span>     * <a name="line.626"></a>
+<span class="sourceLineNo">627</span>     * @param srcKeyIndex &lt;div class="zh"&gt;保护密钥索引。取值范围：1~100。&lt;/div&gt; &lt;div class="en"&gt;The index of key protection key. Value range:1~100.&lt;/div&gt;<a name="line.627"></a>
+<span class="sourceLineNo">628</span>     * <a name="line.628"></a>
+<span class="sourceLineNo">629</span>     * @param srcKeyType &lt;div class="zh"&gt;保护密钥类型。<a name="line.629"></a>
+<span class="sourceLineNo">630</span>     *  &lt;ul&gt;<a name="line.630"></a>
+<span class="sourceLineNo">631</span>     *   &lt;li&gt;0x42:TXK&lt;/li&gt;<a name="line.631"></a>
+<span class="sourceLineNo">632</span>     *   &lt;li&gt;0x43:PPAD_TMK&lt;/li&gt;<a name="line.632"></a>
+<span class="sourceLineNo">633</span>     *  &lt;/ul&gt;<a name="line.633"></a>
+<span class="sourceLineNo">634</span>     * &lt;/div&gt; <a name="line.634"></a>
+<span class="sourceLineNo">635</span>     * &lt;div class="en"&gt;The key type of key protection key.<a name="line.635"></a>
+<span class="sourceLineNo">636</span>     *  &lt;ul&gt;<a name="line.636"></a>
+<span class="sourceLineNo">637</span>     *   &lt;li&gt;0x42:TXK&lt;/li&gt;<a name="line.637"></a>
+<span class="sourceLineNo">638</span>     *   &lt;li&gt;0x43:PPAD_TMK&lt;/li&gt;<a name="line.638"></a>
+<span class="sourceLineNo">639</span>     *  &lt;/ul&gt;<a name="line.639"></a>
+<span class="sourceLineNo">640</span>     * &lt;/div&gt;<a name="line.640"></a>
+<span class="sourceLineNo">641</span>     * <a name="line.641"></a>
+<span class="sourceLineNo">642</span>     * @param destkeyIndex &lt;div class="zh"&gt;目的密钥索引。取值范围：1~100。&lt;/div&gt; &lt;div class="en"&gt;The destination key index.Value range:1~100.&lt;/div&gt;<a name="line.642"></a>
+<span class="sourceLineNo">643</span>     * <a name="line.643"></a>
+<span class="sourceLineNo">644</span>     * @param destKeyType &lt;div class="zh"&gt;目的密钥类型。<a name="line.644"></a>
+<span class="sourceLineNo">645</span>     *  &lt;ul&gt;<a name="line.645"></a>
+<span class="sourceLineNo">646</span>     *   &lt;li&gt;0x43:PPAD_TMK&lt;/li&gt;<a name="line.646"></a>
+<span class="sourceLineNo">647</span>     *   &lt;li&gt;0x44:PPAD_TPK&lt;/li&gt;<a name="line.647"></a>
+<span class="sourceLineNo">648</span>     *  &lt;/ul&gt;<a name="line.648"></a>
+<span class="sourceLineNo">649</span>     * &lt;/div&gt; <a name="line.649"></a>
+<span class="sourceLineNo">650</span>     * &lt;div class="en"&gt;The destination key type.<a name="line.650"></a>
+<span class="sourceLineNo">651</span>     *  &lt;ul&gt;<a name="line.651"></a>
+<span class="sourceLineNo">652</span>     *   &lt;li&gt;0x43:PPAD_TMK&lt;/li&gt;<a name="line.652"></a>
+<span class="sourceLineNo">653</span>     *   &lt;li&gt;0x44:PPAD_TPK&lt;/li&gt;<a name="line.653"></a>
+<span class="sourceLineNo">654</span>     *  &lt;/ul&gt;<a name="line.654"></a>
+<span class="sourceLineNo">655</span>     * &lt;/div&gt;<a name="line.655"></a>
+<span class="sourceLineNo">656</span>     * <a name="line.656"></a>
+<span class="sourceLineNo">657</span>     * @param keyLen &lt;div class="zh"&gt;目的密钥长度。现支持8、16、24位长度。&lt;/div&gt; &lt;div class="en"&gt;Destination key length. 8, 16, and 24 lengths are now supported.&lt;/div&gt;<a name="line.657"></a>
+<span class="sourceLineNo">658</span>     * <a name="line.658"></a>
+<span class="sourceLineNo">659</span>     * @param genMode &lt;div class="zh"&gt;<a name="line.659"></a>
+<span class="sourceLineNo">660</span>     *  &lt;ul&gt;<a name="line.660"></a>
+<span class="sourceLineNo">661</span>     *   &lt;li&gt;0x00:使用已经存在的目的密钥。&lt;/li&gt;<a name="line.661"></a>
+<span class="sourceLineNo">662</span>     *   &lt;li&gt;0x01:生成新的目的密钥。生成一个随机密钥存储在PED中，索引为destkeyIndex。&lt;/li&gt;<a name="line.662"></a>
+<span class="sourceLineNo">663</span>     *  &lt;/ul&gt;<a name="line.663"></a>
+<span class="sourceLineNo">664</span>     * &lt;/div&gt; <a name="line.664"></a>
+<span class="sourceLineNo">665</span>     * &lt;div class="en"&gt;<a name="line.665"></a>
+<span class="sourceLineNo">666</span>     *  &lt;ul&gt;<a name="line.666"></a>
+<span class="sourceLineNo">667</span>     *   &lt;li&gt;0x00:Using the existed destination key.&lt;/li&gt;<a name="line.667"></a>
+<span class="sourceLineNo">668</span>     *   &lt;li&gt;0x01:Create a destination key.generate a real random key in PED on destkeyIndex.&lt;/li&gt;<a name="line.668"></a>
+<span class="sourceLineNo">669</span>     *  &lt;/ul&gt;<a name="line.669"></a>
+<span class="sourceLineNo">670</span>     * &lt;/div&gt;<a name="line.670"></a>
+<span class="sourceLineNo">671</span>     * <a name="line.671"></a>
+<span class="sourceLineNo">672</span>     * @param dataIn &lt;div class="zh"&gt;输入密钥块。最长32字节。&lt;/div&gt; <a name="line.672"></a>
+<span class="sourceLineNo">673</span>     * &lt;div class="en"&gt;Input Data for key block. Max 32 bytes.&lt;/div&gt;<a name="line.673"></a>
+<span class="sourceLineNo">674</span>     * <a name="line.674"></a>
+<span class="sourceLineNo">675</span>     * @return &lt;div class="zh"&gt;目标密钥的加密密钥块。最长32字节。&lt;/div&gt; <a name="line.675"></a>
+<span class="sourceLineNo">676</span>     * &lt;div class="en"&gt;The cipher key block of destination key. Max 32 bytes.&lt;/div&gt;<a name="line.676"></a>
+<span class="sourceLineNo">677</span>     * <a name="line.677"></a>
+<span class="sourceLineNo">678</span>     * @throws PedDevException<a name="line.678"></a>
+<span class="sourceLineNo">679</span>     * @since V3.17.00<a name="line.679"></a>
+<span class="sourceLineNo">680</span>     */<a name="line.680"></a>
+<span class="sourceLineNo">681</span>    byte[] genPinpadKeyBlock(byte srcKeyIndex, byte srcKeyType, byte destkeyIndex, byte destKeyType, byte keyLen, byte genMode, byte[] dataIn) throws PedDevException;<a name="line.681"></a>
+<span class="sourceLineNo">682</span>    <a name="line.682"></a>
+<span class="sourceLineNo">683</span>    /**<a name="line.683"></a>
+<span class="sourceLineNo">684</span>     * &lt;div class="zh"&gt;将PinBlock转为online PINBlock。&lt;/div&gt; <a name="line.684"></a>
+<span class="sourceLineNo">685</span>     * &lt;div class="en"&gt;Translate a pinpad session TPK pin block to online TPK pin block.&lt;/div&gt;<a name="line.685"></a>
+<span class="sourceLineNo">686</span>     * <a name="line.686"></a>
+<span class="sourceLineNo">687</span>     * @param pinpadTPKIndex &lt;div class="zh"&gt;PED_PPAD_TPK密钥索引。取值范围:1~100。&lt;/div&gt; <a name="line.687"></a>
+<span class="sourceLineNo">688</span>     * &lt;div class="en"&gt;PinBlock’s TPK, must be the pinpad session TPK(type is PED_PPAD_TPK).Value range:1~100&lt;/div&gt;<a name="line.688"></a>
+<span class="sourceLineNo">689</span>     * <a name="line.689"></a>
+<span class="sourceLineNo">690</span>     * @param pinpadPinBlock &lt;div class="zh"&gt;8字节ISO9564 格式 1的PINBlock。&lt;/div&gt; &lt;div class="en"&gt;Pin block for Translating from pinpad, must use format 1, 8 bytes.&lt;/div&gt;<a name="line.690"></a>
+<span class="sourceLineNo">691</span>     * <a name="line.691"></a>
+<span class="sourceLineNo">692</span>     * @param destTPKIndex &lt;div class="zh"&gt;目的TPK密钥索引，必须是online TPK。取值范围：1~100。&lt;/div&gt; &lt;div class="en"&gt;Destination TPK index, must be the online TPK. Value range:1~100.&lt;/div&gt;<a name="line.692"></a>
+<span class="sourceLineNo">693</span>     * <a name="line.693"></a>
+<span class="sourceLineNo">694</span>     * @param destKeyType <a name="line.694"></a>
+<span class="sourceLineNo">695</span>     * &lt;div class="zh"&gt;<a name="line.695"></a>
+<span class="sourceLineNo">696</span>     *  &lt;ul&gt;<a name="line.696"></a>
+<span class="sourceLineNo">697</span>     *   &lt;li&gt;0x03:TPK&lt;/li&gt;<a name="line.697"></a>
+<span class="sourceLineNo">698</span>     *   &lt;li&gt;0x07:TIK&lt;/li&gt;<a name="line.698"></a>
+<span class="sourceLineNo">699</span>     *   &lt;li&gt;0x23:AES_TPK&lt;/li&gt;<a name="line.699"></a>
+<span class="sourceLineNo">700</span>     *   &lt;li&gt;0x51:AES_TIK&lt;/li&gt;<a name="line.700"></a>
+<span class="sourceLineNo">701</span>     *  &lt;/ul&gt;<a name="line.701"></a>
+<span class="sourceLineNo">702</span>     * &lt;/div&gt; <a name="line.702"></a>
+<span class="sourceLineNo">703</span>     * &lt;div class="en"&gt;<a name="line.703"></a>
+<span class="sourceLineNo">704</span>     *  &lt;ul&gt;<a name="line.704"></a>
+<span class="sourceLineNo">705</span>     *   &lt;li&gt;0x03:TPK&lt;/li&gt;<a name="line.705"></a>
+<span class="sourceLineNo">706</span>     *   &lt;li&gt;0x07:TIK&lt;/li&gt;<a name="line.706"></a>
+<span class="sourceLineNo">707</span>     *   &lt;li&gt;0x23:AES_TPK&lt;/li&gt;<a name="line.707"></a>
+<span class="sourceLineNo">708</span>     *   &lt;li&gt;0x51:AES_TIK&lt;/li&gt;<a name="line.708"></a>
+<span class="sourceLineNo">709</span>     *  &lt;/ul&gt;<a name="line.709"></a>
+<span class="sourceLineNo">710</span>     * &lt;/div&gt;<a name="line.710"></a>
+<span class="sourceLineNo">711</span>     * <a name="line.711"></a>
+<span class="sourceLineNo">712</span>     * @param dataIn &lt;div class="zh"&gt;<a name="line.712"></a>
+<span class="sourceLineNo">713</span>     *  &lt;ul&gt;<a name="line.713"></a>
+<span class="sourceLineNo">714</span>     *   &lt;li&gt;当mode=0x00时, DataIn指向卡号移位后生成的16位主帐号。&lt;/li&gt;<a name="line.714"></a>
+<span class="sourceLineNo">715</span>     *   &lt;li&gt;当mode=0x01时, 输入参数为参与PinBlock的格式化,8字节数据(根据ISO9564的规范,该数据可以是随机数、交易流水号或时间戳等)。&lt;/li&gt;<a name="line.715"></a>
+<span class="sourceLineNo">716</span>     *   &lt;li&gt;当mode=0x02时, DataIn指向卡号移位后生成的16位主帐号,DataIn+16指向参与PinBlock格式化的8字节数据(根据ISO9564的规范，<a name="line.716"></a>
+<span class="sourceLineNo">717</span>     *      ,该数据可以是随机数、交易流水号或时间戳等,但是每个字节的高4位和低4位,均必须在0xA~0xF之间,所以当Mode为0x02时,应用需要将该8字节的数据做此检查,如果不满足要求将返回错误)&lt;/li&gt;<a name="line.717"></a>
+<span class="sourceLineNo">718</span>     *   &lt;li&gt;当mode=0x03时, 为交易流水号ISN [6 Bytes,ASCII码]&lt;/li&gt;<a name="line.718"></a>
+<span class="sourceLineNo">719</span>     *  &lt;/ul&gt;<a name="line.719"></a>
+<span class="sourceLineNo">720</span>     * &lt;/div&gt; <a name="line.720"></a>
+<span class="sourceLineNo">721</span>     * &lt;div class="en"&gt;<a name="line.721"></a>
+<span class="sourceLineNo">722</span>     *  &lt;ul&gt;<a name="line.722"></a>
+<span class="sourceLineNo">723</span>     *   &lt;li&gt;When mode=0x00, DataIn is the 16 bytes primary account number after shifting.&lt;/li&gt;<a name="line.723"></a>
+<span class="sourceLineNo">724</span>     *   &lt;li&gt;When mode=0x01, Input parameters for participation in PinBlock formatting, 8 bytes data. (refer to<a name="line.724"></a>
+<span class="sourceLineNo">725</span>     *      ISO9564 standard, this data can be Random number, the transaction serial number or time stamp, etc.)&lt;/li&gt;<a name="line.725"></a>
+<span class="sourceLineNo">726</span>     *   &lt;li&gt;When mode=0x02, DataIn is the 16 bytes primary account number after shifting. DataIn+16 point to<a name="line.726"></a>
+<span class="sourceLineNo">727</span>     *      the 8 bytes data which has participated in PinBlock formatting. (refer to ISO9564 standard, this data<a name="line.727"></a>
+<span class="sourceLineNo">728</span>     *      can be Random number, the transaction serial number or time stamp,etc. But the higher 4 bits and lower<a name="line.728"></a>
+<span class="sourceLineNo">729</span>     *      4 bits of each byte should between 0xA~0xF. So, if the Mode=0x02, the bottom level will do this check<a name="line.729"></a>
+<span class="sourceLineNo">730</span>     *      for the 8 bytes data, it will return an error if does not meet the requirement.).&lt;/li&gt;<a name="line.730"></a>
+<span class="sourceLineNo">731</span>     *   &lt;li&gt;When mode=0x03, dataIn is ISN [6 Bytes, ASCII code]&lt;/li&gt;<a name="line.731"></a>
+<span class="sourceLineNo">732</span>     *  &lt;/ul&gt;<a name="line.732"></a>
+<span class="sourceLineNo">733</span>     * &lt;/div&gt;<a name="line.733"></a>
+<span class="sourceLineNo">734</span>     * <a name="line.734"></a>
+<span class="sourceLineNo">735</span>     * @param mode &lt;div class="zh"&gt;PIN Block的格式。<a name="line.735"></a>
+<span class="sourceLineNo">736</span>     *  &lt;ul&gt;<a name="line.736"></a>
+<span class="sourceLineNo">737</span>     *   &lt;li&gt;0x00:ISO9564 格式 0&lt;/li&gt;<a name="line.737"></a>
+<span class="sourceLineNo">738</span>     *   &lt;li&gt;0x01:ISO9564 格式 1&lt;/li&gt;<a name="line.738"></a>
+<span class="sourceLineNo">739</span>     *   &lt;li&gt;0x02:ISO9564 格式 3&lt;/li&gt;<a name="line.739"></a>
+<span class="sourceLineNo">740</span>     *   &lt;li&gt;0x03:HK EPS 专用格式&lt;/li&gt;<a name="line.740"></a>
+<span class="sourceLineNo">741</span>     *  &lt;/ul&gt;<a name="line.741"></a>
+<span class="sourceLineNo">742</span>     * &lt;/div&gt; <a name="line.742"></a>
+<span class="sourceLineNo">743</span>     * &lt;div class="en"&gt; PIN Block format.<a name="line.743"></a>
+<span class="sourceLineNo">744</span>     *  &lt;ul&gt;<a name="line.744"></a>
+<span class="sourceLineNo">745</span>     *   &lt;li&gt;0x00:ISO9564 format 0&lt;/li&gt;<a name="line.745"></a>
+<span class="sourceLineNo">746</span>     *   &lt;li&gt;0x01:ISO9564 format 1&lt;/li&gt;<a name="line.746"></a>
+<span class="sourceLineNo">747</span>     *   &lt;li&gt;0x02:ISO9564 format 3&lt;/li&gt;<a name="line.747"></a>
+<span class="sourceLineNo">748</span>     *   &lt;li&gt;0x03:HK EPS -EPS PINBLOCK Format&lt;/li&gt;<a name="line.748"></a>
+<span class="sourceLineNo">749</span>     *  &lt;/ul&gt;<a name="line.749"></a>
+<span class="sourceLineNo">750</span>     * &lt;/div&gt;<a name="line.750"></a>
+<span class="sourceLineNo">751</span>     * <a name="line.751"></a>
+<span class="sourceLineNo">752</span>     * @return &lt;div class="zh"&gt;16字节的目的PINBlock。&lt;/div&gt; &lt;div class="en"&gt;16-bytes destination pin block.&lt;/div&gt;<a name="line.752"></a>
+<span class="sourceLineNo">753</span>     * <a name="line.753"></a>
+<span class="sourceLineNo">754</span>     * @throws PedDevException<a name="line.754"></a>
+<span class="sourceLineNo">755</span>     * @since V3.17.00<a name="line.755"></a>
+<span class="sourceLineNo">756</span>     */<a name="line.756"></a>
+<span class="sourceLineNo">757</span>    byte[] convertPinBlock(byte pinpadTPKIndex, byte[] pinpadPinBlock, byte destTPKIndex, byte destKeyType, byte[] dataIn, byte mode) throws PedDevException;<a name="line.757"></a>
+<span class="sourceLineNo">758</span>    <a name="line.758"></a>
+<span class="sourceLineNo">759</span>    /**<a name="line.759"></a>
+<span class="sourceLineNo">760</span>     * &lt;div class="zh"&gt;从外置PINPAD获取TXK（交换密钥）。&lt;/div&gt; &lt;div class="en"&gt;Get TXK (exchange key) from external PINPAD.&lt;/div&gt;<a name="line.760"></a>
+<span class="sourceLineNo">761</span>     * <a name="line.761"></a>
+<span class="sourceLineNo">762</span>     * @param info &lt;div class="zh"&gt;RSA公钥。&lt;/div&gt; &lt;div class="en"&gt;RSA public key.&lt;/div&gt;<a name="line.762"></a>
+<span class="sourceLineNo">763</span>     * <a name="line.763"></a>
+<span class="sourceLineNo">764</span>     * @param param &lt;div class="zh"&gt;端口通信参数。{@link UartParam}&lt;/div&gt; &lt;div class="en"&gt;Port communication parameters.{@link UartParam}&lt;/div&gt;<a name="line.764"></a>
+<span class="sourceLineNo">765</span>     * <a name="line.765"></a>
+<span class="sourceLineNo">766</span>     * @return &lt;div class="zh"&gt;TXK（交换密钥）。&lt;/div&gt; &lt;div class="en"&gt;TXK(exchange key).&lt;/div&gt;<a name="line.766"></a>
+<span class="sourceLineNo">767</span>     * <a name="line.767"></a>
+<span class="sourceLineNo">768</span>     * @throws PedDevException<a name="line.768"></a>
+<span class="sourceLineNo">769</span>     */<a name="line.769"></a>
+<span class="sourceLineNo">770</span>    // byte[] getTXKFromPinPad(RSAKeyInfo info, UartParam param) throws PedDevException;<a name="line.770"></a>
+<span class="sourceLineNo">771</span>    <a name="line.771"></a>
+<span class="sourceLineNo">772</span>    /**<a name="line.772"></a>
+<span class="sourceLineNo">773</span>     * &lt;div class="zh"&gt;向外置PINPAD写PPAD_TMK密钥。&lt;/div&gt; &lt;div class="en"&gt;Write the PPAD_TMK key to the external PINPAD.&lt;/div&gt;<a name="line.773"></a>
+<span class="sourceLineNo">774</span>     * <a name="line.774"></a>
+<span class="sourceLineNo">775</span>     * @param tmk &lt;div class="zh"&gt;PPAD_TMK主密钥。&lt;/div&gt; &lt;div class="en"&gt;PPAD_TMK master key.&lt;/div&gt;<a name="line.775"></a>
+<span class="sourceLineNo">776</span>     * <a name="line.776"></a>
+<span class="sourceLineNo">777</span>     * @param param &lt;div class="zh"&gt;端口通信参数。{@link UartParam}&lt;/div&gt; &lt;div class="en"&gt;Port communication parameters.{@link UartParam}&lt;/div&gt;<a name="line.777"></a>
+<span class="sourceLineNo">778</span>     * <a name="line.778"></a>
+<span class="sourceLineNo">779</span>     * @throws PedDevException<a name="line.779"></a>
+<span class="sourceLineNo">780</span>     */<a name="line.780"></a>
+<span class="sourceLineNo">781</span>    // void writeTMKToPinPad(byte[] tmk, UartParam param) throws PedDevException;<a name="line.781"></a>
+<span class="sourceLineNo">782</span>    <a name="line.782"></a>
+<span class="sourceLineNo">783</span>    /**<a name="line.783"></a>
+<span class="sourceLineNo">784</span>     * &lt;div class="zh"&gt;向外置PINPAD写PPAD_TPK密钥。&lt;/div&gt; &lt;div class="en"&gt;Write the PPAD_TPK key to the external PINPAD.&lt;/div&gt;<a name="line.784"></a>
+<span class="sourceLineNo">785</span>     * <a name="line.785"></a>
+<span class="sourceLineNo">786</span>     * @param srcIndex &lt;div class="zh"&gt;用该索引指定的主密钥对tpk进行mode方式的计算后再写入。如果srcIndex=0,不进行任何计算,直接写入。&lt;/div&gt; <a name="line.786"></a>
+<span class="sourceLineNo">787</span>     * &lt;div class="en"&gt;Calculate the TPK in mode with the master key specified by the index before writing. if srcIndex = 0, no calculation, write directly.&lt;/div&gt;<a name="line.787"></a>
+<span class="sourceLineNo">788</span>     * <a name="line.788"></a>
+<span class="sourceLineNo">789</span>     * @param destIndex &lt;div class="zh"&gt;密钥写入的索引(工作密钥区)。&lt;/div&gt; &lt;div class="en"&gt;The index to which the key is written (the working key area).&lt;/div&gt;<a name="line.789"></a>
+<span class="sourceLineNo">790</span>     * <a name="line.790"></a>
+<span class="sourceLineNo">791</span>     * @param tpk &lt;div class="zh"&gt;PPAD_TPK密钥。&lt;/div&gt; &lt;div class="en"&gt;PPAD_TPK keys.&lt;/div&gt;<a name="line.791"></a>
+<span class="sourceLineNo">792</span>     * <a name="line.792"></a>
+<span class="sourceLineNo">793</span>     * @param mode &lt;div class="zh"&gt;<a name="line.793"></a>
+<span class="sourceLineNo">794</span>     *  &lt;ul&gt;<a name="line.794"></a>
+<span class="sourceLineNo">795</span>     *   &lt;p&gt;当主密钥TMK和工作密钥TPK均为单DES 8字节密钥。&lt;/p&gt;<a name="line.795"></a>
+<span class="sourceLineNo">796</span>     *   &lt;li&gt;0x01:DES加密&lt;/li&gt;<a name="line.796"></a>
+<span class="sourceLineNo">797</span>     *   &lt;li&gt;0x81:DES解密&lt;/li&gt;<a name="line.797"></a>
+<span class="sourceLineNo">798</span>     *   &lt;p&gt;当主密钥TMK为3DES 16字节密钥，工作密钥TPK为单DES 8字节密钥。&lt;/p&gt;<a name="line.798"></a>
+<span class="sourceLineNo">799</span>     *   &lt;li&gt;0x03:3DES加密&lt;/li&gt;<a name="line.799"></a>
+<span class="sourceLineNo">800</span>     *   &lt;li&gt;0x31:3DES加密&lt;/li&gt;<a name="line.800"></a>
+<span class="sourceLineNo">801</span>     *   &lt;li&gt;0x83:3DES解密&lt;/li&gt;<a name="line.801"></a>
+<span class="sourceLineNo">802</span>     *   &lt;li&gt;0xb1:3DES解密&lt;/li&gt;<a name="line.802"></a>
+<span class="sourceLineNo">803</span>     *   &lt;p&gt;当主密钥TMK为3DES 24字节密钥，工作密钥TPK为单DES 8字节密钥。&lt;/p&gt;<a name="line.803"></a>
+<span class="sourceLineNo">804</span>     *   &lt;li&gt;0x07:3DES加密&lt;/li&gt;<a name="line.804"></a>
+<span class="sourceLineNo">805</span>     *   &lt;li&gt;0x87:3DES解密&lt;/li&gt;<a name="line.805"></a>
+<span class="sourceLineNo">806</span>     *   &lt;p&gt;当主密钥TMK和工作密钥TPK均为3DES 16字节密钥。&lt;/p&gt;<a name="line.806"></a>
+<span class="sourceLineNo">807</span>     *   &lt;li&gt;0x33:3DES加密&lt;/li&gt;<a name="line.807"></a>
+<span class="sourceLineNo">808</span>     *   &lt;li&gt;0xb3:3DES解密&lt;/li&gt;<a name="line.808"></a>
+<span class="sourceLineNo">809</span>     *   &lt;p&gt;当主密钥TMK为3DES 24字节密钥，工作密钥TPK为单DES 8字节密钥。&lt;/p&gt;<a name="line.809"></a>
+<span class="sourceLineNo">810</span>     *   &lt;li&gt;0x71:3DES加密&lt;/li&gt;<a name="line.810"></a>
+<span class="sourceLineNo">811</span>     *   &lt;li&gt;0xf1:3DES解密&lt;/li&gt;<a name="line.811"></a>
+<span class="sourceLineNo">812</span>     *   &lt;p&gt;当主密钥TMK为3DES 24字节密钥，工作密钥TPK为单DES 16字节密钥。&lt;/p&gt;<a name="line.812"></a>
+<span class="sourceLineNo">813</span>     *   &lt;li&gt;0x73:3DES加密&lt;/li&gt;<a name="line.813"></a>
+<span class="sourceLineNo">814</span>     *   &lt;li&gt;0xf3:3DES解密&lt;/li&gt;<a name="line.814"></a>
+<span class="sourceLineNo">815</span>     *   &lt;p&gt;当主密钥TMK和工作密钥TPK均为3DES 24字节密钥。&lt;/p&gt;<a name="line.815"></a>
+<span class="sourceLineNo">816</span>     *   &lt;li&gt;0x77:3DES加密&lt;/li&gt;<a name="line.816"></a>
+<span class="sourceLineNo">817</span>     *   &lt;li&gt;0xf7:3DES解密&lt;/li&gt;<a name="line.817"></a>
+<span class="sourceLineNo">818</span>     *  &lt;/ul&gt;<a name="line.818"></a>
+<span class="sourceLineNo">819</span>     * &lt;/div&gt; <a name="line.819"></a>
+<span class="sourceLineNo">820</span>     * &lt;div class="en"&gt;<a name="line.820"></a>
+<span class="sourceLineNo">821</span>     *  &lt;ul&gt;<a name="line.821"></a>
+<span class="sourceLineNo">822</span>     *   &lt;p&gt;When the master key TMK and the working key TPK are both single DES 8-byte keys.&lt;/p&gt;<a name="line.822"></a>
+<span class="sourceLineNo">823</span>     *   &lt;li&gt;0x01:DES encryption&lt;/li&gt;<a name="line.823"></a>
+<span class="sourceLineNo">824</span>     *   &lt;li&gt;0x81:DES decryption&lt;/li&gt;<a name="line.824"></a>
+<span class="sourceLineNo">825</span>     *   &lt;p&gt;When the master key TMK is a 3DES 16-byte key, the working key TPK is a single DES 8-byte key.&lt;/p&gt;<a name="line.825"></a>
+<span class="sourceLineNo">826</span>     *   &lt;li&gt;0x03:3DES encryption&lt;/li&gt;<a name="line.826"></a>
+<span class="sourceLineNo">827</span>     *   &lt;li&gt;0x31:3DES encryption&lt;/li&gt;<a name="line.827"></a>
+<span class="sourceLineNo">828</span>     *   &lt;li&gt;0x83:3DES decryption&lt;/li&gt;<a name="line.828"></a>
+<span class="sourceLineNo">829</span>     *   &lt;li&gt;0xb1:3DES decryption&lt;/li&gt;<a name="line.829"></a>
+<span class="sourceLineNo">830</span>     *   &lt;p&gt;When the master key TMK is a 3DES 24-byte key, the working key TPK is a single DES 8-byte key.&lt;/p&gt;<a name="line.830"></a>
+<span class="sourceLineNo">831</span>     *   &lt;li&gt;0x07:3DES encryption&lt;/li&gt;<a name="line.831"></a>
+<span class="sourceLineNo">832</span>     *   &lt;li&gt;0x87:3DES decryption&lt;/li&gt;<a name="line.832"></a>
+<span class="sourceLineNo">833</span>     *   &lt;p&gt;When the master key TMK and the working key TPK are both 3DES 16-byte keys.&lt;/p&gt;<a name="line.833"></a>
+<span class="sourceLineNo">834</span>     *   &lt;li&gt;0x33:3DES encryption&lt;/li&gt;<a name="line.834"></a>
+<span class="sourceLineNo">835</span>     *   &lt;li&gt;0xb3:3DES decryption&lt;/li&gt;<a name="line.835"></a>
+<span class="sourceLineNo">836</span>     *   &lt;p&gt;When the master key TMK is a 3DES 24-byte key, the working key TPK is a single DES 8-byte key.&lt;/p&gt;<a name="line.836"></a>
+<span class="sourceLineNo">837</span>     *   &lt;li&gt;0x71:3DES encryption&lt;/li&gt;<a name="line.837"></a>
+<span class="sourceLineNo">838</span>     *   &lt;li&gt;0xf1:3DES decryption&lt;/li&gt;<a name="line.838"></a>
+<span class="sourceLineNo">839</span>     *   &lt;p&gt;When the master key TMK is a 3DES 24-byte key, the working key TPK is a single DES 16-byte key.&lt;/p&gt;<a name="line.839"></a>
+<span class="sourceLineNo">840</span>     *   &lt;li&gt;0x73:3DES encryption&lt;/li&gt;<a name="line.840"></a>
+<span class="sourceLineNo">841</span>     *   &lt;li&gt;0xf3:3DES decryption&lt;/li&gt;<a name="line.841"></a>
+<span class="sourceLineNo">842</span>     *   &lt;p&gt;When the master key TMK and the working key TPK are both 3DES 24-byte keys.&lt;/p&gt;<a name="line.842"></a>
+<span class="sourceLineNo">843</span>     *   &lt;li&gt;0x77:3DES encryption&lt;/li&gt;<a name="line.843"></a>
+<span class="sourceLineNo">844</span>     *   &lt;li&gt;0xf7:3DES decryption&lt;/li&gt;<a name="line.844"></a>
+<span class="sourceLineNo">845</span>     *  &lt;/ul&gt;<a name="line.845"></a>
+<span class="sourceLineNo">846</span>     * &lt;/div&gt;<a name="line.846"></a>
+<span class="sourceLineNo">847</span>     * <a name="line.847"></a>
+<span class="sourceLineNo">848</span>     * @param param &lt;div class="zh"&gt;端口通信参数。{@link UartParam}&lt;/div&gt; &lt;div class="en"&gt;Port communication parameters.{@link UartParam}&lt;/div&gt;<a name="line.848"></a>
+<span class="sourceLineNo">849</span>     * <a name="line.849"></a>
+<span class="sourceLineNo">850</span>     * @throws PedDevException<a name="line.850"></a>
+<span class="sourceLineNo">851</span>     */<a name="line.851"></a>
+<span class="sourceLineNo">852</span>    // void writeTPKToPinPad(byte srcIndex, byte destIndex, byte[] tpk, byte mode, UartParam param) throws PedDevException;<a name="line.852"></a>
+<span class="sourceLineNo">853</span>}<a name="line.853"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

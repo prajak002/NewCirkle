@@ -1,0 +1,8 @@
+com.pax.dal
+com.pax.dal.entity
+com.pax.dal.exceptions
+com.pax.dal.memorycard
+com.pax.dal.pedkeyisolation
+com.pax.dal.proxy
+com.pax.dal.utils
+com.pax.neptunelite.api

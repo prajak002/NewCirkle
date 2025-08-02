@@ -1,0 +1,338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span>package com.pax.dal.entity;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>/**<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * &lt;div class="zh"&gt;设置菜单和快捷设置&lt;/div&gt; &lt;div class="en"&gt;Settings menu and quick settings&lt;/div&gt;<a name="line.19"></a>
+<span class="sourceLineNo">020</span> */<a name="line.20"></a>
+<span class="sourceLineNo">021</span>public enum PosMenu {<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    /**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>     * &lt;div class="zh"&gt;下拉栏-wifi开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Wifi switch&lt;/div&gt;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>    QS_WIFI("wifi"),<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;div class="zh"&gt;下拉栏-蓝牙开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Bluetooth switch&lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    QS_BT("bt"),<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * &lt;div class="zh"&gt;下拉栏-蜂窝数据开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Cellular data switch&lt;/div&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     */<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    QS_DATA("data"),<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * &lt;div class="zh"&gt;下拉栏-移动网络类型开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Mobile network type switch&lt;/div&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    QS_LTE("lte"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt;下拉栏-飞行模式开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Airplane mode switch&lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     */<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    QS_AIRPLANE("airplane"),<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    /**<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * &lt;div class="zh"&gt;设置菜单-WiFi&lt;/div&gt; &lt;div class="en"&gt;Settings menu -WiFi&lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     */<a name="line.44"></a>
+<span class="sourceLineNo">045</span>    WIFI("wifi_settings"),<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * &lt;div class="zh"&gt;设置菜单-蓝牙&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Bluetooth&lt;/div&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    BT("bluetooth_settings"),<a name="line.49"></a>
+<span class="sourceLineNo">050</span>    /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * &lt;div class="zh"&gt;设置菜单-蓝牙网络共享&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Bluetooth network sharing&lt;/div&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     */<a name="line.52"></a>
+<span class="sourceLineNo">053</span>    BT_TETHER("bt_tether_settings"),<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    /**<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * &lt;div class="zh"&gt;设置菜单-SIM卡&lt;/div&gt; &lt;div class="en"&gt;Settings menu -SIM card&lt;/div&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    SIM("sim_settings"),<a name="line.57"></a>
+<span class="sourceLineNo">058</span>    /**<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * &lt;div class="zh"&gt;设置菜单-流量使用情况&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Data usage&lt;/div&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    DATA_USAGE("data_usage_settings"),<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    /**<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * &lt;div class="zh"&gt;设置菜单-更多&lt;/div&gt; &lt;div class="en"&gt;Settings menu - More&lt;/div&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    MORE("wireless_settings"),<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    /**<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * &lt;div class="zh"&gt;设置菜单-密码&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Password&lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    PASSWORD("password_settings"),<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    /**<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * &lt;div class="zh"&gt;设置菜单-显示&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Display&lt;/div&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    DISPLAY("display_settings"),<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * &lt;div class="zh"&gt;设置菜单-通知&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Notifications&lt;/div&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     */<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    NOTIFICATION("notification_settings"),<a name="line.77"></a>
+<span class="sourceLineNo">078</span>    /**<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * &lt;div class="zh"&gt;设置菜单-应用&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Apps&lt;/div&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    APPS("application_settings"),<a name="line.81"></a>
+<span class="sourceLineNo">082</span>    /**<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * &lt;div class="zh"&gt;设置菜单-储存&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Storage&lt;/div&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    STORAGE("storage_settings"),<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * &lt;div class="zh"&gt;设置菜单-电池&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Battery&lt;/div&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     */<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    BATTERY("battery_settings"),<a name="line.89"></a>
+<span class="sourceLineNo">090</span>    /**<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * &lt;div class="zh"&gt;设置菜单-内存&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Memory&lt;/div&gt;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     */<a name="line.92"></a>
+<span class="sourceLineNo">093</span>    MEMORY("manage_memory"),<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    /**<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     * &lt;div class="zh"&gt;设置菜单-位置信息&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Location&lt;/div&gt;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    LOCATION("location_settings"),<a name="line.97"></a>
+<span class="sourceLineNo">098</span>    /**<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     * &lt;div class="zh"&gt;设置菜单-安全&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Security&lt;/div&gt;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     */<a name="line.100"></a>
+<span class="sourceLineNo">101</span>    SECURITY("security_settings"),<a name="line.101"></a>
+<span class="sourceLineNo">102</span>    /**<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * &lt;div class="zh"&gt;设置菜单-帐户&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Accounts&lt;/div&gt;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     */<a name="line.104"></a>
+<span class="sourceLineNo">105</span>    ACCOUNTS("account_settings"),<a name="line.105"></a>
+<span class="sourceLineNo">106</span>    /**<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     * &lt;div class="zh"&gt;设置菜单-语言和输入法&lt;/div&gt; &lt;div class="en"&gt;Settings menu - language and input&lt;/div&gt;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     */<a name="line.108"></a>
+<span class="sourceLineNo">109</span>    LANGUAGE("language_settings"),<a name="line.109"></a>
+<span class="sourceLineNo">110</span>    /**<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * &lt;div class="zh"&gt;设置菜单-备份和重置&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Backpu and reset&lt;/div&gt;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     */<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    PRIVACY("privacy_settings"),<a name="line.113"></a>
+<span class="sourceLineNo">114</span>    /**<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     * &lt;div class="zh"&gt;设置菜单-日期和时间&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Date and time&lt;/div&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     */<a name="line.116"></a>
+<span class="sourceLineNo">117</span>    DATE("date_time_settings"),<a name="line.117"></a>
+<span class="sourceLineNo">118</span>    /**<a name="line.118"></a>
+<span class="sourceLineNo">119</span>     * &lt;div class="zh"&gt;设置菜单-无障碍&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Accesssibility&lt;/div&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     */<a name="line.120"></a>
+<span class="sourceLineNo">121</span>    ACCESSIBILITY("accessibility_settings"),<a name="line.121"></a>
+<span class="sourceLineNo">122</span>    /**<a name="line.122"></a>
+<span class="sourceLineNo">123</span>     * &lt;div class="zh"&gt;设置菜单-打印&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Printer&lt;/div&gt;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>     */<a name="line.124"></a>
+<span class="sourceLineNo">125</span>    PRINTING("print_settings"),<a name="line.125"></a>
+<span class="sourceLineNo">126</span>    /**<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     * &lt;div class="zh"&gt;设置菜单-关于设备&lt;/div&gt; &lt;div class="en"&gt;Settings menu - About device&lt;/div&gt;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>     */<a name="line.128"></a>
+<span class="sourceLineNo">129</span>    ABOUT("about_settings"),<a name="line.129"></a>
+<span class="sourceLineNo">130</span>    /**<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     * &lt;div class="zh"&gt;设置菜单-系统更新&lt;/div&gt; &lt;div class="en"&gt;Settings menu - System updates&lt;/div&gt;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     */<a name="line.132"></a>
+<span class="sourceLineNo">133</span>    UPDATES("pax_ota_settings"),<a name="line.133"></a>
+<span class="sourceLineNo">134</span>    /**<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     * &lt;div class="zh"&gt;下拉栏-设置&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Settings&lt;/div&gt;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     */<a name="line.136"></a>
+<span class="sourceLineNo">137</span>    QS_SETTING("settings"),<a name="line.137"></a>
+<span class="sourceLineNo">138</span>    /**<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     * &lt;div class="zh"&gt;关机界面-飞行模式&lt;/div&gt; &lt;div class="en"&gt;Global action - Airplane mode&lt;/div&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     */<a name="line.140"></a>
+<span class="sourceLineNo">141</span>    GL_AIRPLANE("gl_airplane"),<a name="line.141"></a>
+<span class="sourceLineNo">142</span>    /**<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     * &lt;div class="zh"&gt;设置菜单-Google&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Google&lt;/div&gt;<a name="line.143"></a>
+<span class="sourceLineNo">144</span>     */<a name="line.144"></a>
+<span class="sourceLineNo">145</span>    GOOGLE("google_settings"),<a name="line.145"></a>
+<span class="sourceLineNo">146</span>    /**<a name="line.146"></a>
+<span class="sourceLineNo">147</span>     * &lt;div class="zh"&gt;下拉栏-热点开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Hotspot switch&lt;/div&gt;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     */<a name="line.148"></a>
+<span class="sourceLineNo">149</span>    QS_HOTSPOT("hotspot"),<a name="line.149"></a>
+<span class="sourceLineNo">150</span>    /**<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     * &lt;div class="zh"&gt;下拉栏-反色开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Inversion switch&lt;/div&gt;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     */<a name="line.152"></a>
+<span class="sourceLineNo">153</span>    QS_INVERSION("inversion"),<a name="line.153"></a>
+<span class="sourceLineNo">154</span>    /**<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     * &lt;div class="zh"&gt;下拉栏-流量节省开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Traffic saver switch&lt;/div&gt;<a name="line.155"></a>
+<span class="sourceLineNo">156</span>     */<a name="line.156"></a>
+<span class="sourceLineNo">157</span>    QS_SAVER("saver"),<a name="line.157"></a>
+<span class="sourceLineNo">158</span>    /**<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     * &lt;div class="zh"&gt;下拉栏-勿扰开关&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Do Not Disturb switch&lt;/div&gt;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>     */<a name="line.160"></a>
+<span class="sourceLineNo">161</span>    QS_DND("dnd"),<a name="line.161"></a>
+<span class="sourceLineNo">162</span>    /**<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     * &lt;div class="zh"&gt;设置菜单-RKI下载&lt;/div&gt; &lt;div class="en"&gt;Settings menu - RKI Download&lt;/div&gt;<a name="line.163"></a>
+<span class="sourceLineNo">164</span>     */<a name="line.164"></a>
+<span class="sourceLineNo">165</span>    RKI_DOWNLOAD("rki_download"),<a name="line.165"></a>
+<span class="sourceLineNo">166</span><a name="line.166"></a>
+<span class="sourceLineNo">167</span>    /**<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     * &lt;div class="zh"&gt;下拉栏-修改&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Edit&lt;/div&gt;<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     * @since V3.19.00<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     */<a name="line.170"></a>
+<span class="sourceLineNo">171</span>    QS_EDIT("edit"),<a name="line.171"></a>
+<span class="sourceLineNo">172</span>    <a name="line.172"></a>
+<span class="sourceLineNo">173</span>    /**<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     * &lt;div class="zh"&gt;下拉栏-电池&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Battery&lt;/div&gt;<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * @since V3.19.00<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     */<a name="line.176"></a>
+<span class="sourceLineNo">177</span>    QS_BATTERY("battery"),<a name="line.177"></a>
+<span class="sourceLineNo">178</span>    /**<a name="line.178"></a>
+<span class="sourceLineNo">179</span>     * &lt;div class="zh"&gt;下拉栏-旋转&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Rotation&lt;/div&gt;<a name="line.179"></a>
+<span class="sourceLineNo">180</span>     * @since V3.19.00<a name="line.180"></a>
+<span class="sourceLineNo">181</span>     */<a name="line.181"></a>
+<span class="sourceLineNo">182</span>    QS_ROTATION("rotation"),<a name="line.182"></a>
+<span class="sourceLineNo">183</span><a name="line.183"></a>
+<span class="sourceLineNo">184</span>    /**<a name="line.184"></a>
+<span class="sourceLineNo">185</span>     * &lt;div class="zh"&gt;下拉栏-闪光灯&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - FlashLight&lt;/div&gt;<a name="line.185"></a>
+<span class="sourceLineNo">186</span>     * @since V3.19.00<a name="line.186"></a>
+<span class="sourceLineNo">187</span>     */<a name="line.187"></a>
+<span class="sourceLineNo">188</span>    QS_FLASHLIGHT("flashlight"),<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>    /**<a name="line.190"></a>
+<span class="sourceLineNo">191</span>     * &lt;div class="zh"&gt;下拉栏-定位&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Location&lt;/div&gt;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>     * @since V3.19.00<a name="line.192"></a>
+<span class="sourceLineNo">193</span>     */<a name="line.193"></a>
+<span class="sourceLineNo">194</span>    QS_LOCATION("location"),<a name="line.194"></a>
+<span class="sourceLineNo">195</span><a name="line.195"></a>
+<span class="sourceLineNo">196</span>    /**<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     * &lt;div class="zh"&gt;下拉栏-投射&lt;/div&gt; &lt;div class="en"&gt;Quick-Settings - Cast&lt;/div&gt;<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     */<a name="line.198"></a>
+<span class="sourceLineNo">199</span>    QS_CAST("cast"),<a name="line.199"></a>
+<span class="sourceLineNo">200</span><a name="line.200"></a>
+<span class="sourceLineNo">201</span>    /**<a name="line.201"></a>
+<span class="sourceLineNo">202</span>     * &lt;div class="zh"&gt;设置-HOME菜单&lt;/div&gt; &lt;div class="en"&gt;Home-Settings&lt;/div&gt;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>     */<a name="line.203"></a>
+<span class="sourceLineNo">204</span>    HOME_SETTINGS("home_settings"),<a name="line.204"></a>
+<span class="sourceLineNo">205</span><a name="line.205"></a>
+<span class="sourceLineNo">206</span>    /**<a name="line.206"></a>
+<span class="sourceLineNo">207</span>     * &lt;div class="zh"&gt;设置-user菜单&lt;/div&gt; &lt;div class="en"&gt;User-Settings&lt;/div&gt;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>     */<a name="line.208"></a>
+<span class="sourceLineNo">209</span>    USER_SETTINGS("users_settings"),<a name="line.209"></a>
+<span class="sourceLineNo">210</span><a name="line.210"></a>
+<span class="sourceLineNo">211</span>    /**<a name="line.211"></a>
+<span class="sourceLineNo">212</span>     * &lt;div class="zh"&gt;设置-热点和网络共享&lt;/div&gt; &lt;div class="en"&gt;Settings menu - Hotspot &amp; Tethering&lt;/div&gt;<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     */<a name="line.213"></a>
+<span class="sourceLineNo">214</span>    HOTSPOT_TETHERING("hotspot_tethering"),<a name="line.214"></a>
+<span class="sourceLineNo">215</span><a name="line.215"></a>
+<span class="sourceLineNo">216</span>    /**<a name="line.216"></a>
+<span class="sourceLineNo">217</span>     * &lt;div class="zh"&gt;下拉栏-亮度条&lt;/div&gt; &lt;div class="en"&gt;Drop-down bar - Brightness bar&lt;/div&gt;<a name="line.217"></a>
+<span class="sourceLineNo">218</span>     */<a name="line.218"></a>
+<span class="sourceLineNo">219</span>    QS_BRIGHTNESS("brightness"),<a name="line.219"></a>
+<span class="sourceLineNo">220</span><a name="line.220"></a>
+<span class="sourceLineNo">221</span>    /**<a name="line.221"></a>
+<span class="sourceLineNo">222</span>     * &lt;div class="zh"&gt;下拉栏-监管标签&lt;/div&gt; &lt;div class="en"&gt;Drop-down bar - Monitor TAB&lt;/div&gt;<a name="line.222"></a>
+<span class="sourceLineNo">223</span>     */<a name="line.223"></a>
+<span class="sourceLineNo">224</span>    QS_REGULATORYINFO("regulatoryinfo"),<a name="line.224"></a>
+<span class="sourceLineNo">225</span><a name="line.225"></a>
+<span class="sourceLineNo">226</span>    /**<a name="line.226"></a>
+<span class="sourceLineNo">227</span>     * &lt;div class="zh"&gt;下拉栏-情景模式&lt;/div&gt; &lt;div class="en"&gt;Drop-down bar - Situational model&lt;/div&gt;<a name="line.227"></a>
+<span class="sourceLineNo">228</span>     */<a name="line.228"></a>
+<span class="sourceLineNo">229</span>    QS_AUDIOPROFILE("audioprofile"),<a name="line.229"></a>
+<span class="sourceLineNo">230</span><a name="line.230"></a>
+<span class="sourceLineNo">231</span>    /**<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     * &lt;div class="zh"&gt;设置菜单-勿扰模式&lt;/div&gt; &lt;div class="en"&gt;Settings Menu - Do not disturb mode&lt;/div&gt;<a name="line.232"></a>
+<span class="sourceLineNo">233</span>     */<a name="line.233"></a>
+<span class="sourceLineNo">234</span>    DND_SETTINGS("dnd_settings"),<a name="line.234"></a>
+<span class="sourceLineNo">235</span><a name="line.235"></a>
+<span class="sourceLineNo">236</span>    /**<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     * &lt;div class="zh"&gt;设置菜单-显示密码&lt;/div&gt; &lt;div class="en"&gt;Settings Menu - Show password&lt;/div&gt;<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     */<a name="line.238"></a>
+<span class="sourceLineNo">239</span>    SHOW_PASSWORD_SETTINGS("show_password_settings"),<a name="line.239"></a>
+<span class="sourceLineNo">240</span><a name="line.240"></a>
+<span class="sourceLineNo">241</span>    /**<a name="line.241"></a>
+<span class="sourceLineNo">242</span>     * &lt;div class="zh"&gt;下拉菜单-护眼模式&lt;/div&gt; &lt;div class="en"&gt;Drop-down bar - night light&lt;/div&gt;<a name="line.242"></a>
+<span class="sourceLineNo">243</span>     */<a name="line.243"></a>
+<span class="sourceLineNo">244</span>    QS_EYE("eye"),<a name="line.244"></a>
+<span class="sourceLineNo">245</span><a name="line.245"></a>
+<span class="sourceLineNo">246</span>    /**<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     * &lt;div class="zh"&gt;下拉菜单-截屏&lt;/div&gt; &lt;div class="en"&gt;Drop-down bar - screenshot&lt;/div&gt;<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     */<a name="line.248"></a>
+<span class="sourceLineNo">249</span>    QS_SCREENSHOT("screenshot"),<a name="line.249"></a>
+<span class="sourceLineNo">250</span><a name="line.250"></a>
+<span class="sourceLineNo">251</span>    /**<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     * &lt;div class="zh"&gt;下拉菜单-屏幕录制&lt;/div&gt; &lt;div class="en"&gt;Drop-down bar - screen record&lt;/div&gt;<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     */<a name="line.253"></a>
+<span class="sourceLineNo">254</span>    QS_SCREEN_RECORD("screenrecord")<a name="line.254"></a>
+<span class="sourceLineNo">255</span>    ;<a name="line.255"></a>
+<span class="sourceLineNo">256</span><a name="line.256"></a>
+<span class="sourceLineNo">257</span>    private String value;<a name="line.257"></a>
+<span class="sourceLineNo">258</span><a name="line.258"></a>
+<span class="sourceLineNo">259</span>    private PosMenu(String value) {<a name="line.259"></a>
+<span class="sourceLineNo">260</span>        this.value = value;<a name="line.260"></a>
+<span class="sourceLineNo">261</span>    }<a name="line.261"></a>
+<span class="sourceLineNo">262</span><a name="line.262"></a>
+<span class="sourceLineNo">263</span>    public String toString() {<a name="line.263"></a>
+<span class="sourceLineNo">264</span>        return this.value;<a name="line.264"></a>
+<span class="sourceLineNo">265</span>    }<a name="line.265"></a>
+<span class="sourceLineNo">266</span>}<a name="line.266"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.entity.BatterySipper;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.pax.dal.entity.DeviceInfo;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pax.dal.entity.EmmcInfo;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.pax.dal.entity.AppNetworkStats;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.util.List;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.util.Map;<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>/**<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * @since V2.00.01<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * <a name="line.29"></a>
+<span class="sourceLineNo">030</span> */<a name="line.30"></a>
+<span class="sourceLineNo">031</span>public interface IDeviceInfo {<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>    public interface ProcessUsageListener {<a name="line.33"></a>
+<span class="sourceLineNo">034</span><a name="line.34"></a>
+<span class="sourceLineNo">035</span>        /**<a name="line.35"></a>
+<span class="sourceLineNo">036</span>         * &lt;div class="zh"&gt;系统资源信息 &lt;/div&gt;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>         * &lt;div class="en"&gt;System resource information&lt;/div&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         * @param cpuTotal<a name="line.38"></a>
+<span class="sourceLineNo">039</span>         *            &lt;div class="zh"&gt;设备CPU使用率 &lt;/div&gt; &lt;div class="en"&gt;Device CPU usage&lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>         * @param processNames<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         *            &lt;div class="zh"&gt;各进程名称 &lt;/div&gt; &lt;div class="en"&gt;Name of each process&lt;/div&gt;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         * @param cpuUsages<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         *            &lt;div class="zh"&gt; 各进程CPU使用率 &lt;/div&gt; &lt;div class="en"&gt;CPU usage of each process&lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>         * @param memUsages<a name="line.44"></a>
+<span class="sourceLineNo">045</span>         *            &lt;div class="zh"&gt;各进程memUsages使用情况 &lt;/div&gt; &lt;div class="en"&gt;memUsages by process&lt;/div&gt;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>         */<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        void onResult(float cpuTotal, String[] processNames, float[] cpuUsages, String[] memUsages);<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    }<a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span>    /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * &lt;div class="zh"&gt;模块支持定义 &lt;/div&gt; &lt;div class="en"&gt;module support &lt;/div&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * <a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * @author Steven.W<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * <a name="line.54"></a>
+<span class="sourceLineNo">055</span>     */<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    public static enum ESupported {<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        /**<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * &lt;div class="zh"&gt;支持 &lt;/div&gt; &lt;div class="en"&gt;support &lt;/div&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         */<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        YES,<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        /**<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * &lt;div class="zh"&gt; 不支持&lt;/div&gt; &lt;div class="en"&gt;not support &lt;/div&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         */<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        NO,<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * &lt;div class="zh"&gt; 无效的, 模块未定 &lt;/div&gt; &lt;div class="en"&gt;invalid &lt;/div&gt;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        INVALID,<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * &lt;div class="zh"&gt; 未知 &lt;/div&gt; &lt;div class="en"&gt;unknow &lt;/div&gt;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         */<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        UNKNOWN<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    }<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>    public interface ResultCallback {<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>        void onResult(boolean isSucc);<a name="line.77"></a>
+<span class="sourceLineNo">078</span>    }<a name="line.78"></a>
+<span class="sourceLineNo">079</span><a name="line.79"></a>
+<span class="sourceLineNo">080</span>    /**<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * &lt;div class="zh"&gt;磁条卡模块 &lt;/div&gt; &lt;div class="en"&gt;mag module &lt;/div&gt;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     */<a name="line.82"></a>
+<span class="sourceLineNo">083</span>    public static final int MODULE_MAG = 1;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    /**<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     * &lt;div class="zh"&gt;ICC模块 &lt;/div&gt; &lt;div class="en"&gt;icc module&lt;/div&gt;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     */<a name="line.86"></a>
+<span class="sourceLineNo">087</span>    public static final int MODULE_ICC = 2;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    /**<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     * &lt;div class="zh"&gt;PICC模块 &lt;/div&gt; &lt;div class="en"&gt;picc module&lt;/div&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     */<a name="line.90"></a>
+<span class="sourceLineNo">091</span>    public static final int MODULE_PICC = 3;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>    /**<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     * &lt;div class="zh"&gt;PED模块 &lt;/div&gt; &lt;div class="en"&gt;ped module &lt;/div&gt;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     */<a name="line.94"></a>
+<span class="sourceLineNo">095</span>    public static final int MODULE_PED = 4;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * &lt;div class="zh"&gt;物理键盘模块 &lt;/div&gt; &lt;div class="en"&gt;keyboard module&lt;/div&gt;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     */<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    public static final int MODULE_KEYBOARD = 5;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    /**<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * &lt;div class="zh"&gt;打印机模块 &lt;/div&gt; &lt;div class="en"&gt;printer module &lt;/div&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     */<a name="line.102"></a>
+<span class="sourceLineNo">103</span>    public static final int MODULE_PRINTER = 6;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>    /**<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * &lt;div class="zh"&gt; 蓝牙模块 &lt;/div&gt; &lt;div class="en"&gt;Bluetooth module &lt;/div&gt;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     */<a name="line.106"></a>
+<span class="sourceLineNo">107</span>    public static final int MODULE_BT = 7;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    /**<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * &lt;div class="zh"&gt;钱箱模块 &lt;/div&gt; &lt;div class="en"&gt;cash box module &lt;/div&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     */<a name="line.110"></a>
+<span class="sourceLineNo">111</span>    public static final int MODULE_CASH_BOX = 8;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    /**<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     * &lt;div class="zh"&gt;客显模块 &lt;/div&gt; &lt;div class="en"&gt;customer display&lt;/div&gt;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     */<a name="line.114"></a>
+<span class="sourceLineNo">115</span>    public static final int MODULE_CUSTOMER_DISPLAY = 9;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>    /**<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     * &lt;div class="zh"&gt; 以太网模块 &lt;/div&gt; &lt;div class="en"&gt;Ethernet module&lt;/div&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     */<a name="line.118"></a>
+<span class="sourceLineNo">119</span>    public static final int MODULE_ETHERNET = 10;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>    /**<a name="line.120"></a>
+<span class="sourceLineNo">121</span>     * &lt;div class="zh"&gt; 指纹识别模块&lt;/div&gt; &lt;div class="en"&gt;fingerprint reader module &lt;/div&gt;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     */<a name="line.122"></a>
+<span class="sourceLineNo">123</span>    public static final int MODULE_FINGERPRINT_READER = 11;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>    /**<a name="line.124"></a>
+<span class="sourceLineNo">125</span>     * &lt;div class="zh"&gt; 重力感应模块&lt;/div&gt; &lt;div class="en"&gt; GSensor module&lt;/div&gt;<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     */<a name="line.126"></a>
+<span class="sourceLineNo">127</span>    public static final int MODULE_G_SENSOR = 12;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>    /**<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     * &lt;div class="zh"&gt;HDMI模块 &lt;/div&gt; &lt;div class="en"&gt;HDMI module &lt;/div&gt;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     */<a name="line.130"></a>
+<span class="sourceLineNo">131</span>    public static final int MODULE_HDMI = 13;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>    /**<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     * &lt;div class="zh"&gt;身份证读卡器模块 &lt;/div&gt; &lt;div class="en"&gt;ID card reader module &lt;/div&gt;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     */<a name="line.134"></a>
+<span class="sourceLineNo">135</span>    public static final int MODULE_ID_CARD_READER = 14;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>    <a name="line.136"></a>
+<span class="sourceLineNo">137</span>    /**<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     * &lt;div class="zh"&gt; 国密模块 &lt;/div&gt; &lt;div class="en"&gt;SM module &lt;/div&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     */<a name="line.139"></a>
+<span class="sourceLineNo">140</span>    public static final int MODULE_SM = 15;<a name="line.140"></a>
+<span class="sourceLineNo">141</span>    <a name="line.141"></a>
+<span class="sourceLineNo">142</span>    /**<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     *&lt;div class="zh"&gt; Modem模块 &lt;/div&gt; &lt;div class="en"&gt;Modem module &lt;/div&gt; <a name="line.143"></a>
+<span class="sourceLineNo">144</span>     */<a name="line.144"></a>
+<span class="sourceLineNo">145</span>    public static final int MODULE_MODEM = 16;<a name="line.145"></a>
+<span class="sourceLineNo">146</span><a name="line.146"></a>
+<span class="sourceLineNo">147</span>    /**<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     * &lt;div class="zh"&gt; 硬扫码 &lt;/div&gt; &lt;div class="en"&gt;ScannerHw &lt;/div&gt;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     */<a name="line.149"></a>
+<span class="sourceLineNo">150</span>    public static final int MODULE_SCANNER_HW = 17;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>    <a name="line.151"></a>
+<span class="sourceLineNo">152</span>    /**<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * &lt;div class="zh"&gt; Wi-Fi模块。 &lt;/div&gt; &lt;div class="en"&gt;Wi-Fi module.&lt;/div&gt;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     */<a name="line.154"></a>
+<span class="sourceLineNo">155</span>    public static final int MODULE_WIFI = 18;<a name="line.155"></a>
+<span class="sourceLineNo">156</span>    /**<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     * &lt;div class="zh"&gt; Wi-Fi5G&lt;/div&gt; &lt;div class="en"&gt;Wi-Fi5G&lt;/div&gt;<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     */<a name="line.158"></a>
+<span class="sourceLineNo">159</span>    public static final int MODULE_WIFI5G = 19;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>    /**<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     * &lt;div class="zh"&gt;正面非接模块（非接模块分为正面非接和背面非接）&lt;/div&gt; &lt;div class="en"&gt;Front PICC(The PICC module is divided into front PICC and back PICC)&lt;/div&gt;<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     */<a name="line.162"></a>
+<span class="sourceLineNo">163</span>    public static final int MODULE_FRONT_PICC = 20;<a name="line.163"></a>
+<span class="sourceLineNo">164</span>    /**<a name="line.164"></a>
+<span class="sourceLineNo">165</span>     * &lt;div class="zh"&gt;SD卡槽&lt;/div&gt; &lt;div class="en"&gt;SD card slot&lt;/div&gt;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     */<a name="line.166"></a>
+<span class="sourceLineNo">167</span>    public static final int MODULE_SD_CARD_SLOT = 21;<a name="line.167"></a>
+<span class="sourceLineNo">168</span><a name="line.168"></a>
+<span class="sourceLineNo">169</span>    /**<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     * &lt;div class="zh"&gt;SIM卡槽&lt;/div&gt; &lt;div class="en"&gt;SIM card slot&lt;/div&gt;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     */<a name="line.171"></a>
+<span class="sourceLineNo">172</span>    public static final int MODULE_SIM_CARD_SLOT = 22;<a name="line.172"></a>
+<span class="sourceLineNo">173</span><a name="line.173"></a>
+<span class="sourceLineNo">174</span>    /**<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * &lt;div class="zh"&gt;获取指定时间段的日志文件  (日志级别：警告及以上)&lt;/div&gt; &lt;div class="en"&gt;Get log files for the specified time period <a name="line.175"></a>
+<span class="sourceLineNo">176</span>     * (log level: warning and above)&lt;/div&gt;<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     * <a name="line.177"></a>
+<span class="sourceLineNo">178</span>     * @param startDate &lt;div class="zh"&gt;开始日期(格式：yyyy-MM-dd)&lt;/div&gt; &lt;div class="en"&gt;Start date (format: yyyy-MM-dd)&lt;/div&gt;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>     * <a name="line.179"></a>
+<span class="sourceLineNo">180</span>     * @param endDate &lt;div class="zh"&gt;结束日期(格式：yyyy-MM-dd)&lt;/div&gt; &lt;div class="en"&gt;End date (format: yyyy--dd)&lt;/div&gt;<a name="line.180"></a>
+<span class="sourceLineNo">181</span>     * <a name="line.181"></a>
+<span class="sourceLineNo">182</span>     * @return &lt;div class="zh"&gt;日志文件的存储路径&lt;/div&gt; &lt;div class="en"&gt;The storage path for log files&lt;/div&gt;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>     * <a name="line.183"></a>
+<span class="sourceLineNo">184</span>     * @since V3.06.00<a name="line.184"></a>
+<span class="sourceLineNo">185</span>     * <a name="line.185"></a>
+<span class="sourceLineNo">186</span>     * 和{@link ISys#getAppLogs}接口重复<a name="line.186"></a>
+<span class="sourceLineNo">187</span>     */<a name="line.187"></a>
+<span class="sourceLineNo">188</span>    // public String getAppLogs(String startDate, String endDate);<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>    /**<a name="line.190"></a>
+<span class="sourceLineNo">191</span>     * &lt;div class="zh"&gt;获取系统消耗电池数据情况&lt;/div&gt;&lt;div class="en"&gt;Obtain the data situation of battery consumed by the system.&lt;/div&gt;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>     * <a name="line.192"></a>
+<span class="sourceLineNo">193</span>     * @return &lt;div class="zh"&gt;消耗电池数据情况 {@link BatterySipper}&lt;/div&gt;&lt;div class="en"&gt;Battery data consumption&lt;/div&gt;<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     * <a name="line.194"></a>
+<span class="sourceLineNo">195</span>     * @since V3.06.00<a name="line.195"></a>
+<span class="sourceLineNo">196</span>     */<a name="line.196"></a>
+<span class="sourceLineNo">197</span>    public List&lt;BatterySipper&gt; getBatteryUsages();<a name="line.197"></a>
+<span class="sourceLineNo">198</span><a name="line.198"></a>
+<span class="sourceLineNo">199</span>    /**<a name="line.199"></a>
+<span class="sourceLineNo">200</span>     * &lt;div class="zh"&gt; 获取设备被使用的失败总次数。收集磁条卡的刷卡失败次数和 接触式芯片卡与非接卡的Apdu exchange失败次数&lt;/div&gt; &lt;div class="en"&gt;Get failed count<a name="line.200"></a>
+<span class="sourceLineNo">201</span>     * for the device be used. collect swipe failed times for MagCard ,and Apdu exchange failed times for ICC and<a name="line.201"></a>
+<span class="sourceLineNo">202</span>     * PICC.&lt;/div&gt;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>     * <a name="line.203"></a>
+<span class="sourceLineNo">204</span>     * @param module<a name="line.204"></a>
+<span class="sourceLineNo">205</span>     *            &lt;div class="zh"&gt; 设备类型类型 ：1.磁条卡{@link #MODULE_MAG} 2.接触式芯片卡{@link #MODULE_ICC} 3.非接触式芯片卡<a name="line.205"></a>
+<span class="sourceLineNo">206</span>     *            {@link #MODULE_PICC}&lt;/div&gt; &lt;div class="en"&gt; device type：1.MagCard{@link #MODULE_MAG} 2.ICC<a name="line.206"></a>
+<span class="sourceLineNo">207</span>     *            {@link #MODULE_ICC} 3.PICC{@link #MODULE_PICC}&lt;/div&gt;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>     * @since V2.00.01<a name="line.208"></a>
+<span class="sourceLineNo">209</span>     * @return &lt;div class="zh"&gt;<a name="line.209"></a>
+<span class="sourceLineNo">210</span>     *         &lt;ul&gt;<a name="line.210"></a>
+<span class="sourceLineNo">211</span>     *         &lt;li&gt;&gt;0 返回失败次数&lt;/li&gt;<a name="line.211"></a>
+<span class="sourceLineNo">212</span>     *         &lt;li&gt;-1 表示系统不支持&lt;/li&gt;<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     *         &lt;li&gt;-2 模块超出定义范围&lt;/li&gt;<a name="line.213"></a>
+<span class="sourceLineNo">214</span>     *         &lt;/ul&gt;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.215"></a>
+<span class="sourceLineNo">216</span>     *         &lt;ul&gt;<a name="line.216"></a>
+<span class="sourceLineNo">217</span>     *         &lt;li&gt;&gt;0 usage count&lt;/li&gt;<a name="line.217"></a>
+<span class="sourceLineNo">218</span>     *         &lt;li&gt;-1 device not support&lt;/li&gt;<a name="line.218"></a>
+<span class="sourceLineNo">219</span>     *         &lt;li&gt;-2 not support module&lt;/li&gt;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>     *         &lt;/ul&gt;<a name="line.220"></a>
+<span class="sourceLineNo">221</span>     *         &lt;/div&gt;<a name="line.221"></a>
+<span class="sourceLineNo">222</span>     */<a name="line.222"></a>
+<span class="sourceLineNo">223</span>    public long getFailCount(int module);<a name="line.223"></a>
+<span class="sourceLineNo">224</span><a name="line.224"></a>
+<span class="sourceLineNo">225</span>    /**<a name="line.225"></a>
+<span class="sourceLineNo">226</span>     * &lt;div class="zh"&gt; 获取所有模块支持情况 &lt;/div&gt; &lt;div class="en"&gt;get every module support or not&lt;/div&gt;<a name="line.226"></a>
+<span class="sourceLineNo">227</span>     * <a name="line.227"></a>
+<span class="sourceLineNo">228</span>     * @since V2.00.01<a name="line.228"></a>
+<span class="sourceLineNo">229</span>     * @return<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     * <a name="line.230"></a>
+<span class="sourceLineNo">231</span>     */<a name="line.231"></a>
+<span class="sourceLineNo">232</span>    public Map&lt;Integer, ESupported&gt; getModuleSupported();<a name="line.232"></a>
+<span class="sourceLineNo">233</span><a name="line.233"></a>
+<span class="sourceLineNo">234</span>    /**<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     * &lt;div class="zh"&gt;返回指定模块的支持情况 &lt;/div&gt; &lt;div class="en"&gt;get the module support or not &lt;/div&gt;<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     * <a name="line.236"></a>
+<span class="sourceLineNo">237</span>     * @param module<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     * @since V2.00.01<a name="line.238"></a>
+<span class="sourceLineNo">239</span>     * @return &lt;div class="zh"&gt;是否支持。如果module不在定义范围内，返回INVALID &lt;/div&gt; &lt;div class="en"&gt;support or not .if module is out of<a name="line.239"></a>
+<span class="sourceLineNo">240</span>     *         defined,return INVALID &lt;/div&gt;<a name="line.240"></a>
+<span class="sourceLineNo">241</span>     */<a name="line.241"></a>
+<span class="sourceLineNo">242</span>    public ESupported getModuleSupported(int module);<a name="line.242"></a>
+<span class="sourceLineNo">243</span>    <a name="line.243"></a>
+<span class="sourceLineNo">244</span>    /**<a name="line.244"></a>
+<span class="sourceLineNo">245</span>     * &lt;div class="zh"&gt;获取打印状态 &lt;/div&gt; &lt;div class="en"&gt;get printer status &lt;/div&gt;<a name="line.245"></a>
+<span class="sourceLineNo">246</span>     * <a name="line.246"></a>
+<span class="sourceLineNo">247</span>     * @since V2.00.01<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     * @return &lt;div class="zh"&gt;<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     *         &lt;ul&gt;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     *         &lt;li&gt;0: 正常&lt;/li&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>     *         &lt;li&gt;1: 打印机忙&lt;/li&gt;<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     *         &lt;li&gt;2: 打印机缺纸&lt;/li&gt;<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     *         &lt;li&gt;3: 打印数据包格式错&lt;/li&gt;<a name="line.253"></a>
+<span class="sourceLineNo">254</span>     *         &lt;li&gt;4: 打印机故障&lt;/li&gt;<a name="line.254"></a>
+<span class="sourceLineNo">255</span>     *         &lt;li&gt;8: 打印机过热&lt;/li&gt;<a name="line.255"></a>
+<span class="sourceLineNo">256</span>     *         &lt;li&gt;9: 打印机电压过低&lt;/li&gt;<a name="line.256"></a>
+<span class="sourceLineNo">257</span>     *         &lt;li&gt;-16:打印未完成&lt;/li&gt;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>     *         &lt;li&gt;-4：打印机未安装字库&lt;/li&gt;<a name="line.258"></a>
+<span class="sourceLineNo">259</span>     *         &lt;li&gt;-2：数据包过长&lt;/li&gt;<a name="line.259"></a>
+<span class="sourceLineNo">260</span>     *         &lt;/ul&gt;<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.261"></a>
+<span class="sourceLineNo">262</span>     *         &lt;ul&gt;<a name="line.262"></a>
+<span class="sourceLineNo">263</span>     *         &lt;li&gt;0- Success&lt;/li&gt;<a name="line.263"></a>
+<span class="sourceLineNo">264</span>     *         &lt;li&gt;1- Printer is busy&lt;/li&gt;<a name="line.264"></a>
+<span class="sourceLineNo">265</span>     *         &lt;li&gt;2- Out of paper&lt;/li&gt;<a name="line.265"></a>
+<span class="sourceLineNo">266</span>     *         &lt;li&gt;3- The format of print data packet error&lt;/li&gt;<a name="line.266"></a>
+<span class="sourceLineNo">267</span>     *         &lt;li&gt;4- Printer malfunctions&lt;/li&gt;<a name="line.267"></a>
+<span class="sourceLineNo">268</span>     *         &lt;li&gt;8- Printer over heats&lt;/li&gt;<a name="line.268"></a>
+<span class="sourceLineNo">269</span>     *         &lt;li&gt;9- Printer voltage is too low&lt;/li&gt;<a name="line.269"></a>
+<span class="sourceLineNo">270</span>     *         &lt;li&gt;-16- Printing is unfinished&lt;/li&gt;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     *         &lt;li&gt;-4- The printer has not installed font library&lt;/li&gt;<a name="line.271"></a>
+<span class="sourceLineNo">272</span>     *         &lt;li&gt;-2- Data package is too long&lt;/li&gt;<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     *         &lt;/ul&gt;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>     *         &lt;/div&gt;<a name="line.274"></a>
+<span class="sourceLineNo">275</span>     */<a name="line.275"></a>
+<span class="sourceLineNo">276</span>    public int getPrinterStatus();<a name="line.276"></a>
+<span class="sourceLineNo">277</span>    <a name="line.277"></a>
+<span class="sourceLineNo">278</span>    /**<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     * &lt;div class="zh"&gt; 获取所有APP在指定网络类型下流量的使用情况。 &lt;/div&gt; &lt;div class="en"&gt; get the usage of all APP traffic under the<a name="line.279"></a>
+<span class="sourceLineNo">280</span>     * specified network type. &lt;/div&gt;<a name="line.280"></a>
+<span class="sourceLineNo">281</span>     *<a name="line.281"></a>
+<span class="sourceLineNo">282</span>     * @param netType &lt;div class="zh"&gt; 1:表示 Wi-Fi; 2:表示移动网络; 6: 表示以太网; &lt;/div&gt; &lt;div class="en"&gt; 1: Wi-Fi; 2: mobile network; 6: LAN;&lt;/div&gt;<a name="line.282"></a>
+<span class="sourceLineNo">283</span>     * <a name="line.283"></a>
+<span class="sourceLineNo">284</span>     * @param start   &lt;div class="zh"&gt; 开始时间，单位毫秒 &lt;/div&gt; &lt;div class="en"&gt; start time (ms) &lt;/div&gt;<a name="line.284"></a>
+<span class="sourceLineNo">285</span>     * <a name="line.285"></a>
+<span class="sourceLineNo">286</span>     * @param end     &lt;div class="zh"&gt; 结束时间，单位毫秒 &lt;/div&gt; &lt;div class="en"&gt; end time (ms) &lt;/div&gt;<a name="line.286"></a>
+<span class="sourceLineNo">287</span>     * <a name="line.287"></a>
+<span class="sourceLineNo">288</span>     * @return &lt;div class="zh"&gt; map(结构：key：应用名； value：流量 )&lt;/div&gt; &lt;div class="en"&gt; map(key:application name value:traffic)&lt;/div&gt;<a name="line.288"></a>
+<span class="sourceLineNo">289</span>     * <a name="line.289"></a>
+<span class="sourceLineNo">290</span>     * @since V3.06.00<a name="line.290"></a>
+<span class="sourceLineNo">291</span>     */<a name="line.291"></a>
+<span class="sourceLineNo">292</span>    public Map&lt;String, Long&gt; getTrafficOfEachApp(int netType, long start, long end);<a name="line.292"></a>
+<span class="sourceLineNo">293</span><a name="line.293"></a>
+<span class="sourceLineNo">294</span>    /**<a name="line.294"></a>
+<span class="sourceLineNo">295</span>     * &lt;div class="zh"&gt; 获取系统指定网络类型的总使用流量 。 &lt;/div&gt; &lt;div class="en"&gt; Gets the total usage traffic of the system specified<a name="line.295"></a>
+<span class="sourceLineNo">296</span>     * network type. &lt;/div&gt;<a name="line.296"></a>
+<span class="sourceLineNo">297</span>     *<a name="line.297"></a>
+<span class="sourceLineNo">298</span>     * @param netType &lt;div class="zh"&gt; 1:表示 Wi-Fi; 2:表示移动网络; 6: 表示以太网。 &lt;/div&gt; &lt;div class="en"&gt; 1: Wi-Fi; 2: mobile network; 6: LAN.&lt;/div&gt;<a name="line.298"></a>
+<span class="sourceLineNo">299</span>     * <a name="line.299"></a>
+<span class="sourceLineNo">300</span>     * @param start   &lt;div class="zh"&gt; 开始时间，单位毫秒 &lt;/div&gt; &lt;div class="en"&gt; start time (ms) &lt;/div&gt;<a name="line.300"></a>
+<span class="sourceLineNo">301</span>     * <a name="line.301"></a>
+<span class="sourceLineNo">302</span>     * @param end     &lt;div class="zh"&gt; 结束时间，单位毫秒 &lt;/div&gt; &lt;div class="en"&gt; end time (ms) &lt;/div&gt;<a name="line.302"></a>
+<span class="sourceLineNo">303</span>     * <a name="line.303"></a>
+<span class="sourceLineNo">304</span>     * @return &lt;div class="zh"&gt; 流量 &lt;/div&gt; &lt;div class="en"&gt; traffic &lt;/div&gt;<a name="line.304"></a>
+<span class="sourceLineNo">305</span>     * <a name="line.305"></a>
+<span class="sourceLineNo">306</span>     * @since V3.06.00<a name="line.306"></a>
+<span class="sourceLineNo">307</span>     */<a name="line.307"></a>
+<span class="sourceLineNo">308</span>    public long getTrafficTotal(int netType, long start, long end);<a name="line.308"></a>
+<span class="sourceLineNo">309</span>    <a name="line.309"></a>
+<span class="sourceLineNo">310</span>    /**<a name="line.310"></a>
+<span class="sourceLineNo">311</span>     * &lt;div class="zh"&gt; 获取设备被使用的总次数。收集磁条卡的刷卡成功次数和 接触式芯片卡与非接卡的Apdu exchange成功次数&lt;/div&gt; &lt;div class="en"&gt; Get total count<a name="line.311"></a>
+<span class="sourceLineNo">312</span>     * for the device be used. collect swipe success times for MagCard ,and Apdu exchange success times for ICC and<a name="line.312"></a>
+<span class="sourceLineNo">313</span>     * PICC. &lt;/div&gt;<a name="line.313"></a>
+<span class="sourceLineNo">314</span>     * <a name="line.314"></a>
+<span class="sourceLineNo">315</span>     * @param module<a name="line.315"></a>
+<span class="sourceLineNo">316</span>     *            &lt;div class="zh"&gt; 设备类型类型 ：1.磁条卡{@link #MODULE_MAG} 2.接触式芯片卡{@link #MODULE_ICC} 3.非接触式芯片卡<a name="line.316"></a>
+<span class="sourceLineNo">317</span>     *            {@link #MODULE_PICC}&lt;/div&gt; &lt;div class="en"&gt; device type：1.MagCard{@link #MODULE_MAG} 2.ICC<a name="line.317"></a>
+<span class="sourceLineNo">318</span>     *            {@link #MODULE_ICC} 3.PICC{@link #MODULE_PICC}&lt;/div&gt;<a name="line.318"></a>
+<span class="sourceLineNo">319</span>     * @since V2.00.01<a name="line.319"></a>
+<span class="sourceLineNo">320</span>     * @return &lt;div class="zh"&gt;<a name="line.320"></a>
+<span class="sourceLineNo">321</span>     *         &lt;ul&gt;<a name="line.321"></a>
+<span class="sourceLineNo">322</span>     *         &lt;li&gt;&gt;0 返回使用次数&lt;/li&gt;<a name="line.322"></a>
+<span class="sourceLineNo">323</span>     *         &lt;li&gt;-1 表示系统不支持&lt;/li&gt;<a name="line.323"></a>
+<span class="sourceLineNo">324</span>     *         &lt;li&gt;-2 模块超出定义范围&lt;/li&gt;<a name="line.324"></a>
+<span class="sourceLineNo">325</span>     *         &lt;/ul&gt;<a name="line.325"></a>
+<span class="sourceLineNo">326</span>     *         &lt;/div&gt; &lt;div class="en"&gt;<a name="line.326"></a>
+<span class="sourceLineNo">327</span>     *         &lt;ul&gt;<a name="line.327"></a>
+<span class="sourceLineNo">328</span>     *         &lt;li&gt;&gt;0 usage count&lt;/li&gt;<a name="line.328"></a>
+<span class="sourceLineNo">329</span>     *         &lt;li&gt;-1 device not support&lt;/li&gt;<a name="line.329"></a>
+<span class="sourceLineNo">330</span>     *         &lt;li&gt;-2 not support module&lt;/li&gt;<a name="line.330"></a>
+<span class="sourceLineNo">331</span>     *         &lt;/ul&gt;<a name="line.331"></a>
+<span class="sourceLineNo">332</span>     *         &lt;/div&gt;<a name="line.332"></a>
+<span class="sourceLineNo">333</span>     */<a name="line.333"></a>
+<span class="sourceLineNo">334</span>    public long getUsageCount(int module);<a name="line.334"></a>
+<span class="sourceLineNo">335</span>    <a name="line.335"></a>
+<span class="sourceLineNo">336</span>    /**<a name="line.336"></a>
+<span class="sourceLineNo">337</span>     * &lt;div class="zh"&gt;获取POS设备信息。&lt;/div&gt; &lt;div class="en"&gt;Get POS device information.&lt;/div&gt;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>     *<a name="line.338"></a>
+<span class="sourceLineNo">339</span>     * @return {@link DeviceInfo}<a name="line.339"></a>
+<span class="sourceLineNo">340</span>     * @throws Exception<a name="line.340"></a>
+<span class="sourceLineNo">341</span>     * @since V3.17.00<a name="line.341"></a>
+<span class="sourceLineNo">342</span>     */<a name="line.342"></a>
+<span class="sourceLineNo">343</span>    DeviceInfo getDeviceInfo() throws Exception;<a name="line.343"></a>
+<span class="sourceLineNo">344</span><a name="line.344"></a>
+<span class="sourceLineNo">345</span>    /**<a name="line.345"></a>
+<span class="sourceLineNo">346</span>     * &lt;div class="zh"&gt;模块是否被启用。&lt;/div&gt; &lt;div class="en"&gt;Whether the module is enabled.&lt;/div&gt;<a name="line.346"></a>
+<span class="sourceLineNo">347</span>     *<a name="line.347"></a>
+<span class="sourceLineNo">348</span>     * @param module &lt;div class="zh"&gt;<a name="line.348"></a>
+<span class="sourceLineNo">349</span>     *                  &lt;ul&gt;<a name="line.349"></a>
+<span class="sourceLineNo">350</span>     *                      &lt;li&gt;1:MODULE_MAG&lt;/li&gt;<a name="line.350"></a>
+<span class="sourceLineNo">351</span>     *                      &lt;li&gt;2:MODULE_ICC&lt;/li&gt;<a name="line.351"></a>
+<span class="sourceLineNo">352</span>     *                      &lt;li&gt;3:MODULE_PICC&lt;/li&gt;<a name="line.352"></a>
+<span class="sourceLineNo">353</span>     *                      &lt;li&gt;4:MODULE_PED&lt;/li&gt;<a name="line.353"></a>
+<span class="sourceLineNo">354</span>     *                      &lt;li&gt;5:MODULE_PRINTER&lt;/li&gt;<a name="line.354"></a>
+<span class="sourceLineNo">355</span>     *                      &lt;li&gt;6:MODULE_SCANNER&lt;/li&gt;<a name="line.355"></a>
+<span class="sourceLineNo">356</span>     *                  &lt;/ul&gt;<a name="line.356"></a>
+<span class="sourceLineNo">357</span>     *               &lt;/div&gt;<a name="line.357"></a>
+<span class="sourceLineNo">358</span>     *               &lt;div class="en"&gt;<a name="line.358"></a>
+<span class="sourceLineNo">359</span>     *                  &lt;ul&gt;<a name="line.359"></a>
+<span class="sourceLineNo">360</span>     *                      &lt;li&gt;1:MODULE_MAG&lt;/li&gt;<a name="line.360"></a>
+<span class="sourceLineNo">361</span>     *                      &lt;li&gt;2:MODULE_ICC&lt;/li&gt;<a name="line.361"></a>
+<span class="sourceLineNo">362</span>     *                      &lt;li&gt;3:MODULE_PICC&lt;/li&gt;<a name="line.362"></a>
+<span class="sourceLineNo">363</span>     *                      &lt;li&gt;4:MODULE_PED&lt;/li&gt;<a name="line.363"></a>
+<span class="sourceLineNo">364</span>     *                      &lt;li&gt;5:MODULE_PRINTER&lt;/li&gt;<a name="line.364"></a>
+<span class="sourceLineNo">365</span>     *                      &lt;li&gt;6:MODULE_SCANNER&lt;/li&gt;<a name="line.365"></a>
+<span class="sourceLineNo">366</span>     *                  &lt;/ul&gt; &lt;/div&gt;<a name="line.366"></a>
+<span class="sourceLineNo">367</span>     * @return &lt;div class="zh"&gt;&lt;/div&gt; &lt;div class="en"&gt;&lt;/div&gt;<a name="line.367"></a>
+<span class="sourceLineNo">368</span>     * @throws Exception<a name="line.368"></a>
+<span class="sourceLineNo">369</span>     * @since V3.22.00<a name="line.369"></a>
+<span class="sourceLineNo">370</span>     */<a name="line.370"></a>
+<span class="sourceLineNo">371</span>    boolean isModuleEnable(int module) throws Exception;<a name="line.371"></a>
+<span class="sourceLineNo">372</span><a name="line.372"></a>
+<span class="sourceLineNo">373</span>    /**<a name="line.373"></a>
+<span class="sourceLineNo">374</span>     * &lt;div class="zh"&gt;获取电池的循环次数。&lt;/div&gt; &lt;div class="en"&gt;Get the battery cycle count.&lt;/div&gt;<a name="line.374"></a>
+<span class="sourceLineNo">375</span>     *<a name="line.375"></a>
+<span class="sourceLineNo">376</span>     * @return &lt;div class="zh"&gt;电池的循环次数。&lt;/div&gt; &lt;div class="en"&gt;Battery cycle count.&lt;/div&gt;<a name="line.376"></a>
+<span class="sourceLineNo">377</span>     * @throws Exception Exception<a name="line.377"></a>
+<span class="sourceLineNo">378</span>     * @since V3.22.00<a name="line.378"></a>
+<span class="sourceLineNo">379</span>     */<a name="line.379"></a>
+<span class="sourceLineNo">380</span>    int getBatteryCycleCount() throws Exception;<a name="line.380"></a>
+<span class="sourceLineNo">381</span><a name="line.381"></a>
+<span class="sourceLineNo">382</span>    /**<a name="line.382"></a>
+<span class="sourceLineNo">383</span>     * &lt;div class="zh"&gt;清除电池数据。注意：设备重启后生效。&lt;/div&gt;<a name="line.383"></a>
+<span class="sourceLineNo">384</span>     * &lt;div class="en"&gt;Clear battery data. Note: It will take effect after the device restarts.&lt;/div&gt;<a name="line.384"></a>
+<span class="sourceLineNo">385</span>     *<a name="line.385"></a>
+<span class="sourceLineNo">386</span>     * @throws Exception Exception<a name="line.386"></a>
+<span class="sourceLineNo">387</span>     * @since V3.27.00<a name="line.387"></a>
+<span class="sourceLineNo">388</span>     */<a name="line.388"></a>
+<span class="sourceLineNo">389</span>    void resetBMSData() throws Exception;<a name="line.389"></a>
+<span class="sourceLineNo">390</span><a name="line.390"></a>
+<span class="sourceLineNo">391</span>    /**<a name="line.391"></a>
+<span class="sourceLineNo">392</span>     * &lt;div class="zh"&gt;设置电池模式。注意：设备重启后生效。&lt;/div&gt;<a name="line.392"></a>
+<span class="sourceLineNo">393</span>     * &lt;div class="en"&gt;Set battery mode. Note: It will take effect after the device restarts.&lt;/div&gt;<a name="line.393"></a>
+<span class="sourceLineNo">394</span>     *<a name="line.394"></a>
+<span class="sourceLineNo">395</span>     * @param mode &lt;div class="zh"&gt;电池模式<a name="line.395"></a>
+<span class="sourceLineNo">396</span>     *             &lt;br&gt;0：表示终端自动识别工作模式<a name="line.396"></a>
+<span class="sourceLineNo">397</span>     *             &lt;br&gt;1：设定工作模式为移动模式<a name="line.397"></a>
+<span class="sourceLineNo">398</span>     *             &lt;br&gt;2：设定工作模式为桌面模式&lt;/div&gt;<a name="line.398"></a>
+<span class="sourceLineNo">399</span>     *             &lt;div class="en"&gt;Battery mode<a name="line.399"></a>
+<span class="sourceLineNo">400</span>     *             &lt;br&gt;0: indicates that the device automatically recognizes the working mode<a name="line.400"></a>
+<span class="sourceLineNo">401</span>     *             &lt;br&gt;1: Set the working mode to mobile mode<a name="line.401"></a>
+<span class="sourceLineNo">402</span>     *             &lt;br&gt;2: Set the working mode to desktop mode&lt;/div&gt;<a name="line.402"></a>
+<span class="sourceLineNo">403</span>     * @throws Exception Exception<a name="line.403"></a>
+<span class="sourceLineNo">404</span>     * @since V3.28.00<a name="line.404"></a>
+<span class="sourceLineNo">405</span>     */<a name="line.405"></a>
+<span class="sourceLineNo">406</span>    void setBMSMode(byte mode) throws Exception;<a name="line.406"></a>
+<span class="sourceLineNo">407</span><a name="line.407"></a>
+<span class="sourceLineNo">408</span>    /**<a name="line.408"></a>
+<span class="sourceLineNo">409</span>     * &lt;div class="zh"&gt;设置电池模式。注意：设备重启后生效。&lt;/div&gt;<a name="line.409"></a>
+<span class="sourceLineNo">410</span>     * &lt;div class="en"&gt;Set battery mode. Note: It will take effect after the device restarts.&lt;/div&gt;<a name="line.410"></a>
+<span class="sourceLineNo">411</span>     *<a name="line.411"></a>
+<span class="sourceLineNo">412</span>     * @return &lt;div class="zh"&gt;电池模式<a name="line.412"></a>
+<span class="sourceLineNo">413</span>     *         &lt;br&gt;0：表示终端自动识别工作模式<a name="line.413"></a>
+<span class="sourceLineNo">414</span>     *         &lt;br&gt;1：设定工作模式为移动模式<a name="line.414"></a>
+<span class="sourceLineNo">415</span>     *         &lt;br&gt;2：设定工作模式为桌面模式&lt;/div&gt;<a name="line.415"></a>
+<span class="sourceLineNo">416</span>     *         &lt;div class="en"&gt;Battery mode<a name="line.416"></a>
+<span class="sourceLineNo">417</span>     *         &lt;br&gt;0: indicates that the device automatically recognizes the working mode<a name="line.417"></a>
+<span class="sourceLineNo">418</span>     *         &lt;br&gt;1: Set the working mode to mobile mode<a name="line.418"></a>
+<span class="sourceLineNo">419</span>     *         &lt;br&gt;2: Set the working mode to desktop mode&lt;/div&gt;<a name="line.419"></a>
+<span class="sourceLineNo">420</span>     * @throws Exception Exception<a name="line.420"></a>
+<span class="sourceLineNo">421</span>     * @since V3.28.00<a name="line.421"></a>
+<span class="sourceLineNo">422</span>     */<a name="line.422"></a>
+<span class="sourceLineNo">423</span>    byte getBMSMode() throws Exception;<a name="line.423"></a>
+<span class="sourceLineNo">424</span><a name="line.424"></a>
+<span class="sourceLineNo">425</span>    /**<a name="line.425"></a>
+<span class="sourceLineNo">426</span>     * &lt;div class="zh"&gt;切换临时移动模式。&lt;/div&gt;<a name="line.426"></a>
+<span class="sourceLineNo">427</span>     * &lt;div class="en"&gt;Switch temporary mobile mode.&lt;/div&gt;<a name="line.427"></a>
+<span class="sourceLineNo">428</span>     *<a name="line.428"></a>
+<span class="sourceLineNo">429</span>     * @param mode &lt;div class="zh"&gt;0:关闭临时移动模式 1:开启临时移动模式 &lt;/div&gt;<a name="line.429"></a>
+<span class="sourceLineNo">430</span>     *             &lt;div class="en"&gt;0: disable the temporary mobile mode. 1: enable the temporary mobile mode&lt;/div&gt;<a name="line.430"></a>
+<span class="sourceLineNo">431</span><a name="line.431"></a>
+<span class="sourceLineNo">432</span>     * @throws Exception Exception<a name="line.432"></a>
+<span class="sourceLineNo">433</span>     * @since V3.32.00<a name="line.433"></a>
+<span class="sourceLineNo">434</span>     */<a name="line.434"></a>
+<span class="sourceLineNo">435</span>    void setTemporaryBMSMode(int mode) throws Exception;<a name="line.435"></a>
+<span class="sourceLineNo">436</span><a name="line.436"></a>
+<span class="sourceLineNo">437</span><a name="line.437"></a>
+<span class="sourceLineNo">438</span>    /**<a name="line.438"></a>
+<span class="sourceLineNo">439</span>     * &lt;div class="zh"&gt;获取累计打印纸张长度。&lt;br/&gt;<a name="line.439"></a>
+<span class="sourceLineNo">440</span>     *                 注：调用该接口前需先调用{@link ISys#setInfoCollect(boolean)}打开终端信息收集功能。&lt;/div&gt;<a name="line.440"></a>
+<span class="sourceLineNo">441</span>     * &lt;div class="en"&gt;Gets the cumulative print paper length.&lt;br/&gt;<a name="line.441"></a>
+<span class="sourceLineNo">442</span>     *                 Note: Before calling this interface, you need to call {@link ISys#setInfoCollect(boolean)} to enable<a name="line.442"></a>
+<span class="sourceLineNo">443</span>     *                 the terminal information collection function.&lt;/div&gt;<a name="line.443"></a>
+<span class="sourceLineNo">444</span>     *<a name="line.444"></a>
+<span class="sourceLineNo">445</span>     * @return   &lt;div class="zh"&gt;累计打印纸张长度,单位是公里  &lt;/div&gt;<a name="line.445"></a>
+<span class="sourceLineNo">446</span>     *           &lt;div class="en"&gt;The cumulative length of the printed paper, in kilometers&lt;/div&gt;<a name="line.446"></a>
+<span class="sourceLineNo">447</span>     * @throws Exception Exception<a name="line.447"></a>
+<span class="sourceLineNo">448</span>     * @since V3.33.00<a name="line.448"></a>
+<span class="sourceLineNo">449</span>     */<a name="line.449"></a>
+<span class="sourceLineNo">450</span>    float getPaperUsage() throws Exception;<a name="line.450"></a>
+<span class="sourceLineNo">451</span><a name="line.451"></a>
+<span class="sourceLineNo">452</span>    /**<a name="line.452"></a>
+<span class="sourceLineNo">453</span>     * &lt;div class="zh"&gt;获取电池衰减之后的容量占新电池容量的百分比。&lt;/div&gt; &lt;div class="en"&gt;Get the percentage of the capacity after battery decay to the new battery capacity.&lt;/div&gt;<a name="line.453"></a>
+<span class="sourceLineNo">454</span>     *<a name="line.454"></a>
+<span class="sourceLineNo">455</span>     * @return &lt;div class="zh"&gt;0-100,1表示1%，100表示100%。&lt;/div&gt; &lt;div class="en"&gt;0-100, 1 means 1%, 100 means 100%.&lt;/div&gt;<a name="line.455"></a>
+<span class="sourceLineNo">456</span>     * @throws Exception Exception<a name="line.456"></a>
+<span class="sourceLineNo">457</span>     * @since V3.33.00<a name="line.457"></a>
+<span class="sourceLineNo">458</span>     */<a name="line.458"></a>
+<span class="sourceLineNo">459</span>    int getBatteryHealthState() throws Exception;<a name="line.459"></a>
+<span class="sourceLineNo">460</span><a name="line.460"></a>
+<span class="sourceLineNo">461</span>    /**<a name="line.461"></a>
+<span class="sourceLineNo">462</span>     * &lt;div class="zh"&gt;获取emmc使用寿命信息。&lt;/div&gt; &lt;div class="en"&gt;Get emmc life information.&lt;/div&gt;<a name="line.462"></a>
+<span class="sourceLineNo">463</span>     *<a name="line.463"></a>
+<span class="sourceLineNo">464</span>     * @return &lt;div class="zh"&gt;emmc使用寿命信息。array[0]:Type A(emmc SLC块) ;array[1]:Type B(emmc MLC块)。{@link EmmcInfo}&lt;/div&gt;<a name="line.464"></a>
+<span class="sourceLineNo">465</span>     *          &lt;div class="en"&gt;emmc life information. array[0]:Type A (emmc SLC block); array[1]:Type B (emmc MLC block).{@link EmmcInfo}&lt;/div&gt;<a name="line.465"></a>
+<span class="sourceLineNo">466</span>     * @throws Exception Exception<a name="line.466"></a>
+<span class="sourceLineNo">467</span>     * @since V4.07.00<a name="line.467"></a>
+<span class="sourceLineNo">468</span>     */<a name="line.468"></a>
+<span class="sourceLineNo">469</span>    EmmcInfo[] getEmmcLifeInfo() throws Exception;<a name="line.469"></a>
+<span class="sourceLineNo">470</span><a name="line.470"></a>
+<span class="sourceLineNo">471</span>    /**<a name="line.471"></a>
+<span class="sourceLineNo">472</span>     * &lt;div class="zh"&gt;获取前摄打开次数。&lt;/div&gt; &lt;div class="en"&gt;Gets the number of proactive opens.&lt;/div&gt;<a name="line.472"></a>
+<span class="sourceLineNo">473</span>     *<a name="line.473"></a>
+<span class="sourceLineNo">474</span>     * @return &lt;div class="zh"&gt;前摄打开次数 。&lt;/div&gt; &lt;div class="en"&gt;The number of proactive opens.&lt;/div&gt;<a name="line.474"></a>
+<span class="sourceLineNo">475</span>     * @throws Exception Exception<a name="line.475"></a>
+<span class="sourceLineNo">476</span>     * @since V4.08.00<a name="line.476"></a>
+<span class="sourceLineNo">477</span>     */<a name="line.477"></a>
+<span class="sourceLineNo">478</span>    long getFrontCameraOpenCount() throws Exception;<a name="line.478"></a>
+<span class="sourceLineNo">479</span><a name="line.479"></a>
+<span class="sourceLineNo">480</span>    /**<a name="line.480"></a>
+<span class="sourceLineNo">481</span>     * &lt;div class="zh"&gt;获取后摄打开次数。&lt;/div&gt; &lt;div class="en"&gt;Gets the number of shots opened.&lt;/div&gt;<a name="line.481"></a>
+<span class="sourceLineNo">482</span>     *<a name="line.482"></a>
+<span class="sourceLineNo">483</span>     * @return &lt;div class="zh"&gt;后摄打开次数。&lt;/div&gt; &lt;div class="en"&gt;Back shot open times.&lt;/div&gt;<a name="line.483"></a>
+<span class="sourceLineNo">484</span>     * @throws Exception Exception<a name="line.484"></a>
+<span class="sourceLineNo">485</span>     * @since V4.08.00<a name="line.485"></a>
+<span class="sourceLineNo">486</span>     */<a name="line.486"></a>
+<span class="sourceLineNo">487</span>    long getRearCameraOpenCount() throws Exception;<a name="line.487"></a>
+<span class="sourceLineNo">488</span><a name="line.488"></a>
+<span class="sourceLineNo">489</span>    /**<a name="line.489"></a>
+<span class="sourceLineNo">490</span>     * &lt;div class="zh"&gt;获取应用的网络使用情况。&lt;/div&gt; &lt;div class="en"&gt;Obtain the network usage of the application.&lt;/div&gt;<a name="line.490"></a>
+<span class="sourceLineNo">491</span>     *<a name="line.491"></a>
+<span class="sourceLineNo">492</span>     * @param packageName &lt;div class="zh"&gt;应用包名 &lt;/div&gt;<a name="line.492"></a>
+<span class="sourceLineNo">493</span>     *             &lt;div class="en"&gt;Application package name&lt;/div&gt;<a name="line.493"></a>
+<span class="sourceLineNo">494</span>     *<a name="line.494"></a>
+<span class="sourceLineNo">495</span>     * @return {@link com.pax.dal.entity.AppNetworkStats}<a name="line.495"></a>
+<span class="sourceLineNo">496</span>     * @since V4.10.00<a name="line.496"></a>
+<span class="sourceLineNo">497</span>     */<a name="line.497"></a>
+<span class="sourceLineNo">498</span>    AppNetworkStats getAppNetworkStats(String packageName);<a name="line.498"></a>
+<span class="sourceLineNo">499</span><a name="line.499"></a>
+<span class="sourceLineNo">500</span>    /**<a name="line.500"></a>
+<span class="sourceLineNo">501</span>     * &lt;div class="zh"&gt;清除应用缓存。&lt;/div&gt; &lt;div class="en"&gt;Clear application cache.&lt;/div&gt;<a name="line.501"></a>
+<span class="sourceLineNo">502</span>     *<a name="line.502"></a>
+<span class="sourceLineNo">503</span>     * @param packageName &lt;div class="zh"&gt;应用包名 &lt;/div&gt;<a name="line.503"></a>
+<span class="sourceLineNo">504</span>     *             &lt;div class="en"&gt;Application package name&lt;/div&gt;<a name="line.504"></a>
+<span class="sourceLineNo">505</span>     *<a name="line.505"></a>
+<span class="sourceLineNo">506</span>     * @param {@link ResultCallck}<a name="line.506"></a>
+<span class="sourceLineNo">507</span>     * @throws Exception Exception<a name="line.507"></a>
+<span class="sourceLineNo">508</span>     * @since V4.10.00<a name="line.508"></a>
+<span class="sourceLineNo">509</span>     */<a name="line.509"></a>
+<span class="sourceLineNo">510</span>    void cleanAppCache(String packageName, ResultCallback resultCallback) throws Exception;<a name="line.510"></a>
+<span class="sourceLineNo">511</span><a name="line.511"></a>
+<span class="sourceLineNo">512</span>    /**<a name="line.512"></a>
+<span class="sourceLineNo">513</span>     * &lt;div class="zh"&gt;获取各个进程的系统资源使用情况。&lt;/div&gt; &lt;div class="en"&gt;Gets the system resource usage of each process.&lt;/div&gt;<a name="line.513"></a>
+<span class="sourceLineNo">514</span>     *<a name="line.514"></a>
+<span class="sourceLineNo">515</span>     * @param {@link ProcessUsageListener}<a name="line.515"></a>
+<span class="sourceLineNo">516</span>     * @throws Exception Exception<a name="line.516"></a>
+<span class="sourceLineNo">517</span>     * @since V4.11.00<a name="line.517"></a>
+<span class="sourceLineNo">518</span>     */<a name="line.518"></a>
+<span class="sourceLineNo">519</span>    void getProcessUsage(ProcessUsageListener listener) throws Exception;<a name="line.519"></a>
+<span class="sourceLineNo">520</span><a name="line.520"></a>
+<span class="sourceLineNo">521</span>    /**<a name="line.521"></a>
+<span class="sourceLineNo">522</span>     * &lt;div class="zh"&gt;获取EMMC CID值。&lt;/div&gt; &lt;div class="en"&gt;Obtain the EMMC CID value.&lt;/div&gt;<a name="line.522"></a>
+<span class="sourceLineNo">523</span>     *<a name="line.523"></a>
+<span class="sourceLineNo">524</span>     * @return &lt;div class="zh"&gt;EMMC CID 。&lt;/div&gt; &lt;div class="en"&gt;EMMC CID .&lt;/div&gt;<a name="line.524"></a>
+<span class="sourceLineNo">525</span>     * @throws Exception Exception<a name="line.525"></a>
+<span class="sourceLineNo">526</span>     * @since V4.11.00<a name="line.526"></a>
+<span class="sourceLineNo">527</span>     */<a name="line.527"></a>
+<span class="sourceLineNo">528</span>    String getEmmcCidInfo() throws Exception;<a name="line.528"></a>
+<span class="sourceLineNo">529</span>}<a name="line.529"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

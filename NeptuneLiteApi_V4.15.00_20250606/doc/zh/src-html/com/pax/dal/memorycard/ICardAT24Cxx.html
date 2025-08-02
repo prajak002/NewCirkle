@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal.memorycard;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.exceptions.AT24CxxDevException;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>public interface ICardAT24Cxx extends IMemoryCard {<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>    /**<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     * &lt;div class="zh"&gt; 注册操作的信息 &lt;/div&gt; &lt;div class="en"&gt; The deck information for the registration operation. &lt;/div&gt;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>     * <a name="line.25"></a>
+<span class="sourceLineNo">026</span>     * @param cardType<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     *            &lt;div class="zh"&gt; 卡类型。类型值包括：1,2,4,8,16,32,64. &lt;/div&gt; &lt;div class="en"&gt; the type of card.Type value<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     *            inclues 1,2,4,8,16,32,64. &lt;/div&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     * @param devAddr<a name="line.29"></a>
+<span class="sourceLineNo">030</span>     *            &lt;div class="zh"&gt; 设备地址。 格式是(XXXXXA2A1A0)b。考虑参数填充：<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     *            &lt;ul&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     *            &lt;li&gt;卡类型1，A2A1A0由硬件脚A2/A1/A0连接决定&lt;/li&gt;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     *            &lt;li&gt;卡类型2，A2A1A0由硬件脚A2/A1/A0连接决定&lt;/li&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     *            &lt;li&gt;卡类型4，A2A1由硬件脚A2/A1,A0=(0)b连接决定&lt;/li&gt;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     *            &lt;li&gt;卡类型8，A2由硬件脚A2,A1A0=(00)b连接决定&lt;/li&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     *            &lt;li&gt;卡类型16，A2A1A0=(000)b&lt;/li&gt;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>     *            &lt;li&gt;卡类型32，A2A1A0=(000)b&lt;/li&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     *            &lt;li&gt;卡类型64，A2A1A0=(000)b&lt;/li&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     *            &lt;/div&gt; &lt;div class="en"&gt; the address of the device. The format is (XXXXXA2A1A0)b.Parameter Filling<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     *            Considerations: cardType=1,A2A1A0 is determined by the connection of hardware leg A2/A1/A0.<a name="line.40"></a>
+<span class="sourceLineNo">041</span>     *            cardType=2,A2A1A0 is determined by the connection of hardware leg A2/A1/A0. cardType=4,A2A1 is<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     *            determined by the connection of hardware leg A2/A1,A0=(0)b. cardType=8,A2 is determined by the<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     *            connection of hardware leg A2,A1A0=(00)b. cardType=16,A2A1A0=(000)b. cardType=32,A2A1A0=(000)b.<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     *            cardType=64,A2A1A0=(000)b. &lt;/div&gt;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * @throws AT24CxxDevException<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     */<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    public void open(int cardType, byte devAddr) throws AT24CxxDevException;<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>    /**<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     * &lt;div class="zh"&gt; 下电 &lt;/div&gt; &lt;div class="en"&gt; Power down &lt;/div&gt;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * <a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * @throws AT24CxxDevException<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     */<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    public void close() throws AT24CxxDevException;<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>    /**<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     * &lt;div class="zh"&gt; 按顺序读取指定的地址和数据长度 &lt;/div&gt; &lt;div class="en"&gt; Read specified address and length of data in order<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;/div&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * <a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * @param addr<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     *            &lt;div class="zh"&gt; 读取数据的地址 &lt;/div&gt; &lt;div class="en"&gt; the address of the read data. &lt;/div&gt;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     * @param exLen<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     *            &lt;div class="zh"&gt; 读取数据期望长度 &lt;/div&gt; &lt;div class="en"&gt; the expected length of the read data. &lt;/div&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * @return &lt;div class="zh"&gt; 读取到的数据 &lt;/div&gt; &lt;div class="en"&gt; the read data. &lt;/div&gt;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * @throws AT24CxxDevException<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     */<a name="line.66"></a>
+<span class="sourceLineNo">067</span>    public byte[] read(int addr, int exLen) throws AT24CxxDevException;<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>    /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * &lt;div class="zh"&gt; 使用字节写模式，在卡片的指定地址写数据 &lt;/div&gt; &lt;div class="en"&gt; Use byte writting mode.Write data at the specified<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * address of the card &lt;/div&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * <a name="line.72"></a>
+<span class="sourceLineNo">073</span>     * @param addr<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     *            &lt;div class="zh"&gt; 写数据的指定地址 &lt;/div&gt; &lt;div class="en"&gt; the specified address to write data. &lt;/div&gt;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * @param data<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     *            &lt;div class="zh"&gt; 要写的数据 &lt;/div&gt; &lt;div class="en"&gt; the written data. &lt;/div&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * @throws AT24CxxDevException<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     */<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    public void write(int addr, byte[] data) throws AT24CxxDevException;<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>}<a name="line.81"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

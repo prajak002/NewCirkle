@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span>package com.pax.dal;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import android.os.Bundle;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.pax.dal.entity.OCRResult;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pax.dal.exceptions.OCRException;<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>/**<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * &lt;div class="zh"&gt;OCR模块。&lt;/div&gt; &lt;div class="en"&gt;OCR module.&lt;/div&gt;<a name="line.24"></a>
+<span class="sourceLineNo">025</span> */<a name="line.25"></a>
+<span class="sourceLineNo">026</span>public interface IOCR {<a name="line.26"></a>
+<span class="sourceLineNo">027</span>    /**<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     * &lt;div class="zh"&gt;机读码。&lt;/div&gt; &lt;div class="en"&gt;Machine Readable Zone.&lt;/div&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     * @since V3.16.00<a name="line.29"></a>
+<span class="sourceLineNo">030</span>     */<a name="line.30"></a>
+<span class="sourceLineNo">031</span>    public static final int TYPE_MRZ = 1;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>    /**<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * &lt;div class="zh"&gt;护照(暂不支持)。&lt;/div&gt; &lt;div class="en"&gt;Passport (not currently supported).&lt;/div&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * @since V3.16.00<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    public static final int TYPE_PASSPORT = 2;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    /**<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     * &lt;div class="zh"&gt;中国身份证(暂不支持)。&lt;/div&gt; &lt;div class="en"&gt;Chinese identity card (not currently supported).&lt;/div&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * @since V3.16.00<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     */<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    public static final int TYPE_CHINA_IDCARD = 3;<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>    /**<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * &lt;div class="zh"&gt;通用机读码。&lt;/div&gt; &lt;div class="en"&gt;Universal Machine Readable Zone&lt;/div&gt;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * @since V3.30.00<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     */<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    public static final int TYPE_MRZ_EX = 4;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     * &lt;div class="zh"&gt;设置授权认证ID。&lt;/div&gt; &lt;div class="en"&gt;Set the authorization ID.&lt;/div&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     *<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * @param authId &lt;div class="zh"&gt;授权认证ID。&lt;/div&gt; &lt;div class="en"&gt;Authorization ID.&lt;/div&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * @throws OCRException<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * @since V3.16.00<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>    void setAuthId(String authId) throws OCRException;<a name="line.55"></a>
+<span class="sourceLineNo">056</span><a name="line.56"></a>
+<span class="sourceLineNo">057</span>    /**<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;div class="zh"&gt;打开OCR。&lt;/div&gt; &lt;div class="en"&gt;Open the OCR.&lt;/div&gt;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     *<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * @throws OCRException<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * @since V3.16.00<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     */<a name="line.62"></a>
+<span class="sourceLineNo">063</span>    void open() throws OCRException;<a name="line.63"></a>
+<span class="sourceLineNo">064</span><a name="line.64"></a>
+<span class="sourceLineNo">065</span>    /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * &lt;div class="zh"&gt;设置摄像头ID。&lt;/div&gt; &lt;div class="en"&gt;Set the camera ID.&lt;/div&gt;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     *<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     * @param cameraId &lt;div class="zh"&gt;摄像头ID。&lt;ul&gt;&lt;li&gt;0:后置摄像头。&lt;/li&gt;&lt;li&gt;1:前置摄像头。&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     *                 &lt;div class="en"&gt;Camera ID.&lt;ul&gt;&lt;li&gt;0:Rear camera.&lt;/li&gt;&lt;li&gt;1:Front camera.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * @throws OCRException<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     */<a name="line.71"></a>
+<span class="sourceLineNo">072</span>    // void setCameraId(int cameraId) throws OCRException;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    <a name="line.73"></a>
+<span class="sourceLineNo">074</span>    /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * &lt;div class="zh"&gt;设置预览配置。在{@link #open()}之后和{@link #startPreview(int, int, IOCRListener)}之前调用。&lt;/div&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * &lt;div class="en"&gt;Set the preview configuration.Called after {@link #open()} and before {@link #startPreview(int, int, IOCRListener)}.&lt;/div&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     *<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * @param param &lt;div class="zh"&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     *                  &lt;table border="1"&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     *                      &lt;tr&gt;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     *                          &lt;th&gt;KEY名称&lt;/th&gt;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     *                          &lt;th&gt;类型&lt;/th&gt;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     *                          &lt;th&gt;说明&lt;/th&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     *                      &lt;/tr&gt;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     *                      &lt;tr&gt;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     *                          &lt;td&gt;cameraId&lt;/td&gt;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     *                          &lt;td&gt;int&lt;/td&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     *                          &lt;td&gt;摄像头ID(默认后置) 0:后置摄像头 1:前置摄像头&lt;/td&gt;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>     *                      &lt;/tr&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     *                      &lt;tr&gt;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     *                          &lt;td&gt;isFlashOn&lt;/td&gt;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     *                          &lt;td&gt;boolean&lt;/td&gt;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     *                          &lt;td&gt;是否开启闪光灯(默认不开启) true:开启 false:不开启&lt;/td&gt;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     *                      &lt;/tr&gt;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     *                      &lt;tr&gt;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     *                          &lt;td&gt;isAutoFocus&lt;/td&gt;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     *                          &lt;td&gt;boolean&lt;/td&gt;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     *                          &lt;td&gt;是否开启自动对焦(默认不开启) true:开启 false:不开启&lt;/td&gt;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     *                      &lt;/tr&gt;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     *                  &lt;/table&gt;<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     *              &lt;/div&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     *              &lt;div class="en"&gt;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     *                  &lt;table border="1"&gt;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     *                      &lt;tr&gt;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     *                          &lt;th&gt;The KEY name&lt;/th&gt;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     *                          &lt;th&gt;Type&lt;/th&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     *                          &lt;th&gt;Instructions&lt;/th&gt;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     *                      &lt;/tr&gt;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     *                      &lt;tr&gt;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     *                          &lt;td&gt;cameraId&lt;/td&gt;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     *                          &lt;td&gt;int&lt;/td&gt;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     *                          &lt;td&gt;Camera ID(default rear). 0: rear camera 1: front camera&lt;/td&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     *                      &lt;/tr&gt;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     *                      &lt;tr&gt;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     *                          &lt;td&gt;isFlashOn&lt;/td&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     *                          &lt;td&gt;boolean&lt;/td&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     *                          &lt;td&gt;Whether to turn on the flash (not on by default).true:open, false:not open&lt;/td&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     *                      &lt;/tr&gt;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>     *                      &lt;tr&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     *                          &lt;td&gt;isAutoFocus&lt;/td&gt;<a name="line.120"></a>
+<span class="sourceLineNo">121</span>     *                          &lt;td&gt;boolean&lt;/td&gt;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     *                          &lt;td&gt;Whether to turn on autofocus (not on by default).true:open, false:not open&lt;/td&gt;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>     *                      &lt;/tr&gt;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>     *                  &lt;/table&gt;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>     *              &lt;/div&gt;<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     * @throws OCRException<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     * @since V3.16.00<a name="line.127"></a>
+<span class="sourceLineNo">128</span>     */<a name="line.128"></a>
+<span class="sourceLineNo">129</span>    void setPreviewParam(Bundle param) throws OCRException;<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>    /**<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     * &lt;div class="zh"&gt;打开预览界面进行扫描。&lt;/div&gt; &lt;div class="en"&gt;Open the preview screen for scanning.&lt;/div&gt;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     *<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     * @param timeout  &lt;div class="zh"&gt;超时时间。单位:毫秒。&lt;/div&gt; &lt;div class="en"&gt;Timeout time. Unit: ms.&lt;/div&gt;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     * @param type     &lt;div class="zh"&gt;证件类型。<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     *                  &lt;ul&gt;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     *                      &lt;li&gt;{@link #TYPE_MRZ}&lt;/li&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     *                      &lt;li&gt;{@link #TYPE_PASSPORT}&lt;/li&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     *                      &lt;li&gt;{@link #TYPE_CHINA_IDCARD}&lt;/li&gt;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>     *                      &lt;li&gt;{@link #TYPE_MRZ_EX}&lt;/li&gt;<a name="line.140"></a>
+<span class="sourceLineNo">141</span>     *                  &lt;/ul&gt;<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     *                 &lt;/div&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     *                 &lt;div class="en"&gt;Type of certificate.<a name="line.143"></a>
+<span class="sourceLineNo">144</span>     *                  &lt;ul&gt;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>     *                      &lt;li&gt;{@link #TYPE_MRZ}&lt;/li&gt;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>     *                      &lt;li&gt;{@link #TYPE_PASSPORT}&lt;/li&gt;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>     *                      &lt;li&gt;{@link #TYPE_CHINA_IDCARD}&lt;/li&gt;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     *                      &lt;li&gt;{@link #TYPE_MRZ_EX}&lt;/li&gt;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     *                  &lt;/ul&gt;<a name="line.149"></a>
+<span class="sourceLineNo">150</span>     *                 &lt;/div&gt;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     * @param listener &lt;div class="zh"&gt;扫描结果回调。{@link IOCRListener}&lt;/div&gt; &lt;div class="en"&gt;Callback of scan results.{@link IOCRListener}&lt;/div&gt;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     * @throws OCRException<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * @since V3.16.00<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     */<a name="line.154"></a>
+<span class="sourceLineNo">155</span>    void startPreview(int type, int timeout, IOCRListener listener) throws OCRException;<a name="line.155"></a>
+<span class="sourceLineNo">156</span><a name="line.156"></a>
+<span class="sourceLineNo">157</span>    /**<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     * &lt;div class="zh"&gt;关闭扫描预览界面。&lt;/div&gt; &lt;div class="en"&gt;Close the scan preview screen.&lt;/div&gt;<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     *<a name="line.159"></a>
+<span class="sourceLineNo">160</span>     * @throws OCRException<a name="line.160"></a>
+<span class="sourceLineNo">161</span>     * @since V3.16.00<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     */<a name="line.162"></a>
+<span class="sourceLineNo">163</span>    void stopPreview() throws OCRException;<a name="line.163"></a>
+<span class="sourceLineNo">164</span><a name="line.164"></a>
+<span class="sourceLineNo">165</span>    /**<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     * &lt;div class="zh"&gt;关闭OCR。&lt;/div&gt; &lt;div class="en"&gt;Close the OCR.&lt;/div&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     *<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     * @throws OCRException<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     * @since V3.16.00<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     */<a name="line.170"></a>
+<span class="sourceLineNo">171</span>    void close() throws OCRException;<a name="line.171"></a>
+<span class="sourceLineNo">172</span><a name="line.172"></a>
+<span class="sourceLineNo">173</span>    /**<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     * &lt;div class="zh"&gt;扫描结果回调。&lt;/div&gt; &lt;div class="en"&gt;Callback of scan results.&lt;/div&gt;<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * @since V3.16.00<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     */<a name="line.176"></a>
+<span class="sourceLineNo">177</span>    interface IOCRListener {<a name="line.177"></a>
+<span class="sourceLineNo">178</span>        /**<a name="line.178"></a>
+<span class="sourceLineNo">179</span>         * &lt;div class="zh"&gt;成功回调。&lt;/div&gt; &lt;div class="en"&gt;Success callback.&lt;/div&gt;<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         * @param result &lt;div class="zh"&gt;根据{@link #startPreview(int, int, IOCRListener)}的type，强制转换成对应的OCRResult。<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         *               &lt;br/&gt;{@link #TYPE_MRZ}: {@link com.pax.dal.entity.OCRMRZResult}<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         *               &lt;br/&gt;{@link #TYPE_MRZ_EX}: {@link com.pax.dal.entity.OCRMRZExResult}&lt;/div&gt;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         *               &lt;div class="en"&gt;Cast to the corresponding OCRResult according to the type of {@link #startPreview(int, int, IOCRListener)}.<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         *               &lt;br/&gt;{@link #TYPE_MRZ}: {@link com.pax.dal.entity.OCRMRZResult}<a name="line.184"></a>
+<span class="sourceLineNo">185</span>         *               &lt;br/&gt;{@link #TYPE_MRZ_EX}: {@link com.pax.dal.entity.OCRMRZExResult}&lt;/div&gt;<a name="line.185"></a>
+<span class="sourceLineNo">186</span>         * @since V3.16.00<a name="line.186"></a>
+<span class="sourceLineNo">187</span>         */<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        void onSuccess(OCRResult result);<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>        /**<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         * &lt;div class="zh"&gt;错误回调。&lt;/div&gt; &lt;div class="en"&gt;Error callback.&lt;/div&gt;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>         * @param code &lt;div class="zh"&gt;<a name="line.192"></a>
+<span class="sourceLineNo">193</span>         *              &lt;ul&gt;<a name="line.193"></a>
+<span class="sourceLineNo">194</span>         *                  &lt;li&gt;1:获取失败&lt;/li&gt;<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         *                  &lt;li&gt;2:扫描超时&lt;/li&gt;<a name="line.195"></a>
+<span class="sourceLineNo">196</span>         *                  &lt;li&gt;3:取消扫描&lt;/li&gt;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>         *                  &lt;li&gt;4:OCR服务初始化失败&lt;/li&gt;<a name="line.197"></a>
+<span class="sourceLineNo">198</span>         *              &lt;/ul&gt;<a name="line.198"></a>
+<span class="sourceLineNo">199</span>         *             &lt;/div&gt;<a name="line.199"></a>
+<span class="sourceLineNo">200</span>         *             &lt;div class="en"&gt;<a name="line.200"></a>
+<span class="sourceLineNo">201</span>         *              &lt;ul&gt;<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         *                  &lt;li&gt;1:Scan failure&lt;/li&gt;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         *                  &lt;li&gt;2:Scan timeout&lt;/li&gt;<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         *                  &lt;li&gt;3:Cancel scan&lt;/li&gt;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>         *                  &lt;li&gt;4:OCR service initialization failure&lt;/li&gt;<a name="line.205"></a>
+<span class="sourceLineNo">206</span>         *              &lt;/ul&gt;<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         *             &lt;/div&gt;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         * @since V3.16.00<a name="line.208"></a>
+<span class="sourceLineNo">209</span>         */<a name="line.209"></a>
+<span class="sourceLineNo">210</span>        void onError(int code);<a name="line.210"></a>
+<span class="sourceLineNo">211</span>    }<a name="line.211"></a>
+<span class="sourceLineNo">212</span>}<a name="line.212"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

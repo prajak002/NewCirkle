@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal.entity;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>/**<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * &lt;div class="zh"&gt; DUKPT的MAC算法模式定义 &lt;/div&gt; &lt;div class="en"&gt; DUKPT MAC Mode &lt;/div&gt;<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * <a name="line.21"></a>
+<span class="sourceLineNo">022</span> * @author Steven.W<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * <a name="line.23"></a>
+<span class="sourceLineNo">024</span> */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>public enum EDUKPTMacMode {<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;div class="zh"&gt; 将BLOCK1用MAC密钥做TDES加密，加密结果与BLOCK2进行逐位异或后再用MAC密钥做TDES加密，依次进行得到8字节的加密结果。 KSN自动加1 &lt;/div&gt; &lt;div<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     * class="en"&gt; Doing TDES encryption for BLOCK1 by using MAC key. Doing TDES encryption again by using MAC key when<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     * and after bitwise XOR the previous encryption result with BLOCK2. Processing in turn to get the 8 bytes<a name="line.29"></a>
+<span class="sourceLineNo">030</span>     * encryption result.KSN auto-add 1 &lt;/div&gt;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>    MODE_00((byte) 0),<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    /**<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * &lt;div class="zh"&gt; 将BLOCK1和BLOCK2进行逐位异或，异或结果与BLOCK3进行逐位异或，依次进行，最后得到8字节的异或结果，将该结果用MAC密钥进行TDES加密运算。 KSN自动加1。 &lt;/div&gt;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * &lt;div class="en"&gt; Doing bitwise XOR for BLOCK1 and BLOCK2; Do bitwise XOR again by using previous XOR result with<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     * BLOCK3. Do it in turn and finally get the 8 bytes XOR result. Using MAC key to process TDES encryption for the<a name="line.36"></a>
+<span class="sourceLineNo">037</span>     * result.KSN auto-add 1 &lt;/div&gt;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     */<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    MODE_01((byte) 1),<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>    /**<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * &lt;div class="zh"&gt;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * ANSIX9.19规范，将BLOCK1用MAC密钥做DES加密(只取前8个字节的key)，加密结果与BLOCK2进行逐位异或后再用MAC密钥做DES加密，依次进行得到8字节的加密结果,直到最后一次采用TDES加密。<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * KSN自动加1。 &lt;/div&gt; &lt;div class="en"&gt; ANSIX9.19 standard, Do DES encryption for BLOCK1 by using MAC key (only take the<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * first 8 bytes of key). The encryption result wills bitwise XOR with BLOCK2,and then doing DES encryption by using<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     * MAC key again. Do it in turn and get the 8 bytes encryption result. Using TDES to encrypt in the last time.KSN<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * auto-add 1 &lt;/div&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    MODE_02((byte) 2),<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>    /**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * &lt;div class="zh"&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * hmac-sha256模式。将MAC密钥作为hmac 密钥。使用DUKPT_MAC_BOTH_KEY（request and response MAC密钥），KSN 自动加 1&lt;/div&gt;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * &lt;div class="en"&gt;hmac-sha256 mode. Use the MAC key as the hmac key. Using DUKPT_MAC_BOTH_KEY (request and response MAC key), KSN is automatically incremented by 1&lt;/div&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     */<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    MODE_05((byte) 5),<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    /**<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;div class="zh"&gt; 将BLOCK1用MAC密钥做TDES加密，加密结果与BLOCK2进行逐位异或后再用MAC密钥做TDES加密，依次进行得到8字节的加密结果。KSN不自动加1。 &lt;/div&gt; &lt;div<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * class="en"&gt; Doing TDES encryption for BLOCK1 by using MAC key. Doing TDES encryption again by using MAC key when<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * and after bitwise XOR the previous encryption result with BLOCK2. Processing in turn to get the 8 bytes<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * encryption result.KSN won't auto-add 1 &lt;/div&gt;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     */<a name="line.62"></a>
+<span class="sourceLineNo">063</span>    MODE_20((byte) 20),<a name="line.63"></a>
+<span class="sourceLineNo">064</span>    /**<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * &lt;div class="zh"&gt; 将BLOCK1和BLOCK2进行逐位异或，异或结果与BLOCK3进行逐位异或，依次进行，最后得到8字节的异或结果，将该结果用MAC密钥进行TDES加密运算。KSN不自动加1。 &lt;/div&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * &lt;div class="en"&gt; Doing bitwise XOR for BLOCK1 and BLOCK2; Do bitwise XOR again by using previous XOR result with<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * BLOCK3. Do it in turn and finally get the 8 bytes XOR result. Using MAC key to process TDES encryption for the<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     * result.KSN won't auto-add 1 &lt;/div&gt;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     */<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    MODE_21((byte) 21),<a name="line.70"></a>
+<span class="sourceLineNo">071</span>    /**<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * &lt;div class="zh"&gt;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     * ANSIX9.19 规范,将 BLOCK1 用 MAC 密钥做DES加密(只取前 8个字节的 key), 加密结果与<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * BLOCK2 进行逐位异或后再用 MAC 密钥做 DES 加密,依次进行得到 8 字节的加密结果, 直到最后一次采用TDES<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * 加密。 KSN 不自动加 1,其它值保留扩展 MAC 算法。 &lt;/div&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * &lt;div class="en"&gt; ANSIX9.19 specification, BLOCK1 use MAC key to do DES encryption (only take the first 8 bytes of the key), encryption results with<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * BLOCK2 performs bit-by-bit XOR and then uses MAC key to do DES encryption, successively obtaining 8-byte encryption results until TDES is used for the last time<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * Encryption. KSN does not automatically add 1, and other values are reserved for the extended MAC algorithm. &lt;/div&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     */<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    MODE_22((byte) 22),<a name="line.80"></a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span>    /**<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * &lt;div class="zh"&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     * hmac-sha256模式。将MAC密钥作为hmac 密钥。使用DUKPT_MAC_BOTH_KEY（request and response MAC密钥），KSN 不自动加1 &lt;/div&gt;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>     * &lt;div class="en"&gt; hmac-sha256 mode. Use the MAC key as the hmac key. With DUKPT_MAC_BOTH_KEY (request and response MAC key), KSN is not automatically incremented by 1&lt;/div&gt;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     */<a name="line.86"></a>
+<span class="sourceLineNo">087</span>    MODE_25((byte) 25),<a name="line.87"></a>
+<span class="sourceLineNo">088</span><a name="line.88"></a>
+<span class="sourceLineNo">089</span>    /**<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * &lt;div class="zh"&gt; 将BLOCK1用MAC密钥做TDES加密，加密结果与BLOCK2进行逐位异或后再用MAC密钥做TDES加密，依次进行得到8字节的加密结果。 KSN不自动加1。 &lt;/div&gt; &lt;div<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * class="en"&gt; Doing TDES encryption for BLOCK1 by using MAC key. Doing TDES encryption again by using MAC key when<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     * and after bitwise XOR the previous encryption result with BLOCK2. Processing in turn to get the 8 bytes<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     * encryption result.KSN won't auto-add 1 &lt;/div&gt;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     */<a name="line.94"></a>
+<span class="sourceLineNo">095</span>    MODE_40((byte) 40),<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * &lt;div class="zh"&gt; 将BLOCK1和BLOCK2进行逐位异或，异或结果与BLOCK3进行逐位异或，依次进行，最后得到8字节的异或结果，将该结果用MAC密钥进行TDES加密运算。 KSN不自动加1。 &lt;/div&gt;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     * &lt;div class="en"&gt; Doing bitwise XOR for BLOCK1 and BLOCK2; Do bitwise XOR again by using previous XOR result with<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     * BLOCK3. Do it in turn and finally get the 8 bytes XOR result. Using MAC key to process TDES encryption for the<a name="line.99"></a>
+<span class="sourceLineNo">100</span>     * result.KSN won't auto-add 1 &lt;/div&gt;<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     */<a name="line.101"></a>
+<span class="sourceLineNo">102</span>    MODE_41((byte) 41),<a name="line.102"></a>
+<span class="sourceLineNo">103</span>    /**<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * &lt;div class="zh"&gt;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * ANSIX9.19 规范,将 BLOCK1 用 MAC 密钥做DES加密(只取前 8个字节的 key),加密结果与<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * BLOCK2 进行逐位异或后再用 TAK 做 DES 加密,依次进行得到 8 字节的加密结果,直到最后一次采用<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     * TDES加密。 KSN 不自动加 1 ,其它值保留扩展 MAC 算法。 &lt;/div&gt;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     * &lt;div class="en"&gt; ANSIX9.19 specification, BLOCK1 use MAC key to do DES encryption (only take the first 8 bytes of the key), encryption results with<a name="line.108"></a>
+<span class="sourceLineNo">109</span>     * BLOCK2 performs bit-by-bit XOR and then uses TAK to do DES encryption, successively obtaining 8-byte encryption results until the last use<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * TDES encryption. KSN does not automatically add 1, and other values are reserved for the extended MAC algorithm. &lt;/div&gt;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     */<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    MODE_42((byte) 42),<a name="line.112"></a>
+<span class="sourceLineNo">113</span><a name="line.113"></a>
+<span class="sourceLineNo">114</span>    /**<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     * &lt;div class="zh"&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>     *  hmac-sha256模式。将MAC密钥作为hmac 密钥。使用DUKPT_MAC_RSP_KEY（response MAC密钥），KSN 不自动加1 &lt;/div&gt;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     *  &lt;div class="en"&gt; hmac-sha256 mode. Use the MAC key as the hmac key. If DUKPT_MAC_RSP_KEY (response MAC key) is used, KSN is not automatically incremented by 1&lt;/div&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     */<a name="line.118"></a>
+<span class="sourceLineNo">119</span>    MODE_45((byte) 45);<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>    private byte dukptMacMode;<a name="line.121"></a>
+<span class="sourceLineNo">122</span><a name="line.122"></a>
+<span class="sourceLineNo">123</span>    private EDUKPTMacMode(byte dukptMacMode) {<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        this.dukptMacMode = dukptMacMode;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>    }<a name="line.125"></a>
+<span class="sourceLineNo">126</span><a name="line.126"></a>
+<span class="sourceLineNo">127</span>    public byte getDUKPTMacMode() {<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        return dukptMacMode;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>    }<a name="line.129"></a>
+<span class="sourceLineNo">130</span>}<a name="line.130"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import android.telephony.PhoneStateListener;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pax.dal.entity.OperatorInfo;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.pax.dal.exceptions.PhoneDevException;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.util.List;<a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span>public interface IPhoneManager {<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>    /**<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     * &lt;div class="zh"&gt; 通过卡槽获取SIM卡索引&lt;/div&gt; &lt;div class="en"&gt; Obtaining SIM card index through a slot &lt;/div&gt;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>     * <a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * @param slotId<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     *            &lt;div class="zh"&gt; 0或1 &lt;/div&gt; &lt;div class="en"&gt; 0 or 1 &lt;/div&gt;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * @return &lt;div class="zh"&gt; SIM卡索引 &lt;/div&gt; &lt;div class="en"&gt; SIM card index &lt;/div&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * @throws PhoneDevException<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    int[] getSubId(int slotId) throws PhoneDevException;<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt; 通过PhoneStateListener获取SIM卡状态，必须在Activity的主线程调用 &lt;/div&gt; &lt;div class="en"&gt; Obtaining the status of<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     * SIM card through PhoneStateListener must be called by the main thread of Activity. &lt;/div&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>     * <a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * @param stateListener<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     *            &lt;div class="zh"&gt; {@link PhoneStateListener}&lt;/div&gt; &lt;div class="en"&gt; {@link PhoneStateListener} &lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * @param events<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     *            &lt;div class="zh"&gt; 参考{@link PhoneStateListener} &lt;/div&gt; &lt;div class="en"&gt; refer to<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     *            {@link PhoneStateListener} &lt;/div&gt;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * @param subId<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     *            &lt;div class="zh"&gt; SIM卡索引，通过getSubId获取 &lt;/div&gt; &lt;div class="en"&gt; SIM card index,through call getSubId<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     *            &lt;/div&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     * @throws PhoneDevException<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     */<a name="line.51"></a>
+<span class="sourceLineNo">052</span>    void listenPhoneState(PhoneStateListener stateListener, int events, int subId) throws PhoneDevException;<a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>    /**<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * &lt;div class="zh"&gt;设置哪张卡来使用数据流量 &lt;/div&gt; &lt;div class="en"&gt; set which card to use data traffic &lt;/div&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     * <a name="line.56"></a>
+<span class="sourceLineNo">057</span>     * @param subId<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     *            &lt;div class="zh"&gt; SIM卡索引，通过getSubId获取 &lt;/div&gt; &lt;div class="en"&gt;SIM card index,through call getSubId<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     *            &lt;/div&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * @throws PhoneDevException<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     */<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    void setDefaultDataSubId(int subId) throws PhoneDevException;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>    <a name="line.63"></a>
+<span class="sourceLineNo">064</span>    /**<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * &lt;div class="zh"&gt;设置网络优选模式。&lt;/div&gt; &lt;div class="en"&gt;Set network preferred mode.&lt;/div&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * <a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * @param networkType &lt;div class="zh"&gt;模式。&lt;ul&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     * &lt;li&gt;1:4G/3G/2G 自动选择&lt;/li&gt;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>     * &lt;li&gt;2:3G/2G 自动选择&lt;/li&gt;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>     * &lt;li&gt;3:2G&lt;/li&gt;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * &lt;li&gt;4:2G(CDMA only)&lt;/li&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * &lt;li&gt;5:2G(GSM  only)&lt;/li&gt;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     * &lt;li&gt;6:4G only &lt;/li&gt;&lt;/ul&gt;<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * &lt;/div&gt; &lt;div class="en"&gt;Mode. &lt;ul&gt;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * &lt;li&gt;1:4G/3G/2G automatic selection&lt;/li&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * &lt;li&gt;2:3G/2G automatic selection&lt;/li&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * &lt;li&gt;3:2G&lt;/li&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * &lt;li&gt;4:2G(CDMA only)&lt;/li&gt;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * &lt;li&gt;5:2G(GSM  only)&lt;/li&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     * &lt;li&gt;6:4G only &lt;/li&gt;&lt;/ul&gt;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * &lt;/div&gt;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     * <a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * @return &lt;div class="zh"&gt;设置结果。true：成功；false：失败。&lt;/div&gt; &lt;div class="en"&gt;Result. true:success; false:failure.&lt;/div&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     * <a name="line.84"></a>
+<span class="sourceLineNo">085</span>     * @throws PhoneDevException<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     * @since V3.08.00<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     */<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    boolean setPreferredNetworkType(int networkType) throws PhoneDevException;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    <a name="line.89"></a>
+<span class="sourceLineNo">090</span>    /**<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * &lt;div class="zh"&gt;判断飞行模式是否开启。&lt;/div&gt; &lt;div class="en"&gt;Check whether the airplane mode is enabled.&lt;/div&gt;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     *<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     * @return &lt;div class="zh"&gt;true:开启; false:关闭。&lt;/div&gt; &lt;div class="en"&gt;True: open; False: closed.&lt;/div&gt;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     * @throws PhoneDevException<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     * @since V3.17.00<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    boolean isAirplaneModeEnable() throws PhoneDevException;<a name="line.97"></a>
+<span class="sourceLineNo">098</span><a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>    /**<a name="line.100"></a>
+<span class="sourceLineNo">101</span>     * &lt;div class="zh"&gt;设置是否开启飞行模式。&lt;/div&gt; &lt;div class="en"&gt;Sets whether the airplane mode is enabled.&lt;/div&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     *<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     * @param enable &lt;div class="zh"&gt;true:开启; false:关闭。&lt;/div&gt; &lt;div class="en"&gt;True: open; False: closed.&lt;/div&gt;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>     * @throws PhoneDevException<a name="line.104"></a>
+<span class="sourceLineNo">105</span>     * @since V3.17.00<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     */<a name="line.106"></a>
+<span class="sourceLineNo">107</span>    void enableAirplaneMode(boolean enable) throws PhoneDevException;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    <a name="line.108"></a>
+<span class="sourceLineNo">109</span>    /**<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * &lt;div class="zh"&gt;扫描当前网络并返回结果。该接口会阻塞线程，不能在主线程调用，会耗时几分钟。&lt;/div&gt;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     * &lt;div class="en"&gt;Scan the current network and return the results.This interface blocks the thread and cannot be called on the main thread, <a name="line.111"></a>
+<span class="sourceLineNo">112</span>     * which can take several minutes. &lt;/div&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     * <a name="line.113"></a>
+<span class="sourceLineNo">114</span>     * @param subId &lt;div class="zh"&gt;SIM卡索引。通过{@link #getSubId(int)}获取。&lt;/div&gt; &lt;div class="en"&gt;SIM card indexes. Get it by {@link #getSubId(int)}.&lt;/div&gt;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     * <a name="line.115"></a>
+<span class="sourceLineNo">116</span>     * @return {@link OperatorInfo}<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     * <a name="line.117"></a>
+<span class="sourceLineNo">118</span>     * @throws PhoneDevException <a name="line.118"></a>
+<span class="sourceLineNo">119</span>     * @since V3.20.00<a name="line.119"></a>
+<span class="sourceLineNo">120</span>     */<a name="line.120"></a>
+<span class="sourceLineNo">121</span>    List&lt;OperatorInfo&gt; getCellNetworkScanResults(int subId) throws PhoneDevException;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>    <a name="line.122"></a>
+<span class="sourceLineNo">123</span>    /**<a name="line.123"></a>
+<span class="sourceLineNo">124</span>     * &lt;div class="zh"&gt;获取数据漫游状态。&lt;/div&gt; &lt;div class="en"&gt;Gets the data roaming state.&lt;/div&gt;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>     * <a name="line.125"></a>
+<span class="sourceLineNo">126</span>     * @param subId &lt;div class="zh"&gt;SIM卡索引。通过{@link #getSubId(int)}获取。&lt;/div&gt; &lt;div class="en"&gt;SIM card indexes. Get it by {@link #getSubId(int)}.&lt;/div&gt;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     * <a name="line.127"></a>
+<span class="sourceLineNo">128</span>     * @return &lt;div class="zh"&gt;true:成功 ；false:失败 。&lt;/div&gt; &lt;div class="en"&gt;true:Success; false:Failure.&lt;/div&gt;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>     * <a name="line.129"></a>
+<span class="sourceLineNo">130</span>     * @throws PhoneDevException<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     * @since V3.20.00<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     */<a name="line.132"></a>
+<span class="sourceLineNo">133</span>    boolean getDataRoamingEnabled(int subId) throws PhoneDevException;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>    <a name="line.134"></a>
+<span class="sourceLineNo">135</span>    /**<a name="line.135"></a>
+<span class="sourceLineNo">136</span>     * &lt;div class="zh"&gt;设置数据漫游。&lt;/div&gt; &lt;div class="en"&gt;Set up the data roaming. &lt;/div&gt;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     * <a name="line.137"></a>
+<span class="sourceLineNo">138</span>     * @param subId &lt;div class="zh"&gt;SIM卡索引。通过{@link #getSubId(int)}获取。&lt;/div&gt; &lt;div class="en"&gt;SIM card indexes. Get it by {@link #getSubId(int)}.&lt;/div&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     * <a name="line.139"></a>
+<span class="sourceLineNo">140</span>     * @param enable &lt;div class="zh"&gt;true:开启 ；false:关闭 。&lt;/div&gt; &lt;div class="en"&gt;true:Open; false:Close.&lt;/div&gt;<a name="line.140"></a>
+<span class="sourceLineNo">141</span>     * <a name="line.141"></a>
+<span class="sourceLineNo">142</span>     * @throws PhoneDevException<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     * @since V3.20.00<a name="line.143"></a>
+<span class="sourceLineNo">144</span>     */<a name="line.144"></a>
+<span class="sourceLineNo">145</span>    void setDataRoamingEnabled(int subId, boolean enable) throws PhoneDevException;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>    <a name="line.146"></a>
+<span class="sourceLineNo">147</span>    /**<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     * &lt;div class="zh"&gt;设置网络运营商。&lt;/div&gt; &lt;div class="en"&gt;Set up a network operator.&lt;/div&gt;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>     * <a name="line.149"></a>
+<span class="sourceLineNo">150</span>     * @param subId &lt;div class="zh"&gt;SIM卡索引。通过{@link #getSubId(int)}获取。&lt;/div&gt; &lt;div class="en"&gt;SIM card indexes. Get it by {@link #getSubId(int)}.&lt;/div&gt;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     * <a name="line.151"></a>
+<span class="sourceLineNo">152</span>     * @param operator {@link OperatorInfo}<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     * <a name="line.153"></a>
+<span class="sourceLineNo">154</span>     * @return &lt;div class="zh"&gt;true:成功 ；false:失败 。&lt;/div&gt; &lt;div class="en"&gt;true:Success; false:Failure.&lt;/div&gt;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     * <a name="line.155"></a>
+<span class="sourceLineNo">156</span>     * @throws PhoneDevException<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     * @since V3.20.00<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     */<a name="line.158"></a>
+<span class="sourceLineNo">159</span>    boolean setNetworkSelectionModeManual(int subId, OperatorInfo operator) throws PhoneDevException;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>    <a name="line.160"></a>
+<span class="sourceLineNo">161</span>    /**<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * &lt;div class="zh"&gt;获取SIM卡锁的状态。&lt;/div&gt; &lt;div class="en"&gt;Get the status of SIM card lock.&lt;/div&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     *<a name="line.163"></a>
+<span class="sourceLineNo">164</span>     * @param subId &lt;div class="zh"&gt;SIM卡索引。通过{{@link #getSubId(int)}}获取。&lt;/div&gt;<a name="line.164"></a>
+<span class="sourceLineNo">165</span>     *              &lt;div class="en"&gt;SIM card index. It is obtained through {{@link #getSubId(int)}}.&lt;/div&gt;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     * @return &lt;div class="zh"&gt;True：已锁；False：没有锁。&lt;/div&gt; &lt;div class="en"&gt;True: locked; False: no lock.&lt;/div&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     * @throws PhoneDevException<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     * @since V3.20.00<a name="line.168"></a>
+<span class="sourceLineNo">169</span>     */<a name="line.169"></a>
+<span class="sourceLineNo">170</span>    boolean isSimCardLock(int subId) throws PhoneDevException;<a name="line.170"></a>
+<span class="sourceLineNo">171</span><a name="line.171"></a>
+<span class="sourceLineNo">172</span>    /**<a name="line.172"></a>
+<span class="sourceLineNo">173</span>     * &lt;div class="zh"&gt;获取是否支持双SIM卡。&lt;/div&gt; &lt;div class="en"&gt;Get whether dual SIM cards are supported.&lt;/div&gt;<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     *<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     * @return &lt;div class="zh"&gt;True：支持；False：不支持。&lt;/div&gt; &lt;div class="en"&gt;True: supported; False: not supported.&lt;/div&gt;<a name="line.175"></a>
+<span class="sourceLineNo">176</span>     * @throws PhoneDevException<a name="line.176"></a>
+<span class="sourceLineNo">177</span>     * @since V3.22.00<a name="line.177"></a>
+<span class="sourceLineNo">178</span>     */<a name="line.178"></a>
+<span class="sourceLineNo">179</span>    boolean isDualSim() throws PhoneDevException;<a name="line.179"></a>
+<span class="sourceLineNo">180</span><a name="line.180"></a>
+<span class="sourceLineNo">181</span>    /**<a name="line.181"></a>
+<span class="sourceLineNo">182</span>     * @deprecated<a name="line.182"></a>
+<span class="sourceLineNo">183</span>     * &lt;div class="zh"&gt;获取VSIM状态。&lt;/div&gt; &lt;div class="en"&gt;Get VSIM status.&lt;/div&gt;<a name="line.183"></a>
+<span class="sourceLineNo">184</span>     *<a name="line.184"></a>
+<span class="sourceLineNo">185</span>     * @return &lt;div class="zh"&gt;True：开启；False：关闭。&lt;/div&gt; &lt;div class="en"&gt;True: on; False: off.&lt;/div&gt;<a name="line.185"></a>
+<span class="sourceLineNo">186</span>     * @throws PhoneDevException<a name="line.186"></a>
+<span class="sourceLineNo">187</span>     * @since V3.27.00<a name="line.187"></a>
+<span class="sourceLineNo">188</span>     */<a name="line.188"></a>
+<span class="sourceLineNo">189</span>    @Deprecated<a name="line.189"></a>
+<span class="sourceLineNo">190</span>    boolean isVSimDataInUse() throws PhoneDevException;<a name="line.190"></a>
+<span class="sourceLineNo">191</span><a name="line.191"></a>
+<span class="sourceLineNo">192</span>    /**<a name="line.192"></a>
+<span class="sourceLineNo">193</span>     * @deprecated<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     * &lt;div class="zh"&gt;打开VSIM。&lt;/div&gt; &lt;div class="en"&gt;Turn on VSIM.&lt;/div&gt;<a name="line.194"></a>
+<span class="sourceLineNo">195</span>     *<a name="line.195"></a>
+<span class="sourceLineNo">196</span>     * @throws PhoneDevException<a name="line.196"></a>
+<span class="sourceLineNo">197</span>     * @since V3.27.00<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     */<a name="line.198"></a>
+<span class="sourceLineNo">199</span>    @Deprecated<a name="line.199"></a>
+<span class="sourceLineNo">200</span>    void turnOnVSimData() throws PhoneDevException;<a name="line.200"></a>
+<span class="sourceLineNo">201</span><a name="line.201"></a>
+<span class="sourceLineNo">202</span>    /**<a name="line.202"></a>
+<span class="sourceLineNo">203</span>     * @deprecated<a name="line.203"></a>
+<span class="sourceLineNo">204</span>     * &lt;div class="zh"&gt;关闭VSIM。&lt;/div&gt; &lt;div class="en"&gt;Turn off VSIM.&lt;/div&gt;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>     *<a name="line.205"></a>
+<span class="sourceLineNo">206</span>     * @throws PhoneDevException<a name="line.206"></a>
+<span class="sourceLineNo">207</span>     * @since V3.27.00<a name="line.207"></a>
+<span class="sourceLineNo">208</span>     */<a name="line.208"></a>
+<span class="sourceLineNo">209</span>    @Deprecated<a name="line.209"></a>
+<span class="sourceLineNo">210</span>    void turnOffVSimData() throws PhoneDevException;<a name="line.210"></a>
+<span class="sourceLineNo">211</span><a name="line.211"></a>
+<span class="sourceLineNo">212</span>    /**<a name="line.212"></a>
+<span class="sourceLineNo">213</span>     * &lt;div class="zh"&gt;获取主SIM卡相关信息。&lt;/div&gt; &lt;div class="en"&gt;Get primary SIM related information.&lt;/div&gt;<a name="line.213"></a>
+<span class="sourceLineNo">214</span>     *<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     * @return &lt;div class="zh"&gt;simInfo[0]:DeviceId&lt;br&gt;simInfo[1]:IMEI&lt;br&gt;simInfo[2]:ICCID&lt;br&gt;simInfo[3]:SIM operator name&lt;br&gt;simInfo[4]:Network operator name&lt;/div&gt;<a name="line.215"></a>
+<span class="sourceLineNo">216</span>     *         &lt;div class="en"&gt;simInfo[0]:DeviceId&lt;br&gt;simInfo[1]:IMEI&lt;br&gt;simInfo[2]:ICCID&lt;br&gt;simInfo[3]:SIM operator name&lt;br&gt;simInfo[4]:Network operator name&lt;/div&gt;<a name="line.216"></a>
+<span class="sourceLineNo">217</span>     * @throws PhoneDevException<a name="line.217"></a>
+<span class="sourceLineNo">218</span>     * @since V3.29.00<a name="line.218"></a>
+<span class="sourceLineNo">219</span>     */<a name="line.219"></a>
+<span class="sourceLineNo">220</span>    String[] getSIMInfo() throws PhoneDevException;<a name="line.220"></a>
+<span class="sourceLineNo">221</span><a name="line.221"></a>
+<span class="sourceLineNo">222</span>    /**<a name="line.222"></a>
+<span class="sourceLineNo">223</span>     * &lt;div class="zh"&gt;通过卡槽号获取SIM相关信息。&lt;/div&gt; &lt;div class="en"&gt;Get SIM information from the card slot number.&lt;/div&gt;<a name="line.223"></a>
+<span class="sourceLineNo">224</span>     *<a name="line.224"></a>
+<span class="sourceLineNo">225</span>     * @param slotId &lt;div class="zh"&gt; 0或1 &lt;/div&gt; &lt;div class="en"&gt; 0 or 1&lt;/div&gt;<a name="line.225"></a>
+<span class="sourceLineNo">226</span>     *<a name="line.226"></a>
+<span class="sourceLineNo">227</span>     * @return &lt;div class="zh"&gt;simInfo[0]:DeviceId&lt;br&gt;simInfo[1]:IMEI&lt;br&gt;simInfo[2]:ICCID&lt;br&gt;simInfo[3]:SIM operator name&lt;br&gt;simInfo[4]:Network operator name&lt;/div&gt;<a name="line.227"></a>
+<span class="sourceLineNo">228</span>     *         &lt;div class="en"&gt;simInfo[0]:DeviceId&lt;br&gt;simInfo[1]:IMEI&lt;br&gt;simInfo[2]:ICCID&lt;br&gt;simInfo[3]:SIM operator name&lt;br&gt;simInfo[4]:Network operator name&lt;/div&gt;<a name="line.228"></a>
+<span class="sourceLineNo">229</span>     * @throws PhoneDevException<a name="line.229"></a>
+<span class="sourceLineNo">230</span>     * @since V3.32.00<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     */<a name="line.231"></a>
+<span class="sourceLineNo">232</span>    String[] getSIMInfoWithSlotId(int slotId) throws PhoneDevException;<a name="line.232"></a>
+<span class="sourceLineNo">233</span><a name="line.233"></a>
+<span class="sourceLineNo">234</span>    /**<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     * &lt;div class="zh"&gt;设置网络选择模式为自动。&lt;/div&gt; &lt;div class="en"&gt;Set the network selection mode to automatic.&lt;/div&gt;<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     *<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     * @param subId &lt;div class="zh"&gt;SIM卡索引。通过{@link #getSubId(int)}获取。&lt;/div&gt; &lt;div class="en"&gt;SIM card indexes. Get it by {@link #getSubId(int)}.&lt;/div&gt;<a name="line.237"></a>
+<span class="sourceLineNo">238</span>     *<a name="line.238"></a>
+<span class="sourceLineNo">239</span>     * @throws PhoneDevException<a name="line.239"></a>
+<span class="sourceLineNo">240</span>     * @since V3.32.00<a name="line.240"></a>
+<span class="sourceLineNo">241</span>     */<a name="line.241"></a>
+<span class="sourceLineNo">242</span>    void setNetworkSelectionModeAutomatic(int subId) throws PhoneDevException;<a name="line.242"></a>
+<span class="sourceLineNo">243</span><a name="line.243"></a>
+<span class="sourceLineNo">244</span><a name="line.244"></a>
+<span class="sourceLineNo">245</span><a name="line.245"></a>
+<span class="sourceLineNo">246</span>    /**<a name="line.246"></a>
+<span class="sourceLineNo">247</span>     * &lt;div class="zh"&gt;获取网络优先模式。&lt;/div&gt; &lt;div class="en"&gt;Get network preferred mode.&lt;/div&gt;<a name="line.247"></a>
+<span class="sourceLineNo">248</span>     *<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     * @return   &lt;div class="zh"&gt;首选网络类型 &lt;/div&gt;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     *           &lt;div class="en"&gt;network preferred mode&lt;/div&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>     * @throws PhoneDevException<a name="line.251"></a>
+<span class="sourceLineNo">252</span>     * @since V3.33.00<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     */<a name="line.253"></a>
+<span class="sourceLineNo">254</span>    int getPreferredNetworkType() throws PhoneDevException;<a name="line.254"></a>
+<span class="sourceLineNo">255</span><a name="line.255"></a>
+<span class="sourceLineNo">256</span>    /**<a name="line.256"></a>
+<span class="sourceLineNo">257</span>     * &lt;div class="zh"&gt;更新种子卡资源文件，设置后重启生效。&lt;/div&gt; &lt;div class="en"&gt;Update share profile and restart to take effect.&lt;/div&gt;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>     *<a name="line.258"></a>
+<span class="sourceLineNo">259</span>     * @param shareProfilePath &lt;div class="zh"&gt;文件路径,不能为空,文件必须存在。&lt;/div&gt; &lt;div class="en"&gt;The file path, cannot be empty. The file must exist.&lt;/div&gt;<a name="line.259"></a>
+<span class="sourceLineNo">260</span>     * @throws PhoneDevException<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     * @since V3.33.00<a name="line.261"></a>
+<span class="sourceLineNo">262</span>     */<a name="line.262"></a>
+<span class="sourceLineNo">263</span>    void updateShareProfile(String shareProfilePath) throws PhoneDevException;<a name="line.263"></a>
+<span class="sourceLineNo">264</span><a name="line.264"></a>
+<span class="sourceLineNo">265</span><a name="line.265"></a>
+<span class="sourceLineNo">266</span>    /**<a name="line.266"></a>
+<span class="sourceLineNo">267</span>     * &lt;div class="zh"&gt;打开卡数据服务。&lt;/div&gt; &lt;div class="en"&gt;Turn on the card data service.&lt;/div&gt;<a name="line.267"></a>
+<span class="sourceLineNo">268</span>     *<a name="line.268"></a>
+<span class="sourceLineNo">269</span>     * @param listener {@link IVSimAndESimListener}<a name="line.269"></a>
+<span class="sourceLineNo">270</span>     *<a name="line.270"></a>
+<span class="sourceLineNo">271</span>     * @throws PhoneDevException<a name="line.271"></a>
+<span class="sourceLineNo">272</span>     * @since V3.33.00<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     */<a name="line.273"></a>
+<span class="sourceLineNo">274</span>    void turnOnVSimAndESimService(IVSimAndESimListener listener) throws PhoneDevException;<a name="line.274"></a>
+<span class="sourceLineNo">275</span><a name="line.275"></a>
+<span class="sourceLineNo">276</span>    /**<a name="line.276"></a>
+<span class="sourceLineNo">277</span>     * &lt;div class="zh"&gt;关闭卡数据服务。&lt;/div&gt; &lt;div class="en"&gt;Turn off the card data service.&lt;/div&gt;<a name="line.277"></a>
+<span class="sourceLineNo">278</span>     *<a name="line.278"></a>
+<span class="sourceLineNo">279</span>     * @param listener {@link IVSimAndESimListener}<a name="line.279"></a>
+<span class="sourceLineNo">280</span>     * @throws PhoneDevException<a name="line.280"></a>
+<span class="sourceLineNo">281</span>     * @since V3.33.00<a name="line.281"></a>
+<span class="sourceLineNo">282</span>     */<a name="line.282"></a>
+<span class="sourceLineNo">283</span>    void turnOffVSimAndESimService(IVSimAndESimListener listener) throws PhoneDevException;<a name="line.283"></a>
+<span class="sourceLineNo">284</span><a name="line.284"></a>
+<span class="sourceLineNo">285</span>    /**<a name="line.285"></a>
+<span class="sourceLineNo">286</span>     * &lt;div class="zh"&gt;获取当前使用的模式。&lt;/div&gt; &lt;div class="en"&gt;Get the mode currently in use.&lt;/div&gt;<a name="line.286"></a>
+<span class="sourceLineNo">287</span>     *<a name="line.287"></a>
+<span class="sourceLineNo">288</span>     * @throws PhoneDevException<a name="line.288"></a>
+<span class="sourceLineNo">289</span>     * @since V3.33.00<a name="line.289"></a>
+<span class="sourceLineNo">290</span>     */<a name="line.290"></a>
+<span class="sourceLineNo">291</span>    String getUiccMode() throws PhoneDevException;<a name="line.291"></a>
+<span class="sourceLineNo">292</span><a name="line.292"></a>
+<span class="sourceLineNo">293</span><a name="line.293"></a>
+<span class="sourceLineNo">294</span>    /**<a name="line.294"></a>
+<span class="sourceLineNo">295</span>     * &lt;div class="zh"&gt;设置要使用的模式，重启后生效。&lt;/div&gt; &lt;div class="en"&gt;Set the mode to use, restart to take effect.&lt;/div&gt;<a name="line.295"></a>
+<span class="sourceLineNo">296</span>     *<a name="line.296"></a>
+<span class="sourceLineNo">297</span>     * @param mode &lt;div class="zh"&gt;<a name="line.297"></a>
+<span class="sourceLineNo">298</span>     *             &lt;ul&gt;&lt;li&gt;"ESIM"&lt;/li&gt;<a name="line.298"></a>
+<span class="sourceLineNo">299</span>     *             &lt;li&gt;"GSMA_ESIM"&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;<a name="line.299"></a>
+<span class="sourceLineNo">300</span>     *             &lt;div class="en"&gt;<a name="line.300"></a>
+<span class="sourceLineNo">301</span>     *             &lt;ul&gt;&lt;li&gt;"ESIM"&lt;/li&gt;<a name="line.301"></a>
+<span class="sourceLineNo">302</span>     *             &lt;li&gt;"GSMA_ESIM"&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;<a name="line.302"></a>
+<span class="sourceLineNo">303</span><a name="line.303"></a>
+<span class="sourceLineNo">304</span>     * @throws PhoneDevException<a name="line.304"></a>
+<span class="sourceLineNo">305</span>     * @since V3.33.00<a name="line.305"></a>
+<span class="sourceLineNo">306</span>     */<a name="line.306"></a>
+<span class="sourceLineNo">307</span>    void setUiccMode(String mode) throws PhoneDevException;<a name="line.307"></a>
+<span class="sourceLineNo">308</span><a name="line.308"></a>
+<span class="sourceLineNo">309</span><a name="line.309"></a>
+<span class="sourceLineNo">310</span><a name="line.310"></a>
+<span class="sourceLineNo">311</span><a name="line.311"></a>
+<span class="sourceLineNo">312</span>    /**<a name="line.312"></a>
+<span class="sourceLineNo">313</span>     * &lt;div class="zh"&gt;获取卡服务状态。&lt;/div&gt; &lt;div class="en"&gt;Get the card service state.&lt;/div&gt;<a name="line.313"></a>
+<span class="sourceLineNo">314</span>     *<a name="line.314"></a>
+<span class="sourceLineNo">315</span>     * @param listener {@link IVSimAndESimListener}<a name="line.315"></a>
+<span class="sourceLineNo">316</span>     *<a name="line.316"></a>
+<span class="sourceLineNo">317</span>     * @throws PhoneDevException<a name="line.317"></a>
+<span class="sourceLineNo">318</span>     * @since V3.33.00<a name="line.318"></a>
+<span class="sourceLineNo">319</span>     */<a name="line.319"></a>
+<span class="sourceLineNo">320</span>    void getVSimAndESimServiceState(IVSimAndESimListener listener) throws PhoneDevException;<a name="line.320"></a>
+<span class="sourceLineNo">321</span><a name="line.321"></a>
+<span class="sourceLineNo">322</span>    /**<a name="line.322"></a>
+<span class="sourceLineNo">323</span>     * &lt;div class="zh"&gt;打开或者关闭当前使用卡的VoLte模式。&lt;/div&gt;<a name="line.323"></a>
+<span class="sourceLineNo">324</span>     * &lt;div class="en"&gt;Enable or disable the VoLte mode of the currently used card.&lt;/div&gt;<a name="line.324"></a>
+<span class="sourceLineNo">325</span>     *<a name="line.325"></a>
+<span class="sourceLineNo">326</span>     * @param enable &lt;div class="zh"&gt;true:打开VoLte false:关闭VoLte &lt;/div&gt;<a name="line.326"></a>
+<span class="sourceLineNo">327</span>     *               &lt;div class="en"&gt;true: enable, false: disable&lt;/div&gt;<a name="line.327"></a>
+<span class="sourceLineNo">328</span>     *<a name="line.328"></a>
+<span class="sourceLineNo">329</span>     * @throws PhoneDevException<a name="line.329"></a>
+<span class="sourceLineNo">330</span>     * @since V3.34.00<a name="line.330"></a>
+<span class="sourceLineNo">331</span>     */<a name="line.331"></a>
+<span class="sourceLineNo">332</span>    void enableVoLteMode(boolean enable) throws  PhoneDevException;<a name="line.332"></a>
+<span class="sourceLineNo">333</span><a name="line.333"></a>
+<span class="sourceLineNo">334</span><a name="line.334"></a>
+<span class="sourceLineNo">335</span>    /**<a name="line.335"></a>
+<span class="sourceLineNo">336</span>     * &lt;div class="zh"&gt; VSim和ESim服务监听器 &lt;/div&gt; &lt;div class="en"&gt; VSim and ESim service listener&lt;/div&gt;<a name="line.336"></a>
+<span class="sourceLineNo">337</span>     *<a name="line.337"></a>
+<span class="sourceLineNo">338</span>     */<a name="line.338"></a>
+<span class="sourceLineNo">339</span>    public interface IVSimAndESimListener {<a name="line.339"></a>
+<span class="sourceLineNo">340</span><a name="line.340"></a>
+<span class="sourceLineNo">341</span>        /**<a name="line.341"></a>
+<span class="sourceLineNo">342</span>         * &lt;div class="zh"&gt; 返回结果。 &lt;/div&gt; &lt;div class="en"&gt;Return result &lt;/div&gt;<a name="line.342"></a>
+<span class="sourceLineNo">343</span>         *<a name="line.343"></a>
+<span class="sourceLineNo">344</span>         * @param code &lt;div class="zh"&gt;&lt;ul&gt;<a name="line.344"></a>
+<span class="sourceLineNo">345</span>         *             &lt;li&gt;0(访问成功)&lt;/li&gt;<a name="line.345"></a>
+<span class="sourceLineNo">346</span>         *             &lt;li&gt;-1（访问失败，一般是发生错误）&lt;/li&gt;<a name="line.346"></a>
+<span class="sourceLineNo">347</span>         *             &lt;li&gt;-2（无权访问，只有同uid或签名的进程可以访问）&lt;/li&gt;<a name="line.347"></a>
+<span class="sourceLineNo">348</span>         *             &lt;li&gt;1000 (服务绑定失败)&lt;/li&gt;<a name="line.348"></a>
+<span class="sourceLineNo">349</span>         *             &lt;li&gt;1001（服务未安装）&lt;/li&gt;<a name="line.349"></a>
+<span class="sourceLineNo">350</span>         *             &lt;li&gt;1002（服务初始化失败）&lt;/li&gt;<a name="line.350"></a>
+<span class="sourceLineNo">351</span>         *             &lt;li&gt;1003（服务未准备好）&lt;/li&gt;<a name="line.351"></a>
+<span class="sourceLineNo">352</span>         *             &lt;li&gt;1004 (切换码号中)&lt;/li&gt;<a name="line.352"></a>
+<span class="sourceLineNo">353</span>         *             &lt;li&gt;1005 (服务调用过于频繁)&lt;/li&gt;<a name="line.353"></a>
+<span class="sourceLineNo">354</span>         *             &lt;li&gt;1006 (操作无效)&lt;/li&gt;<a name="line.354"></a>
+<span class="sourceLineNo">355</span>         *             &lt;li&gt;1007 (输入无效)&lt;/li&gt;<a name="line.355"></a>
+<span class="sourceLineNo">356</span>         *             &lt;li&gt;1008 (没有更多的业务卡)&lt;/li&gt;<a name="line.356"></a>
+<span class="sourceLineNo">357</span>         *             &lt;li&gt;2000 (服务已打开)&lt;/li&gt;<a name="line.357"></a>
+<span class="sourceLineNo">358</span>         *             &lt;li&gt;2001 (服务已关闭)&lt;/li&gt;<a name="line.358"></a>
+<span class="sourceLineNo">359</span>         * &lt;/ul&gt;&lt;/div&gt;<a name="line.359"></a>
+<span class="sourceLineNo">360</span>         *             &lt;div class="en"&gt;&lt;ul&gt;<a name="line.360"></a>
+<span class="sourceLineNo">361</span>         *             &lt;li&gt;0(Access success)&lt;/li&gt;<a name="line.361"></a>
+<span class="sourceLineNo">362</span>         *             &lt;li&gt;-1（Access failed, usually an error occurred）&lt;/li&gt;<a name="line.362"></a>
+<span class="sourceLineNo">363</span>         *             &lt;li&gt;-2（Only processes with the same uid or signature have access）&lt;/li&gt;<a name="line.363"></a>
+<span class="sourceLineNo">364</span>         *             &lt;li&gt;1000 (Service binding failure)&lt;/li&gt;<a name="line.364"></a>
+<span class="sourceLineNo">365</span>         *             &lt;li&gt;1001（Service not installed）&lt;/li&gt;<a name="line.365"></a>
+<span class="sourceLineNo">366</span>         *             &lt;li&gt;1002（Service initialization failed. Procedure）&lt;/li&gt;<a name="line.366"></a>
+<span class="sourceLineNo">367</span>         *             &lt;li&gt;1003（Service initialization failed）&lt;/li&gt;<a name="line.367"></a>
+<span class="sourceLineNo">368</span>         *             &lt;li&gt;1004 (Switching code numbers)&lt;/li&gt;<a name="line.368"></a>
+<span class="sourceLineNo">369</span>         *             &lt;li&gt;1005 (Service calls are too frequent)&lt;/li&gt;<a name="line.369"></a>
+<span class="sourceLineNo">370</span>         *             &lt;li&gt;1006 (Invalid operation)&lt;/li&gt;<a name="line.370"></a>
+<span class="sourceLineNo">371</span>         *             &lt;li&gt;1007 (Invalid input)&lt;/li&gt;<a name="line.371"></a>
+<span class="sourceLineNo">372</span>         *             &lt;li&gt;1008 (No more business cards)&lt;/li&gt;<a name="line.372"></a>
+<span class="sourceLineNo">373</span>         *             &lt;li&gt;2000 (Service opened)&lt;/li&gt;<a name="line.373"></a>
+<span class="sourceLineNo">374</span>         *             &lt;li&gt;2001 (Service is closed)&lt;/li&gt;<a name="line.374"></a>
+<span class="sourceLineNo">375</span>         *             &lt;/ul&gt;&lt;/div&gt;<a name="line.375"></a>
+<span class="sourceLineNo">376</span>         *<a name="line.376"></a>
+<span class="sourceLineNo">377</span>         */<a name="line.377"></a>
+<span class="sourceLineNo">378</span>        public void onResult(int code);<a name="line.378"></a>
+<span class="sourceLineNo">379</span><a name="line.379"></a>
+<span class="sourceLineNo">380</span>    }<a name="line.380"></a>
+<span class="sourceLineNo">381</span><a name="line.381"></a>
+<span class="sourceLineNo">382</span>    /**<a name="line.382"></a>
+<span class="sourceLineNo">383</span>     * &lt;div class="zh"&gt;通过subId获取IMSI。&lt;/div&gt;<a name="line.383"></a>
+<span class="sourceLineNo">384</span>     * &lt;div class="en"&gt;Get IMSI by subId.&lt;/div&gt;<a name="line.384"></a>
+<span class="sourceLineNo">385</span>     *<a name="line.385"></a>
+<span class="sourceLineNo">386</span>     * @param subId &lt;div class="zh"&gt;SIM卡索引。通过{@link #getSubId(int)}获取。&lt;/div&gt;<a name="line.386"></a>
+<span class="sourceLineNo">387</span>     *               &lt;div class="en"&gt;SIM card index. Get it by {@link #getSubId(int)}.&lt;/div&gt;<a name="line.387"></a>
+<span class="sourceLineNo">388</span>     *<a name="line.388"></a>
+<span class="sourceLineNo">389</span>     * @return &lt;div class="zh"&gt;IMSI(International Mobile Subscriber Identity)&lt;/div&gt; &lt;div class="en"&gt;IMSI(International Mobile Subscriber Identity)&lt;/div&gt;<a name="line.389"></a>
+<span class="sourceLineNo">390</span>     * @throws PhoneDevException<a name="line.390"></a>
+<span class="sourceLineNo">391</span>     * @since V4.07.00<a name="line.391"></a>
+<span class="sourceLineNo">392</span>     */<a name="line.392"></a>
+<span class="sourceLineNo">393</span>    String getSubscriberId(int subId) throws  PhoneDevException;<a name="line.393"></a>
+<span class="sourceLineNo">394</span><a name="line.394"></a>
+<span class="sourceLineNo">395</span>    /**<a name="line.395"></a>
+<span class="sourceLineNo">396</span>     * &lt;div class="zh"&gt;获取默认数据流量卡的Subscription Id。&lt;/div&gt;<a name="line.396"></a>
+<span class="sourceLineNo">397</span>     * &lt;div class="en"&gt;Gets the Subscription Id for the default data traffic card.&lt;/div&gt;<a name="line.397"></a>
+<span class="sourceLineNo">398</span>     *<a name="line.398"></a>
+<span class="sourceLineNo">399</span>     * @return &lt;div class="zh"&gt;默认数据流量卡的Subscription Id &lt;/div&gt;<a name="line.399"></a>
+<span class="sourceLineNo">400</span>     *          &lt;div class="en"&gt;Subscription Id of the default data traffic card&lt;/div&gt;<a name="line.400"></a>
+<span class="sourceLineNo">401</span>     * @throws PhoneDevException<a name="line.401"></a>
+<span class="sourceLineNo">402</span>     * @since V4.14.00<a name="line.402"></a>
+<span class="sourceLineNo">403</span>     */<a name="line.403"></a>
+<span class="sourceLineNo">404</span>    int getDefaultDataSubscriptionId() throws  PhoneDevException;<a name="line.404"></a>
+<span class="sourceLineNo">405</span><a name="line.405"></a>
+<span class="sourceLineNo">406</span><a name="line.406"></a>
+<span class="sourceLineNo">407</span>    /**<a name="line.407"></a>
+<span class="sourceLineNo">408</span>     * &lt;div class="zh"&gt;获取对应卡槽是否插入SIM卡。&lt;/div&gt;<a name="line.408"></a>
+<span class="sourceLineNo">409</span>     * &lt;div class="en"&gt;Obtain whether a SIM card is inserted into the corresponding slot.&lt;/div&gt;<a name="line.409"></a>
+<span class="sourceLineNo">410</span>     *<a name="line.410"></a>
+<span class="sourceLineNo">411</span>     * @param slotId &lt;div class="zh"&gt;0或1。&lt;/div&gt;<a name="line.411"></a>
+<span class="sourceLineNo">412</span>     *               &lt;div class="en"&gt;0 or 1.&lt;/div&gt;<a name="line.412"></a>
+<span class="sourceLineNo">413</span>     *<a name="line.413"></a>
+<span class="sourceLineNo">414</span>     * @return &lt;div class="zh"&gt;true-存在, false-未插入 &lt;/div&gt;<a name="line.414"></a>
+<span class="sourceLineNo">415</span>     *          &lt;div class="en"&gt;true- exists, false- not inserted&lt;/div&gt;<a name="line.415"></a>
+<span class="sourceLineNo">416</span>     * @throws PhoneDevException<a name="line.416"></a>
+<span class="sourceLineNo">417</span>     * @since V4.14.00<a name="line.417"></a>
+<span class="sourceLineNo">418</span>     */<a name="line.418"></a>
+<span class="sourceLineNo">419</span>    boolean isSimPresent(int slotId) throws  PhoneDevException;<a name="line.419"></a>
+<span class="sourceLineNo">420</span>}<a name="line.420"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

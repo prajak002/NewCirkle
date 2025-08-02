@@ -1,0 +1,660 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal.exceptions;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.utils.Utils;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>public enum EPedDevException {<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    /**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>     * &lt;div class="zh"&gt; 未知异常 &lt;/div&gt; &lt;div class="en"&gt; unexpected error &lt;/div&gt;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>    DEVICES_ERR_UNEXPECTED(97, "unexpected error", "未知异常"),<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;div class="zh"&gt; 参数错误 &lt;/div&gt; &lt;div class="en"&gt; invalid argument error &lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    DEVICES_ERR_INVALID_ARGUMENT(98, "invalid argument error", "参数错误"),<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * &lt;div class="zh"&gt; RPC I/O 连接异常 &lt;/div&gt; &lt;div class="en"&gt; connect error &lt;/div&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     */<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    DEVICES_ERR_CONNECT(99, "connect error", "RPC I/O 连接异常"),<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * &lt;div class="zh"&gt; 不支持 &lt;/div&gt; &lt;div class="en"&gt; not support error &lt;/div&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    DEVICES_ERR_NO_SUPPORT(100, "not support error", "不支持"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt; 无权限异常&lt;/div&gt; &lt;div class="en"&gt; no permission error &lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     */<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    DEVICES_ERR_NO_PERMISSION(101, "no permission error", "无权限异常"),<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    <a name="line.42"></a>
+<span class="sourceLineNo">043</span>    /**<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * &lt;div class="zh"&gt; 模块被禁用 &lt;/div&gt; &lt;div class="en"&gt; module disabled &lt;/div&gt;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     */<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    ERROR_DISABLED(102, "module disabled", "模块被禁用"), <a name="line.46"></a>
+<span class="sourceLineNo">047</span>    <a name="line.47"></a>
+<span class="sourceLineNo">048</span>    /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>     * &lt;div class="zh"&gt; 密钥不存在 &lt;/div&gt; &lt;div class="en"&gt; Key does not exist &lt;/div&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>     */<a name="line.50"></a>
+<span class="sourceLineNo">051</span>    PED_ERR_NO_KEY(1, "Key does not exist", "密钥不存在"),<a name="line.51"></a>
+<span class="sourceLineNo">052</span>    /**<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * &lt;div class="zh"&gt; 密钥索引错,参数索引不在范围内 &lt;/div&gt; &lt;div class="en"&gt; Key index error, parameter index is not in the range<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     * &lt;/div&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     */<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    PED_ERR_KEYIDX(2, "key index error", "密钥索引错,参数索引不在范围内"),<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    /**<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     * &lt;div class="zh"&gt; 密钥写入时,源密钥的层次比目的密钥低 &lt;/div&gt; &lt;div class="en"&gt; When key is written, the source key level is lower<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * than the destination level. &lt;/div&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    PED_ERR_DERIVE(3, "derive error", "密钥写入时,源密钥的层次比目的密钥低"),<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    /**<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * &lt;div class="zh"&gt; 密钥验证失败 &lt;/div&gt; &lt;div class="en"&gt; Key verification failed &lt;/div&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    PED_ERR_CHECK_KEY_FAIL(4, "check key fail error", " 密钥验证失败"),<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    /**<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * &lt;div class="zh"&gt; 取消输入PIN &lt;/div&gt; &lt;div class="en"&gt; Cancel to enter PIN. &lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    PED_ERR_INPUT_CANCEL(5, "input cancel error", "取消输入PIN"),<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    /**<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * &lt;div class="zh"&gt; 函数调用小于最小间隔时间 &lt;/div&gt; &lt;div class="en"&gt; Calling function interval is less than minimum interval<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * time. &lt;/div&gt;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     */<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    PED_ERR_WAIT_INTERVAL(6, "wait interval error", "函数调用小于最小间隔时间"),<a name="line.74"></a>
+<span class="sourceLineNo">075</span>    /**<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * &lt;div class="zh"&gt; KCV模式错,不支持 &lt;/div&gt; &lt;div class="en"&gt; KCV mode error, do not support &lt;/div&gt;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     */<a name="line.77"></a>
+<span class="sourceLineNo">078</span>    PED_ERR_CHECK_MODE(7, "check mode error", "KCV模式错,不支持"),<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    /**<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     * &lt;div class="zh"&gt; 无权使用该密钥,当出现密钥标签不对,或者写入密钥时,源密钥类型的值大于目的密钥类型,都会返回该密钥 &lt;/div&gt; &lt;div class="en"&gt; Not allowed to use the<a name="line.80"></a>
+<span class="sourceLineNo">081</span>     * key. When key label is not correct or source key type is bigger than destination key type, PED will return this<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     * code &lt;/div&gt;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    PED_ERR_NO_RIGHT_USE(8, "no right user error", " 无权使用该密钥,当出现密钥标签不对,或者写入密钥时,源密钥类型的值大于目的密钥类型,都会返回该密钥"),<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    /**<a name="line.85"></a>
+<span class="sourceLineNo">086</span>     * &lt;div class="zh"&gt; 密钥类型错 &lt;/div&gt; &lt;div class="en"&gt; Key type error &lt;/div&gt;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     */<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    PED_ERR_KEY_TYPE(9, "key type error", "密钥类型错"),<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    /**<a name="line.89"></a>
+<span class="sourceLineNo">090</span>     * &lt;div class="zh"&gt; 期望PIN的长度字符串错 &lt;/div&gt; &lt;div class="en"&gt; Expected PIN length string error &lt;/div&gt;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     */<a name="line.91"></a>
+<span class="sourceLineNo">092</span>    PED_ERR_EXPLEN(10, "explen error", "期望PIN的长度字符串错"),<a name="line.92"></a>
+<span class="sourceLineNo">093</span>    /**<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     * &lt;div class="zh"&gt; 目的密钥索引错,不在范围内 &lt;/div&gt; &lt;div class="en"&gt; Destination key index error &lt;/div&gt;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     */<a name="line.95"></a>
+<span class="sourceLineNo">096</span>    PED_ERR_DSTKEY_IDX(11, "dstKey index error", "目的密钥索引错,不在范围内"),<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    /**<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     * &lt;div class="zh"&gt; 源密钥索引错,不在范围内 &lt;/div&gt; &lt;div class="en"&gt; Source key index error &lt;/div&gt;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>     */<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    PED_ERR_SRCKEY_IDX(12, "srcKey index error", "源密钥索引错,不在范围内"),<a name="line.100"></a>
+<span class="sourceLineNo">101</span>    /**<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * &lt;div class="zh"&gt; 密钥长度错 &lt;/div&gt; &lt;div class="en"&gt; Key length error &lt;/div&gt;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     */<a name="line.103"></a>
+<span class="sourceLineNo">104</span>    PED_ERR_KEY_LEN(13, "key length error", "密钥长度错"),<a name="line.104"></a>
+<span class="sourceLineNo">105</span>    /**<a name="line.105"></a>
+<span class="sourceLineNo">106</span>     * &lt;div class="zh"&gt; 输入PIN超时 &lt;/div&gt; &lt;div class="en"&gt; PIN input timeout &lt;/div&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     */<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    PED_ERR_INPUT_TIMEOUT(14, "input timeout error", "输入PIN超时"),<a name="line.108"></a>
+<span class="sourceLineNo">109</span>    /**<a name="line.109"></a>
+<span class="sourceLineNo">110</span>     * &lt;div class="zh"&gt; IC卡不存在 &lt;/div&gt; &lt;div class="en"&gt; IC card does not exist &lt;/div&gt;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>     */<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    PED_ERR_NO_ICC(15, "no icc error", "IC卡不存在"),<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    /**<a name="line.113"></a>
+<span class="sourceLineNo">114</span>     * &lt;div class="zh"&gt; IC卡未初始化 &lt;/div&gt; &lt;div class="en"&gt; IC card is not initialized &lt;/div&gt;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>     */<a name="line.115"></a>
+<span class="sourceLineNo">116</span>    PED_ERR_ICC_NO_INIT(16, "icc no init error", " IC卡未初始化"),<a name="line.116"></a>
+<span class="sourceLineNo">117</span>    /**<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     * &lt;div class="zh"&gt; DUKPT组索引号错 &lt;/div&gt; &lt;div class="en"&gt; DUKPT index error &lt;/div&gt;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>     */<a name="line.119"></a>
+<span class="sourceLineNo">120</span>    PED_ERR_GROUP_IDX(17, "group index error", " DUKPT组索引号错"),<a name="line.120"></a>
+<span class="sourceLineNo">121</span>    /**<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     * &lt;div class="zh"&gt; 指针参数非法为空 &lt;/div&gt; &lt;div class="en"&gt; Pointer parameter error &lt;/div&gt;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>     */<a name="line.123"></a>
+<span class="sourceLineNo">124</span>    PED_ERR_PARAM_PTR_NULL(18, "param ptr null error", "指针参数非法为空"),<a name="line.124"></a>
+<span class="sourceLineNo">125</span>    /**<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     * &lt;div class="zh"&gt; PED已锁 &lt;/div&gt; &lt;div class="en"&gt; PED locked &lt;/div&gt;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     */<a name="line.127"></a>
+<span class="sourceLineNo">128</span>    PED_ERR_LOCKED(19, "locked error", "PED已锁"),<a name="line.128"></a>
+<span class="sourceLineNo">129</span>    /**<a name="line.129"></a>
+<span class="sourceLineNo">130</span>     * &lt;div class="zh"&gt; PED通用错误 &lt;/div&gt; &lt;div class="en"&gt; PED general error &lt;/div&gt;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>     */<a name="line.131"></a>
+<span class="sourceLineNo">132</span>    PED_ERROR(20, "ped error", "PED通用错误"),<a name="line.132"></a>
+<span class="sourceLineNo">133</span>    /**<a name="line.133"></a>
+<span class="sourceLineNo">134</span>     * &lt;div class="zh"&gt; 没有空闲的缓冲 &lt;/div&gt; &lt;div class="en"&gt; No free buffer &lt;/div&gt;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>     */<a name="line.135"></a>
+<span class="sourceLineNo">136</span>    PED_ERR_NOMORE_BUF(21, "nomore buf error", " 没有空闲的缓冲"),<a name="line.136"></a>
+<span class="sourceLineNo">137</span>    /**<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     * &lt;div class="zh"&gt; 需要取得高级权限 &lt;/div&gt; &lt;div class="en"&gt; Not administration &lt;/div&gt;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>     */<a name="line.139"></a>
+<span class="sourceLineNo">140</span>    PED_ERR_NEED_ADMIN(22, "need admin error", "需要取得高级权限"),<a name="line.140"></a>
+<span class="sourceLineNo">141</span>    /**<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     * &lt;div class="zh"&gt; DUKPT已经溢出 &lt;/div&gt; &lt;div class="en"&gt; DUKPT overflow &lt;/div&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     */<a name="line.143"></a>
+<span class="sourceLineNo">144</span>    PED_ERR_DUKPT_OVERFLOW(23, "dukpt overFlow error", "DUKPT已经溢出"),<a name="line.144"></a>
+<span class="sourceLineNo">145</span>    /**<a name="line.145"></a>
+<span class="sourceLineNo">146</span>     * &lt;div class="zh"&gt; KCV 校验失败 &lt;/div&gt; &lt;div class="en"&gt; KCV check error &lt;/div&gt;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>     */<a name="line.147"></a>
+<span class="sourceLineNo">148</span>    PED_ERR_KCV_CHECK_FAIL(24, "kcv check error", "KCV 校验失败"),<a name="line.148"></a>
+<span class="sourceLineNo">149</span>    /**<a name="line.149"></a>
+<span class="sourceLineNo">150</span>     * &lt;div class="zh"&gt; 源密钥类型错 &lt;/div&gt; &lt;div class="en"&gt; Source key type error &lt;/div&gt;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>     */<a name="line.151"></a>
+<span class="sourceLineNo">152</span>    PED_ERR_SRCKEY_TYPE(25, "srcKey type error", "源密钥类型错"),<a name="line.152"></a>
+<span class="sourceLineNo">153</span>    /**<a name="line.153"></a>
+<span class="sourceLineNo">154</span>     * &lt;div class="zh"&gt; 命令不支持 &lt;/div&gt; &lt;div class="en"&gt; Command not support &lt;/div&gt;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>     */<a name="line.155"></a>
+<span class="sourceLineNo">156</span>    PED_ERR_UNSPT_CMD(26, "unsupport cmd error", "命令不支持"),<a name="line.156"></a>
+<span class="sourceLineNo">157</span>    /**<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     * &lt;div class="zh"&gt; 通讯错误 &lt;/div&gt; &lt;div class="en"&gt; Communication error &lt;/div&gt;<a name="line.158"></a>
+<span class="sourceLineNo">159</span>     */<a name="line.159"></a>
+<span class="sourceLineNo">160</span>    PED_ERR_COMM(27, "communication error", "通讯错误"),<a name="line.160"></a>
+<span class="sourceLineNo">161</span>    /**<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * &lt;div class="zh"&gt; 没有用户认证公钥 &lt;/div&gt; &lt;div class="en"&gt; No user authentication public key &lt;/div&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     */<a name="line.163"></a>
+<span class="sourceLineNo">164</span>    PED_ERR_NO_UAPUK(28, "no uapuk error", "没有用户认证公钥"),<a name="line.164"></a>
+<span class="sourceLineNo">165</span>    /**<a name="line.165"></a>
+<span class="sourceLineNo">166</span>     * &lt;div class="zh"&gt; 取系统敏感服务失败 &lt;/div&gt; &lt;div class="en"&gt; Administration error &lt;/div&gt;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     */<a name="line.167"></a>
+<span class="sourceLineNo">168</span>    PED_ERR_ADMIN(29, "admin error", "取系统敏感服务失败"),<a name="line.168"></a>
+<span class="sourceLineNo">169</span>    /**<a name="line.169"></a>
+<span class="sourceLineNo">170</span>     * &lt;div class="zh"&gt; PED处于下载非激活状态 &lt;/div&gt; &lt;div class="en"&gt; PED download inactive &lt;/div&gt;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>     */<a name="line.171"></a>
+<span class="sourceLineNo">172</span>    PED_ERR_DOWNLOAD_INACTIVE(30, "downLoad inactive error", " PED处于下载非激活状态"),<a name="line.172"></a>
+<span class="sourceLineNo">173</span>    /**<a name="line.173"></a>
+<span class="sourceLineNo">174</span>     * &lt;div class="zh"&gt; KCV 奇校验失败 &lt;/div&gt; &lt;div class="en"&gt; KCV parity check fail &lt;/div&gt;<a name="line.174"></a>
+<span class="sourceLineNo">175</span>     */<a name="line.175"></a>
+<span class="sourceLineNo">176</span>    PED_ERR_KCV_ODD_CHECK_FAIL(31, "kcv odd check fail error", " KCV 奇校验失败"),<a name="line.176"></a>
+<span class="sourceLineNo">177</span>    /**<a name="line.177"></a>
+<span class="sourceLineNo">178</span>     * &lt;div class="zh"&gt; 读取PED数据失败 &lt;/div&gt; &lt;div class="en"&gt; Read PED data fail &lt;/div&gt;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>     */<a name="line.179"></a>
+<span class="sourceLineNo">180</span>    PED_ERR_PED_DATA_RW_FAIL(32, "ped data rw fail error", "读取PED数据失败"),<a name="line.180"></a>
+<span class="sourceLineNo">181</span>    /**<a name="line.181"></a>
+<span class="sourceLineNo">182</span>     * &lt;div class="zh"&gt; 卡操作错误(脱机明文、密文密码验证) &lt;/div&gt; &lt;div class="en"&gt; ICC operation fail &lt;/div&gt;<a name="line.182"></a>
+<span class="sourceLineNo">183</span>     */<a name="line.183"></a>
+<span class="sourceLineNo">184</span>    PED_ERR_ICC_CMD(33, "icc cmd error", "卡操作错误(脱机明文、密文密码验证)"),<a name="line.184"></a>
+<span class="sourceLineNo">185</span>    /**<a name="line.185"></a>
+<span class="sourceLineNo">186</span>     * &lt;div class="zh"&gt; 用户按CLEAR键退出输入PIN &lt;/div&gt; &lt;div class="en"&gt; Pressing CLEAR to exit input &lt;/div&gt;<a name="line.186"></a>
+<span class="sourceLineNo">187</span>     */<a name="line.187"></a>
+<span class="sourceLineNo">188</span>    PED_ERR_INPUT_CLEAR(34, "input clear error", " 用户按CLEAR键退出输入PIN"),<a name="line.188"></a>
+<span class="sourceLineNo">189</span>    /**<a name="line.189"></a>
+<span class="sourceLineNo">190</span>     * &lt;div class="zh"&gt; PED存储空间不足 &lt;/div&gt; &lt;div class="en"&gt; PED has no enough storage space &lt;/div&gt;<a name="line.190"></a>
+<span class="sourceLineNo">191</span>     */<a name="line.191"></a>
+<span class="sourceLineNo">192</span>    PED_ERR_NO_FREE_FLASH(35, "no free flash error", "PED存储空间不足"),<a name="line.192"></a>
+<span class="sourceLineNo">193</span>    /**<a name="line.193"></a>
+<span class="sourceLineNo">194</span>     * &lt;div class="zh"&gt; DUKPT KSN需要先加1 &lt;/div&gt; &lt;div class="en"&gt; DUKPT KSN need to plus 1 first &lt;/div&gt;<a name="line.194"></a>
+<span class="sourceLineNo">195</span>     */<a name="line.195"></a>
+<span class="sourceLineNo">196</span>    PED_ERR_DUKPT_NEED_INC_KSN(36, "dukpt need increase ksn", " DUKPT KSN需要先加1"),<a name="line.196"></a>
+<span class="sourceLineNo">197</span>    /**<a name="line.197"></a>
+<span class="sourceLineNo">198</span>     * &lt;div class="zh"&gt; KCV MODE错误 &lt;/div&gt; &lt;div class="en"&gt; KCV MODE error &lt;/div&gt;<a name="line.198"></a>
+<span class="sourceLineNo">199</span>     */<a name="line.199"></a>
+<span class="sourceLineNo">200</span>    PED_ERR_KCV_MODE(37, "kcv mode error", " KCV MODE错误"),<a name="line.200"></a>
+<span class="sourceLineNo">201</span>    /**<a name="line.201"></a>
+<span class="sourceLineNo">202</span>     * &lt;div class="zh"&gt; 无 KCV &lt;/div&gt; &lt;div class="en"&gt; NO KCV &lt;/div&gt;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>     */<a name="line.203"></a>
+<span class="sourceLineNo">204</span>    PED_ERR_DUKPT_NO_KCV(38, "dukpt no kcv error", " 无 KCV"),<a name="line.204"></a>
+<span class="sourceLineNo">205</span>    /**<a name="line.205"></a>
+<span class="sourceLineNo">206</span>     * &lt;div class="zh"&gt; 按FN/ATM4键取消PIN输入 &lt;/div&gt; &lt;div class="en"&gt; Press FN/ATM4 to cancel PIN inputting. &lt;/div&gt;<a name="line.206"></a>
+<span class="sourceLineNo">207</span>     */<a name="line.207"></a>
+<span class="sourceLineNo">208</span>    PED_ERR_PIN_BYPASS_BYFUNKEY(39, "Pass or Funkey to cancle pin input error", "按FN/ATM4键取消PIN输入"),<a name="line.208"></a>
+<span class="sourceLineNo">209</span>    /**<a name="line.209"></a>
+<span class="sourceLineNo">210</span>     * &lt;div class="zh"&gt; 数据MAC校验错 &lt;/div&gt; &lt;div class="en"&gt; Data MAC check error &lt;/div&gt;<a name="line.210"></a>
+<span class="sourceLineNo">211</span>     */<a name="line.211"></a>
+<span class="sourceLineNo">212</span>    PED_ERR_MAC(40, "mac error", " 数据MAC校验错"),<a name="line.212"></a>
+<span class="sourceLineNo">213</span>    /**<a name="line.213"></a>
+<span class="sourceLineNo">214</span>     * &lt;div class="zh"&gt; 数据CRC校验错 &lt;/div&gt; &lt;div class="en"&gt; Data CRC check error &lt;/div&gt;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>     */<a name="line.215"></a>
+<span class="sourceLineNo">216</span>    PED_ERR_CRC(41, "crc error", " 数据CRC校验错"),<a name="line.216"></a>
+<span class="sourceLineNo">217</span><a name="line.217"></a>
+<span class="sourceLineNo">218</span>    /**<a name="line.218"></a>
+<span class="sourceLineNo">219</span>     * &lt;div class="zh"&gt; 数据包长度非法 &lt;/div&gt; &lt;div class="en"&gt; Length of data illegal &lt;/div&gt;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>     */<a name="line.220"></a>
+<span class="sourceLineNo">221</span>    PED_ERR_EX_A_LEN(42, "Length of data illegal", "数据包长度非法"),<a name="line.221"></a>
+<span class="sourceLineNo">222</span>    /**<a name="line.222"></a>
+<span class="sourceLineNo">223</span>     * &lt;div class="zh"&gt; 无效的密钥标志号 &lt;/div&gt; &lt;div class="en"&gt; Invalid Key Index &lt;/div&gt;<a name="line.223"></a>
+<span class="sourceLineNo">224</span>     */<a name="line.224"></a>
+<span class="sourceLineNo">225</span>    PED_ERR_EX_A_INVALID_INDEX(43, "Invalid  Key Index", " 无效的密钥标志号"),<a name="line.225"></a>
+<span class="sourceLineNo">226</span>    /**<a name="line.226"></a>
+<span class="sourceLineNo">227</span>     * &lt;div class="zh"&gt; mode非法 &lt;/div&gt; &lt;div class="en"&gt; Mode Illegal &lt;/div&gt;<a name="line.227"></a>
+<span class="sourceLineNo">228</span>     */<a name="line.228"></a>
+<span class="sourceLineNo">229</span>    PED_ERR_EX_A_INVALID_MODE(44, "Mode Illegal", "mode非法"),<a name="line.229"></a>
+<span class="sourceLineNo">230</span>    /**<a name="line.230"></a>
+<span class="sourceLineNo">231</span>     * &lt;div class="zh"&gt; 显示坐标值错 &lt;/div&gt; &lt;div class="en"&gt; Displayed Coordinate Value Error &lt;/div&gt;<a name="line.231"></a>
+<span class="sourceLineNo">232</span>     */<a name="line.232"></a>
+<span class="sourceLineNo">233</span>    PED_ERR_EX_A_COORDONATE(45, "Displayed Coordinate Value Error", " 显示坐标值错"),<a name="line.233"></a>
+<span class="sourceLineNo">234</span>    /**<a name="line.234"></a>
+<span class="sourceLineNo">235</span>     * &lt;div class="zh"&gt; 无效的允许输入长度(非法MinLen或MaxLen) &lt;/div&gt; &lt;div class="en"&gt; Invalid allowed typing length(Illegal MinLen<a name="line.235"></a>
+<span class="sourceLineNo">236</span>     * or MaxLen) &lt;/div&gt;<a name="line.236"></a>
+<span class="sourceLineNo">237</span>     */<a name="line.237"></a>
+<span class="sourceLineNo">238</span>    PED_ERR_EX_A_INPUT_LEN(46, "Invalid allowed typing length(Illegal MinLen or MaxLen)", "无效的允许输入长度(非法MinLen或MaxLen)"),<a name="line.238"></a>
+<span class="sourceLineNo">239</span>    /**<a name="line.239"></a>
+<span class="sourceLineNo">240</span>     * &lt;div class="zh"&gt; 中止输入(收到POS端的中止命令包) &lt;/div&gt; &lt;div class="en"&gt; Abort typing (receive the abort command package from<a name="line.240"></a>
+<span class="sourceLineNo">241</span>     * POS port) &lt;/div&gt;<a name="line.241"></a>
+<span class="sourceLineNo">242</span>     */<a name="line.242"></a>
+<span class="sourceLineNo">243</span>    PED_ERR_EX_A_SUSPEND(47, "Abort typing (receive the abort command package from POS port)", " 中止输入(收到POS端的中止命令包)"),<a name="line.243"></a>
+<span class="sourceLineNo">244</span>    /**<a name="line.244"></a>
+<span class="sourceLineNo">245</span>     * &lt;div class="zh"&gt; 输入超时（缺省超时时长为120秒) &lt;/div&gt; &lt;div class="en"&gt; Typing overtime(default timeout is 120 seconds) &lt;/div&gt;<a name="line.245"></a>
+<span class="sourceLineNo">246</span>     */<a name="line.246"></a>
+<span class="sourceLineNo">247</span>    PED_ERR_EX_A_TIMEOUT(48, "Typing overtime(default timeout is 120 seconds)", "输入超时（缺省超时时长为120秒)"),<a name="line.247"></a>
+<span class="sourceLineNo">248</span>    /**<a name="line.248"></a>
+<span class="sourceLineNo">249</span>     * &lt;div class="zh"&gt; 两次输入的密码不一致 &lt;/div&gt; &lt;div class="en"&gt; The Passwords entered two times are not the same &lt;/div&gt;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>     */<a name="line.250"></a>
+<span class="sourceLineNo">251</span>    PED_ERR_EX_A_NOT_CONSISTENT(49, "The Passwords entered two times are not the same", "两次输入的密码不一致"),<a name="line.251"></a>
+<span class="sourceLineNo">252</span>    /**<a name="line.252"></a>
+<span class="sourceLineNo">253</span>     * &lt;div class="zh"&gt; 指定的密钥不存在 &lt;/div&gt; &lt;div class="en"&gt; Specific Key not exists &lt;/div&gt;<a name="line.253"></a>
+<span class="sourceLineNo">254</span>     */<a name="line.254"></a>
+<span class="sourceLineNo">255</span>    PED_ERR_EX_A_NOT_EXIST(50, "Specific Key not exists", "指定的密钥不存在"),<a name="line.255"></a>
+<span class="sourceLineNo">256</span>    /**<a name="line.256"></a>
+<span class="sourceLineNo">257</span>     * &lt;div class="zh"&gt; 内存错 &lt;/div&gt; &lt;div class="en"&gt; Memory Error &lt;/div&gt;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>     */<a name="line.258"></a>
+<span class="sourceLineNo">259</span>    PED_ERR_EX_A_MEMERY(51, "Memory Error", "内存错"),<a name="line.259"></a>
+<span class="sourceLineNo">260</span>    /**<a name="line.260"></a>
+<span class="sourceLineNo">261</span>     * &lt;div class="zh"&gt; 奇校验错 &lt;/div&gt; &lt;div class="en"&gt; Odd Verify Error &lt;/div&gt;<a name="line.261"></a>
+<span class="sourceLineNo">262</span>     */<a name="line.262"></a>
+<span class="sourceLineNo">263</span>    PED_ERR_EX_A_ODD_CHECK(52, "Odd Verify Error", " 奇校验错"),<a name="line.263"></a>
+<span class="sourceLineNo">264</span>    /**<a name="line.264"></a>
+<span class="sourceLineNo">265</span>     * &lt;div class="zh"&gt; TMK错 &lt;/div&gt; &lt;div class="en"&gt; TMK error &lt;/div&gt;<a name="line.265"></a>
+<span class="sourceLineNo">266</span>     */<a name="line.266"></a>
+<span class="sourceLineNo">267</span>    PED_ERR_EX_A_TMK(53, "TMK Error", "TMK错"),<a name="line.267"></a>
+<span class="sourceLineNo">268</span>    /**<a name="line.268"></a>
+<span class="sourceLineNo">269</span>     * &lt;div class="zh"&gt; MAC2不相等 &lt;/div&gt; &lt;div class="en"&gt; MAC2 not equal &lt;/div&gt;<a name="line.269"></a>
+<span class="sourceLineNo">270</span>     */<a name="line.270"></a>
+<span class="sourceLineNo">271</span>    PED_ERR_EX_A_MAC2(54, "MAC2 not equal", "MAC2不相等"),<a name="line.271"></a>
+<span class="sourceLineNo">272</span>    /**<a name="line.272"></a>
+<span class="sourceLineNo">273</span>     * &lt;div class="zh"&gt; 连续两次输入的间隔时间未达到指定时长(30秒) &lt;/div&gt; &lt;div class="en"&gt; The interval between two consecutive typing is<a name="line.273"></a>
+<span class="sourceLineNo">274</span>     * not reach the specific time(30 seconds) &lt;/div&gt;<a name="line.274"></a>
+<span class="sourceLineNo">275</span>     */<a name="line.275"></a>
+<span class="sourceLineNo">276</span>    PED_ERR_EX_A_TIME_INTERVAL(55,<a name="line.276"></a>
+<span class="sourceLineNo">277</span>            "The interval between two  consecutive typing is not reach the specific time(30 seconds)",<a name="line.277"></a>
+<span class="sourceLineNo">278</span>            "连续两次输入的间隔时间未达到指定时长(30秒)"),<a name="line.278"></a>
+<span class="sourceLineNo">279</span>    /**<a name="line.279"></a>
+<span class="sourceLineNo">280</span>     * &lt;div class="zh"&gt; 指定的密钥不存在或无效 &lt;/div&gt; &lt;div class="en"&gt; Specific key not exists or invalid &lt;/div&gt;<a name="line.280"></a>
+<span class="sourceLineNo">281</span>     */<a name="line.281"></a>
+<span class="sourceLineNo">282</span>    PED_ERR_EX_A_KEY(56, "Specific Key not exists or invalid", "指定的密钥不存在或无效"),<a name="line.282"></a>
+<span class="sourceLineNo">283</span>    /**<a name="line.283"></a>
+<span class="sourceLineNo">284</span>     * &lt;div class="zh"&gt; 无空闲的DUKPT密钥存储空间 &lt;/div&gt; &lt;div class="en"&gt; No free DUKPT key memory space &lt;/div&gt;<a name="line.284"></a>
+<span class="sourceLineNo">285</span>     */<a name="line.285"></a>
+<span class="sourceLineNo">286</span>    PED_ERR_EX_A_DUKPT_FULL(57, "No free DUKPT key memory space", "无空闲的DUKPT密钥存储空间"),<a name="line.286"></a>
+<span class="sourceLineNo">287</span>    /**<a name="line.287"></a>
+<span class="sourceLineNo">288</span>     * &lt;div class="zh"&gt; 无效的应用标志号 &lt;/div&gt; &lt;div class="en"&gt; Invalid Application Flag &lt;/div&gt;<a name="line.288"></a>
+<span class="sourceLineNo">289</span>     */<a name="line.289"></a>
+<span class="sourceLineNo">290</span>    PED_ERR_EX_A_APP_NO(58, "Invalid Application Flag", "无效的应用标志号"),<a name="line.290"></a>
+<span class="sourceLineNo">291</span>    /**<a name="line.291"></a>
+<span class="sourceLineNo">292</span>     * &lt;div class="zh"&gt; 指定密钥的校验字不符 &lt;/div&gt; &lt;div class="en"&gt; Not match the specific check value &lt;/div&gt;<a name="line.292"></a>
+<span class="sourceLineNo">293</span>     */<a name="line.293"></a>
+<span class="sourceLineNo">294</span>    PED_ERR_EX_A_KEY_CHECK(59, "Not match the specific check value", " 指定密钥的校验字不符"),<a name="line.294"></a>
+<span class="sourceLineNo">295</span>    /**<a name="line.295"></a>
+<span class="sourceLineNo">296</span>     * &lt;div class="zh"&gt; 无效的密钥(BDK)长度 &lt;/div&gt; &lt;div class="en"&gt; Invalid Key(BDK) Length &lt;/div&gt;<a name="line.296"></a>
+<span class="sourceLineNo">297</span>     */<a name="line.297"></a>
+<span class="sourceLineNo">298</span>    PED_ERR_EX_A_BDK_LEN(60, "Invalid Key(BDK) Length ", "无效的密钥(BDK)长度"),<a name="line.298"></a>
+<span class="sourceLineNo">299</span>    /**<a name="line.299"></a>
+<span class="sourceLineNo">300</span>     * &lt;div class="zh"&gt; 无效的密钥序号(KSN)长度 &lt;/div&gt; &lt;div class="en"&gt; Invalid Key(BDK) Length &lt;/div&gt;<a name="line.300"></a>
+<span class="sourceLineNo">301</span>     */<a name="line.301"></a>
+<span class="sourceLineNo">302</span>    PED_ERR_EX_A_KSN_LEN(61, "Invalid Key Serial No.(KSN) Length", " 无效的密钥序号(KSN)长度"),<a name="line.302"></a>
+<span class="sourceLineNo">303</span>    /**<a name="line.303"></a>
+<span class="sourceLineNo">304</span>     * &lt;div class="zh"&gt; 欲清除的密钥已不存在 &lt;/div&gt; &lt;div class="en"&gt; want to clear key already not exists &lt;/div&gt;<a name="line.304"></a>
+<span class="sourceLineNo">305</span>     */<a name="line.305"></a>
+<span class="sourceLineNo">306</span>    PED_ERR_EX_A_NOEXIST(62, "Want to clear key already not exists", "欲清除的密钥已不存在"),<a name="line.306"></a>
+<span class="sourceLineNo">307</span>    /**<a name="line.307"></a>
+<span class="sourceLineNo">308</span>     * &lt;div class="zh"&gt; PINPAD取消 (pinpad 端) &lt;/div&gt; &lt;div class="en"&gt; PINPAD Canceled &lt;/div&gt;<a name="line.308"></a>
+<span class="sourceLineNo">309</span>     */<a name="line.309"></a>
+<span class="sourceLineNo">310</span>    PED_ERR_EX_A_CANCEL(63, "PINPAD Canceled", "PINPAD取消 (pinpad 端)"),<a name="line.310"></a>
+<span class="sourceLineNo">311</span>    /**<a name="line.311"></a>
+<span class="sourceLineNo">312</span>     * &lt;div class="zh"&gt; PINPAD被锁 &lt;/div&gt; &lt;div class="en"&gt; PINPAD Locked &lt;/div&gt;<a name="line.312"></a>
+<span class="sourceLineNo">313</span>     */<a name="line.313"></a>
+<span class="sourceLineNo">314</span>    PED_ERR_EX_A_LOCK(64, "PINPAD Locked", "PINPAD被锁"),<a name="line.314"></a>
+<span class="sourceLineNo">315</span>    /**<a name="line.315"></a>
+<span class="sourceLineNo">316</span>     * &lt;div class="zh"&gt; 解锁失败 &lt;/div&gt; &lt;div class="en"&gt; unlock failure &lt;/div&gt;<a name="line.316"></a>
+<span class="sourceLineNo">317</span>     */<a name="line.317"></a>
+<span class="sourceLineNo">318</span>    PED_ERR_EX_A_UNLOCK(65, "Unlock Failure", "解锁失败"),<a name="line.318"></a>
+<span class="sourceLineNo">319</span>    /**<a name="line.319"></a>
+<span class="sourceLineNo">320</span>     * &lt;div class="zh"&gt; 无效的命令请求字 &lt;/div&gt; &lt;div class="en"&gt; invalid command request &lt;/div&gt;<a name="line.320"></a>
+<span class="sourceLineNo">321</span>     */<a name="line.321"></a>
+<span class="sourceLineNo">322</span>    PED_ERR_EX_A_CMD(66, "Invalid Command Request", "无效的命令请求字"),<a name="line.322"></a>
+<span class="sourceLineNo">323</span>    /**<a name="line.323"></a>
+<span class="sourceLineNo">324</span>     * &lt;div class="zh"&gt; TXK存取失败 &lt;/div&gt; &lt;div class="en"&gt; TXK Access failure &lt;/div&gt;<a name="line.324"></a>
+<span class="sourceLineNo">325</span>     */<a name="line.325"></a>
+<span class="sourceLineNo">326</span>    PED_ERR_EX_A_TXK(67, "TXK Access  Failure", "TXK存取失败"),<a name="line.326"></a>
+<span class="sourceLineNo">327</span>    /**<a name="line.327"></a>
+<span class="sourceLineNo">328</span>     * &lt;div class="zh"&gt; 工作密钥长度错 &lt;/div&gt; &lt;div class="en"&gt; work key length error &lt;/div&gt;<a name="line.328"></a>
+<span class="sourceLineNo">329</span>     */<a name="line.329"></a>
+<span class="sourceLineNo">330</span>    PED_ERR_EX_A_WKEY_LEN(68, "Work Key Length Error", " 工作密钥长度错"),<a name="line.330"></a>
+<span class="sourceLineNo">331</span>    /**<a name="line.331"></a>
+<span class="sourceLineNo">332</span>     * &lt;div class="zh"&gt; 扩展MAC CihperFlag错误或者INPUTMODE错误 &lt;/div&gt; &lt;div class="en"&gt; Expand MAC CihperFlag Error or INPUTMODE<a name="line.332"></a>
+<span class="sourceLineNo">333</span>     * Error &lt;/div&gt;<a name="line.333"></a>
+<span class="sourceLineNo">334</span>     */<a name="line.334"></a>
+<span class="sourceLineNo">335</span>    PED_ERR_EX_A_MAC_CIPHER_FLAG(69, "Expand MAC CihperFlag Error or INPUTMODE Error",<a name="line.335"></a>
+<span class="sourceLineNo">336</span>            "扩展MAC  CihperFlag错误或者INPUTMODE错误"),<a name="line.336"></a>
+<span class="sourceLineNo">337</span>    /**<a name="line.337"></a>
+<span class="sourceLineNo">338</span>     * &lt;div class="zh"&gt; 按clear键取消 &lt;/div&gt; &lt;div class="en"&gt; Press clear button to cancel &lt;/div&gt;<a name="line.338"></a>
+<span class="sourceLineNo">339</span>     */<a name="line.339"></a>
+<span class="sourceLineNo">340</span>    PED_ERR_EX_A_CLEAR_CANCEL(70, "Press clear button to cancel ", "按clear键取消"),<a name="line.340"></a>
+<span class="sourceLineNo">341</span>    /**<a name="line.341"></a>
+<span class="sourceLineNo">342</span>     * &lt;div class="zh"&gt; 其他错误 &lt;/div&gt; &lt;div class="en"&gt; others error &lt;/div&gt;<a name="line.342"></a>
+<span class="sourceLineNo">343</span>     */<a name="line.343"></a>
+<span class="sourceLineNo">344</span>    PED_ERR_EX_A_OTHER(71, "Others Error", " 其他错误"),<a name="line.344"></a>
+<span class="sourceLineNo">345</span>    /**<a name="line.345"></a>
+<span class="sourceLineNo">346</span>     * &lt;div class="zh"&gt; 数据收发失败 &lt;/div&gt; &lt;div class="en"&gt; data send-recvive failure &lt;/div&gt;<a name="line.346"></a>
+<span class="sourceLineNo">347</span>     */<a name="line.347"></a>
+<span class="sourceLineNo">348</span>    PED_ERR_EX_A_COMM(72, "Data Send-reveive Failure", " 数据收发失败"),<a name="line.348"></a>
+<span class="sourceLineNo">349</span>    /**<a name="line.349"></a>
+<span class="sourceLineNo">350</span>     * &lt;div class="zh"&gt; LRC校验失败 &lt;/div&gt; &lt;div class="en"&gt; LRC verify error &lt;/div&gt;<a name="line.350"></a>
+<span class="sourceLineNo">351</span>     */<a name="line.351"></a>
+<span class="sourceLineNo">352</span>    PED_ERR_EX_A_LRC(73, "LRC Verify Error", "LRC校验失败"),<a name="line.352"></a>
+<span class="sourceLineNo">353</span>    /**<a name="line.353"></a>
+<span class="sourceLineNo">354</span>     * &lt;div class="zh"&gt; 不支持的调用 &lt;/div&gt; &lt;div class="en"&gt; unsupported call &lt;/div&gt;<a name="line.354"></a>
+<span class="sourceLineNo">355</span>     */<a name="line.355"></a>
+<span class="sourceLineNo">356</span>    PED_ERR_EX_A_NOT_SUPPORT(74, "Unsupported Call", " 不支持的调用"),<a name="line.356"></a>
+<span class="sourceLineNo">357</span>    // add date:20170427<a name="line.357"></a>
+<span class="sourceLineNo">358</span>    /**<a name="line.358"></a>
+<span class="sourceLineNo">359</span>     * &lt;div class="zh"&gt; TRSYS Buf太小 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Buf too small &lt;/div&gt;<a name="line.359"></a>
+<span class="sourceLineNo">360</span>     */<a name="line.360"></a>
+<span class="sourceLineNo">361</span>    TRSYS_RET_BUF_TOO_SMALL(75, "TRSYS Buf too small", "TRSYS Buf太小"),<a name="line.361"></a>
+<span class="sourceLineNo">362</span>    /**<a name="line.362"></a>
+<span class="sourceLineNo">363</span>     * &lt;div class="zh"&gt; TRSYS Cert 格式化错误 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Cert format error &lt;/div&gt;<a name="line.363"></a>
+<span class="sourceLineNo">364</span>     */<a name="line.364"></a>
+<span class="sourceLineNo">365</span>    TRSYS_RET_CERT_FORMAT_ERR(76, "TRSYS Cert format error", "TRSYS Cert 格式化错误"),<a name="line.365"></a>
+<span class="sourceLineNo">366</span>    /**<a name="line.366"></a>
+<span class="sourceLineNo">367</span>     * &lt;div class="zh"&gt; TRSYS 通用错误 &lt;/div&gt; &lt;div class="en"&gt; TRSYS common error &lt;/div&gt;<a name="line.367"></a>
+<span class="sourceLineNo">368</span>     */<a name="line.368"></a>
+<span class="sourceLineNo">369</span>    TRSYS_RET_ERROR(77, "TRSYS common error", "TRSYS 通用错误"),<a name="line.369"></a>
+<span class="sourceLineNo">370</span>    /**<a name="line.370"></a>
+<span class="sourceLineNo">371</span>     * &lt;div class="zh"&gt; TRSYS Kcv 校验失败 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Kcv check Fail &lt;/div&gt;<a name="line.371"></a>
+<span class="sourceLineNo">372</span>     */<a name="line.372"></a>
+<span class="sourceLineNo">373</span>    TRSYS_RET_KCV_CHECK_FAIL(78, "TRSYS Kcv check Fail", "TRSYS Kcv 校验失败"),<a name="line.373"></a>
+<span class="sourceLineNo">374</span>    /**<a name="line.374"></a>
+<span class="sourceLineNo">375</span>     * &lt;div class="zh"&gt; TRSYS Kcv 模式错误 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Kcv mode error &lt;/div&gt;<a name="line.375"></a>
+<span class="sourceLineNo">376</span>     */<a name="line.376"></a>
+<span class="sourceLineNo">377</span>    TRSYS_RET_KCV_MODE_ERR(79, "TRSYS Kcv mode error", "TRSYS Kcv 模式错误"),<a name="line.377"></a>
+<span class="sourceLineNo">378</span>    /**<a name="line.378"></a>
+<span class="sourceLineNo">379</span>     * &lt;div class="zh"&gt; TRSYS Key已经存在 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Key already exists &lt;/div&gt;<a name="line.379"></a>
+<span class="sourceLineNo">380</span>     */<a name="line.380"></a>
+<span class="sourceLineNo">381</span>    TRSYS_RET_KEY_PRESENT(80, " TRSYS Key already exists", "TRSYS Key已经存在"),<a name="line.381"></a>
+<span class="sourceLineNo">382</span>    /**<a name="line.382"></a>
+<span class="sourceLineNo">383</span>     * &lt;div class="zh"&gt; TRSYS 没有rsa证书 &lt;/div&gt; &lt;div class="en"&gt; TRSYS No rsa cert &lt;/div&gt;<a name="line.383"></a>
+<span class="sourceLineNo">384</span>     */<a name="line.384"></a>
+<span class="sourceLineNo">385</span>    TRSYS_RET_NO_RSA_CERT(81, "TRSYS No rsa cert", "TRSYS 没有rsa证书"),<a name="line.385"></a>
+<span class="sourceLineNo">386</span>    /**<a name="line.386"></a>
+<span class="sourceLineNo">387</span>     * &lt;div class="zh"&gt; TRSYS 没有rsa秘钥 &lt;/div&gt; &lt;div class="en"&gt; TRSYS No rsa key &lt;/div&gt;<a name="line.387"></a>
+<span class="sourceLineNo">388</span>     */<a name="line.388"></a>
+<span class="sourceLineNo">389</span>    TRSYS_RET_NO_RSA_KEY(82, " TRSYS No rsa key", "TRSYS 没有rsa秘钥"),<a name="line.389"></a>
+<span class="sourceLineNo">390</span>    /**<a name="line.390"></a>
+<span class="sourceLineNo">391</span>     * &lt;div class="zh"&gt; TRSYS 参数非法 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Invalid param &lt;/div&gt;<a name="line.391"></a>
+<span class="sourceLineNo">392</span>     */<a name="line.392"></a>
+<span class="sourceLineNo">393</span>    TRSYS_RET_PARAM_INVALID(83, "TRSYS Invalid param", "TRSYS 参数非法"),<a name="line.393"></a>
+<span class="sourceLineNo">394</span>    /**<a name="line.394"></a>
+<span class="sourceLineNo">395</span>     * &lt;div class="zh"&gt; TRSYS rsa padding 错误 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Rsa padding error &lt;/div&gt;<a name="line.395"></a>
+<span class="sourceLineNo">396</span>     */<a name="line.396"></a>
+<span class="sourceLineNo">397</span>    TRSYS_RET_RSA_PADDING_ERROR(84, "TRSYS Rsa padding error", "TRSYS rsa padding 错误"),<a name="line.397"></a>
+<span class="sourceLineNo">398</span>    /**<a name="line.398"></a>
+<span class="sourceLineNo">399</span>     * &lt;div class="zh"&gt; TRSYS ped 篡改 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Ped Tampered &lt;/div&gt;<a name="line.399"></a>
+<span class="sourceLineNo">400</span>     */<a name="line.400"></a>
+<span class="sourceLineNo">401</span>    TRSYS_RET_TAMPERED(85, "TRSYS Ped Tampered", "TRSYS ped 篡改"),<a name="line.401"></a>
+<span class="sourceLineNo">402</span>    /**<a name="line.402"></a>
+<span class="sourceLineNo">403</span>     * &lt;div class="zh"&gt; TRSYS 验证秘钥失败 &lt;/div&gt; &lt;div class="en"&gt; TRSYS Verify key fail &lt;/div&gt;<a name="line.403"></a>
+<span class="sourceLineNo">404</span>     */<a name="line.404"></a>
+<span class="sourceLineNo">405</span>    TRSYS_RET_VERIFY_KEY_FAIL(86, "TRSYS Verify key fail", "TRSYS 验证秘钥失败"),<a name="line.405"></a>
+<span class="sourceLineNo">406</span>    /**<a name="line.406"></a>
+<span class="sourceLineNo">407</span>     * &lt;div class="zh"&gt; 未输入密码异常 &lt;/div&gt; &lt;div class="en"&gt; no pin input error &lt;/div&gt;<a name="line.407"></a>
+<span class="sourceLineNo">408</span>     */<a name="line.408"></a>
+<span class="sourceLineNo">409</span>    PED_ERR_NO_PIN_INPUT(87, "no pin input error", "未输入密码异常"),<a name="line.409"></a>
+<span class="sourceLineNo">410</span>    /**<a name="line.410"></a>
+<span class="sourceLineNo">411</span>     * &lt;div class="zh"&gt; ped密钥隔离查找异常 &lt;/div&gt; &lt;div class="en"&gt; ped slot allocate find error &lt;/div&gt;<a name="line.411"></a>
+<span class="sourceLineNo">412</span>     */<a name="line.412"></a>
+<span class="sourceLineNo">413</span>    PED_ERR_ALLOCATE_FIND(88, "ped slot allocate find error", "ped密钥隔离查找异常"),<a name="line.413"></a>
+<span class="sourceLineNo">414</span>    /**<a name="line.414"></a>
+<span class="sourceLineNo">415</span>     * &lt;div class="zh"&gt;预分配索引失败&lt;/div&gt; &lt;div class="en"&gt;preallocate error &lt;/div&gt;<a name="line.415"></a>
+<span class="sourceLineNo">416</span>     */<a name="line.416"></a>
+<span class="sourceLineNo">417</span>    PED_ERR_ALLOCATE_PREALLOCATE(89, "preallocate error", "预分配索引失败"),<a name="line.417"></a>
+<span class="sourceLineNo">418</span>    /**<a name="line.418"></a>
+<span class="sourceLineNo">419</span>     * &lt;div class="zh"&gt; 分配索引失败 &lt;/div&gt; &lt;div class="en"&gt; allocated error &lt;/div&gt;<a name="line.419"></a>
+<span class="sourceLineNo">420</span>     */<a name="line.420"></a>
+<span class="sourceLineNo">421</span>    PED_ERR_ALLOCATE_SETALLOCATED(90, "set allocated error", "分配索引失败"),<a name="line.421"></a>
+<span class="sourceLineNo">422</span>    /**<a name="line.422"></a>
+<span class="sourceLineNo">423</span>     * &lt;div class="zh"&gt;释放出错 &lt;/div&gt; &lt;div class="en"&gt; deallocate error &lt;/div&gt;<a name="line.423"></a>
+<span class="sourceLineNo">424</span>     */<a name="line.424"></a>
+<span class="sourceLineNo">425</span>    PED_ERR_ALLOCATE_DEALLOCATE(91, "deallocate error", "释放索引出错"),<a name="line.425"></a>
+<span class="sourceLineNo">426</span>    /**<a name="line.426"></a>
+<span class="sourceLineNo">427</span>     * &lt;div class="zh"&gt;获取索引分配器锁失败 &lt;/div&gt; &lt;div class="en"&gt;get slot allocator lock error&lt;/div&gt;<a name="line.427"></a>
+<span class="sourceLineNo">428</span>     */<a name="line.428"></a>
+<span class="sourceLineNo">429</span>    PED_ERR_ALLOCATE_GET_SLOTALLOCATOR_LOCK(92, "get slot allocator lock error", "获取索引分配器锁失败"),<a name="line.429"></a>
+<span class="sourceLineNo">430</span>    /**<a name="line.430"></a>
+<span class="sourceLineNo">431</span>     * &lt;div class="zh"&gt; 释放索引分配器锁失败 &lt;/div&gt; &lt;div class="en"&gt;release slot allocator lock error&lt;/div&gt;<a name="line.431"></a>
+<span class="sourceLineNo">432</span>     */<a name="line.432"></a>
+<span class="sourceLineNo">433</span>    PED_ERR_ALLOCATE_RELEASE_SLOTALLOCATOR_LOCK(93, "release slot allocator lock error", "释放索引分配器锁失败"),<a name="line.433"></a>
+<span class="sourceLineNo">434</span>    /**<a name="line.434"></a>
+<span class="sourceLineNo">435</span>     * &lt;div class="zh"&gt; 新属主的逻辑索引已分配 &lt;/div&gt; &lt;div class="en"&gt;the logical index of the new owner has been assigned&lt;/div&gt;<a name="line.435"></a>
+<span class="sourceLineNo">436</span>     */<a name="line.436"></a>
+<span class="sourceLineNo">437</span>    PED_ERR_ALLOCATE_LOGICAL_ALLOCATED(94, "logical index conflict", "新属主的逻辑索引已分配"),<a name="line.437"></a>
+<span class="sourceLineNo">438</span>    <a name="line.438"></a>
+<span class="sourceLineNo">439</span>    /**<a name="line.439"></a>
+<span class="sourceLineNo">440</span>     * &lt;div class="zh"&gt; 数据包长度非法 &lt;/div&gt; &lt;div class="en"&gt; Length of data illegal &lt;/div&gt;<a name="line.440"></a>
+<span class="sourceLineNo">441</span>     */<a name="line.441"></a>
+<span class="sourceLineNo">442</span>    PED_ERR_EX_C_LEN(200, "Length of data illegal", "数据包长度非法"),<a name="line.442"></a>
+<span class="sourceLineNo">443</span>    /**<a name="line.443"></a>
+<span class="sourceLineNo">444</span>     * &lt;div class="zh"&gt; 无效的密钥标志号 &lt;/div&gt; &lt;div class="en"&gt; Invalid Key Index &lt;/div&gt;<a name="line.444"></a>
+<span class="sourceLineNo">445</span>     */<a name="line.445"></a>
+<span class="sourceLineNo">446</span>    PED_ERR_EX_C_INVALID_INDEX(201, "Invalid  Key Index", " 无效的密钥标志号"),<a name="line.446"></a>
+<span class="sourceLineNo">447</span>    <a name="line.447"></a>
+<span class="sourceLineNo">448</span>    /**<a name="line.448"></a>
+<span class="sourceLineNo">449</span>     * &lt;div class="zh"&gt; 处理中止(收到PINPAD的终止命令包) &lt;/div&gt; &lt;div class="en"&gt; Abort (receive the abort command package from<a name="line.449"></a>
+<span class="sourceLineNo">450</span>     * POS port) &lt;/div&gt;<a name="line.450"></a>
+<span class="sourceLineNo">451</span>     */<a name="line.451"></a>
+<span class="sourceLineNo">452</span>    PED_ERR_EX_C_SUSPEND(202, "Abort (receive the abort command package from POS port)", " 中止(收到POS端的中止命令包)"),<a name="line.452"></a>
+<span class="sourceLineNo">453</span>    /**<a name="line.453"></a>
+<span class="sourceLineNo">454</span>     * &lt;div class="zh"&gt; 非法参数 &lt;/div&gt; &lt;div class="en"&gt; invalid argument &lt;/div&gt;<a name="line.454"></a>
+<span class="sourceLineNo">455</span>     */<a name="line.455"></a>
+<span class="sourceLineNo">456</span>    PED_ERR_EX_C_INVALID_ARG(203, "参数非法", "invalid argument"),<a name="line.456"></a>
+<span class="sourceLineNo">457</span>    /**<a name="line.457"></a>
+<span class="sourceLineNo">458</span>     * &lt;div class="zh"&gt; 指定的密钥不存在或无效 &lt;/div&gt; &lt;div class="en"&gt; Specific key not exists or invalid &lt;/div&gt;<a name="line.458"></a>
+<span class="sourceLineNo">459</span>     */<a name="line.459"></a>
+<span class="sourceLineNo">460</span>    PED_ERR_EX_C_KEY(204, "Specific Key not exists or invalid", "指定的密钥不存在或无效"),<a name="line.460"></a>
+<span class="sourceLineNo">461</span>    <a name="line.461"></a>
+<span class="sourceLineNo">462</span>    /**<a name="line.462"></a>
+<span class="sourceLineNo">463</span>     * &lt;div class="zh"&gt; 无效的密钥序号(KSN)长度 &lt;/div&gt; &lt;div class="en"&gt; Invalid Key(BDK) Length &lt;/div&gt;<a name="line.463"></a>
+<span class="sourceLineNo">464</span>     */<a name="line.464"></a>
+<span class="sourceLineNo">465</span>    PED_ERR_EX_C_KSN_LEN(205, "Invalid Key Serial No.(KSN) Length", " 无效的密钥序号(KSN)长度"),<a name="line.465"></a>
+<span class="sourceLineNo">466</span><a name="line.466"></a>
+<span class="sourceLineNo">467</span>    /**<a name="line.467"></a>
+<span class="sourceLineNo">468</span>     * &lt;div class="zh"&gt; 工作密钥长度错 &lt;/div&gt; &lt;div class="en"&gt; work key length error &lt;/div&gt;<a name="line.468"></a>
+<span class="sourceLineNo">469</span>     */<a name="line.469"></a>
+<span class="sourceLineNo">470</span>    PED_ERR_EX_C_WKEY_LEN(206, "Work Key Length Error", " 工作密钥长度错"),<a name="line.470"></a>
+<span class="sourceLineNo">471</span>    /**<a name="line.471"></a>
+<span class="sourceLineNo">472</span>     * &lt;div class="zh"&gt; 无效的允许输入长度(非法MinLen或MaxLen) &lt;/div&gt; &lt;div class="en"&gt; Invalid allowed typing length(Illegal MinLen<a name="line.472"></a>
+<span class="sourceLineNo">473</span>     * or MaxLen) &lt;/div&gt;<a name="line.473"></a>
+<span class="sourceLineNo">474</span>     */<a name="line.474"></a>
+<span class="sourceLineNo">475</span>    PED_ERR_EX_C_INPUT_LEN(207, "Invalid allowed typing length(Illegal MinLen or MaxLen)", "无效的允许输入长度(非法MinLen或MaxLen)"),<a name="line.475"></a>
+<span class="sourceLineNo">476</span>    <a name="line.476"></a>
+<span class="sourceLineNo">477</span>    /**<a name="line.477"></a>
+<span class="sourceLineNo">478</span>     * &lt;div class="zh"&gt; 数据收发失败 &lt;/div&gt; &lt;div class="en"&gt; data send-recvive failure &lt;/div&gt;<a name="line.478"></a>
+<span class="sourceLineNo">479</span>     */<a name="line.479"></a>
+<span class="sourceLineNo">480</span>    PED_ERR_EX_C_INVALID_RESP(208, "Data Send-reveive Failure", " 数据收发失败"),<a name="line.480"></a>
+<span class="sourceLineNo">481</span>    /**<a name="line.481"></a>
+<span class="sourceLineNo">482</span>     * &lt;div class="zh"&gt; 数据收发失败 &lt;/div&gt; &lt;div class="en"&gt; data send-recvive failure &lt;/div&gt;<a name="line.482"></a>
+<span class="sourceLineNo">483</span>     */<a name="line.483"></a>
+<span class="sourceLineNo">484</span>    PED_ERR_EX_C_COMM(209, "Data Send-reveive Failure", " 数据收发失败"),<a name="line.484"></a>
+<span class="sourceLineNo">485</span>    <a name="line.485"></a>
+<span class="sourceLineNo">486</span>    /**<a name="line.486"></a>
+<span class="sourceLineNo">487</span>     * &lt;div class="zh"&gt;超时&lt;/div&gt; &lt;div class="en"&gt; timeout &lt;/div&gt;<a name="line.487"></a>
+<span class="sourceLineNo">488</span>     */<a name="line.488"></a>
+<span class="sourceLineNo">489</span>    PED_ERR_EX_C_TIMEOUT(210, "timeout", " 超时"),<a name="line.489"></a>
+<span class="sourceLineNo">490</span>    <a name="line.490"></a>
+<span class="sourceLineNo">491</span>    /**<a name="line.491"></a>
+<span class="sourceLineNo">492</span>     * &lt;div class="zh"&gt; LRC校验失败 &lt;/div&gt; &lt;div class="en"&gt; LRC verify error &lt;/div&gt;<a name="line.492"></a>
+<span class="sourceLineNo">493</span>     */<a name="line.493"></a>
+<span class="sourceLineNo">494</span>    PED_ERR_EX_C_LRC(211, "LRC Verify Error", "LRC校验失败"),<a name="line.494"></a>
+<span class="sourceLineNo">495</span>    /**<a name="line.495"></a>
+<span class="sourceLineNo">496</span>     * &lt;div class="zh"&gt; 不支持的调用 &lt;/div&gt; &lt;div class="en"&gt; unsupported call &lt;/div&gt;<a name="line.496"></a>
+<span class="sourceLineNo">497</span>     */<a name="line.497"></a>
+<span class="sourceLineNo">498</span>    PED_ERR_EX_C_NOT_SUPPORT(212, "Unsupported Call", " 不支持的调用"),<a name="line.498"></a>
+<span class="sourceLineNo">499</span>    /**<a name="line.499"></a>
+<span class="sourceLineNo">500</span>     * &lt;div class="zh"&gt; 其他错误 &lt;/div&gt; &lt;div class="en"&gt; others error &lt;/div&gt;<a name="line.500"></a>
+<span class="sourceLineNo">501</span>     */<a name="line.501"></a>
+<span class="sourceLineNo">502</span>    PED_ERR_EX_C_OTHER(213, "Others Error", " 其他错误"),<a name="line.502"></a>
+<span class="sourceLineNo">503</span>    /**<a name="line.503"></a>
+<span class="sourceLineNo">504</span>     * &lt;div class="zh"&gt; 参数错误或无效 &lt;/div&gt; &lt;div class="en"&gt; Wrong or invalid parameter &lt;/div&gt;<a name="line.504"></a>
+<span class="sourceLineNo">505</span>     */<a name="line.505"></a>
+<span class="sourceLineNo">506</span>    PED_ERR_PARAM_INVALID(214, "Wrong or invalid parameter", "参数错误或无效"),<a name="line.506"></a>
+<span class="sourceLineNo">507</span>    /**<a name="line.507"></a>
+<span class="sourceLineNo">508</span>     * &lt;div class="zh"&gt; 参数长度错误 &lt;/div&gt; &lt;div class="en"&gt; Parameter length error &lt;/div&gt;<a name="line.508"></a>
+<span class="sourceLineNo">509</span>     */<a name="line.509"></a>
+<span class="sourceLineNo">510</span>    PED_ERR_PARAM_LEN(215, "Parameter length error", "参数长度错误"),<a name="line.510"></a>
+<span class="sourceLineNo">511</span><a name="line.511"></a>
+<span class="sourceLineNo">512</span>    /**<a name="line.512"></a>
+<span class="sourceLineNo">513</span>     * &lt;div class="zh"&gt;当前不是PED隔离模式&lt;/div&gt; &lt;div class="en"&gt;Current ped mode is not isolation&lt;/div&gt;<a name="line.513"></a>
+<span class="sourceLineNo">514</span>     */<a name="line.514"></a>
+<span class="sourceLineNo">515</span>    PED_ERR_MODE_NOT_ISOLATION(300, "Current ped mode is not isolation", "当前不是PED隔离模式"),<a name="line.515"></a>
+<span class="sourceLineNo">516</span><a name="line.516"></a>
+<span class="sourceLineNo">517</span>    /**<a name="line.517"></a>
+<span class="sourceLineNo">518</span>     * &lt;div class="zh"&gt;找不到相应的物理ID&lt;/div&gt; &lt;div class="en"&gt;No corresponding physical ID was found&lt;/div&gt;<a name="line.518"></a>
+<span class="sourceLineNo">519</span>     */<a name="line.519"></a>
+<span class="sourceLineNo">520</span>    PED_ERR_PHYID_NOT_FOUND(301, "No corresponding physical ID was found", "找不到相应的物理ID"),<a name="line.520"></a>
+<span class="sourceLineNo">521</span><a name="line.521"></a>
+<span class="sourceLineNo">522</span>    /**<a name="line.522"></a>
+<span class="sourceLineNo">523</span>     * &lt;div class="zh"&gt;物理ID已绑定到另一个索引&lt;/div&gt; &lt;div class="en"&gt;The physical ID has been bound to another index&lt;/div&gt;<a name="line.523"></a>
+<span class="sourceLineNo">524</span>     */<a name="line.524"></a>
+<span class="sourceLineNo">525</span>    PED_ERR_PHYID_EXIST(302, "The physical ID has been bound to another index", "物理ID已绑定到另一个索引"),<a name="line.525"></a>
+<span class="sourceLineNo">526</span><a name="line.526"></a>
+<span class="sourceLineNo">527</span>    /**<a name="line.527"></a>
+<span class="sourceLineNo">528</span>     * &lt;div class="zh"&gt;物理ID已满。物理ID不可用&lt;/div&gt; &lt;div class="en"&gt;The physical ID is full. The physical ID is not available&lt;/div&gt;<a name="line.528"></a>
+<span class="sourceLineNo">529</span>     */<a name="line.529"></a>
+<span class="sourceLineNo">530</span>    PED_ERR_PHYID_NO_AVAILABLE(303, "The physical ID is full. The physical ID is not available", "物理ID已满，物理ID不可用"),<a name="line.530"></a>
+<span class="sourceLineNo">531</span><a name="line.531"></a>
+<span class="sourceLineNo">532</span>    /**<a name="line.532"></a>
+<span class="sourceLineNo">533</span>     * &lt;div class="zh"&gt;密钥类型的未知类型&lt;/div&gt; &lt;div class="en"&gt;Unknown type of key type&lt;/div&gt;<a name="line.533"></a>
+<span class="sourceLineNo">534</span>     */<a name="line.534"></a>
+<span class="sourceLineNo">535</span>    PED_ERR_UNKNOWN_KEYTYPE(304, "Unknown type of key type", "密钥类型的未知类型"),<a name="line.535"></a>
+<span class="sourceLineNo">536</span><a name="line.536"></a>
+<span class="sourceLineNo">537</span>    /**<a name="line.537"></a>
+<span class="sourceLineNo">538</span>     * &lt;div class="zh"&gt;数据库文件不存在&lt;/div&gt; &lt;div class="en"&gt;The database file does not exist&lt;/div&gt;<a name="line.538"></a>
+<span class="sourceLineNo">539</span>     */<a name="line.539"></a>
+<span class="sourceLineNo">540</span>    PED_ERR_NO_DATABASE(305, "The database file does not exist", "数据库文件不存在"),<a name="line.540"></a>
+<span class="sourceLineNo">541</span><a name="line.541"></a>
+<span class="sourceLineNo">542</span>    /**<a name="line.542"></a>
+<span class="sourceLineNo">543</span>     * &lt;div class="zh"&gt;无法打开数据库&lt;/div&gt; &lt;div class="en"&gt;Failed to open database&lt;/div&gt;<a name="line.543"></a>
+<span class="sourceLineNo">544</span>     */<a name="line.544"></a>
+<span class="sourceLineNo">545</span>    PED_ERR_OPEN_DATABASE(306, "Failed to open database", "无法打开数据库"),<a name="line.545"></a>
+<span class="sourceLineNo">546</span><a name="line.546"></a>
+<span class="sourceLineNo">547</span>    /**<a name="line.547"></a>
+<span class="sourceLineNo">548</span>     * &lt;div class="zh"&gt;数据库数据中存在异常&lt;/div&gt; &lt;div class="en"&gt;There is an exception in the database data&lt;/div&gt;<a name="line.548"></a>
+<span class="sourceLineNo">549</span>     */<a name="line.549"></a>
+<span class="sourceLineNo">550</span>    PED_ERR_DATABASE_DATA(307, "There is an exception in the database data", "数据库数据中存在异常"),<a name="line.550"></a>
+<span class="sourceLineNo">551</span><a name="line.551"></a>
+<span class="sourceLineNo">552</span>    /**<a name="line.552"></a>
+<span class="sourceLineNo">553</span>     * &lt;div class="zh"&gt;逻辑索引已存在&lt;/div&gt; &lt;div class="en"&gt;The logical index already exists&lt;/div&gt;<a name="line.553"></a>
+<span class="sourceLineNo">554</span>     */<a name="line.554"></a>
+<span class="sourceLineNo">555</span>    PED_ERR_LOGID_EXIST(308, "The logical index already exists", "逻辑索引已存在"),<a name="line.555"></a>
+<span class="sourceLineNo">556</span><a name="line.556"></a>
+<span class="sourceLineNo">557</span>    /**<a name="line.557"></a>
+<span class="sourceLineNo">558</span>     * &lt;div class="zh"&gt;数据库已迁移&lt;/div&gt; &lt;div class="en"&gt;The database has been migrated&lt;/div&gt;<a name="line.558"></a>
+<span class="sourceLineNo">559</span>     */<a name="line.559"></a>
+<span class="sourceLineNo">560</span>    PED_ERR_ALREADY_MIGRATED(309, "The database has been migrated", "数据库已迁移")<a name="line.560"></a>
+<span class="sourceLineNo">561</span><a name="line.561"></a>
+<span class="sourceLineNo">562</span><a name="line.562"></a>
+<span class="sourceLineNo">563</span>    ;<a name="line.563"></a>
+<span class="sourceLineNo">564</span>    <a name="line.564"></a>
+<span class="sourceLineNo">565</span>    private int errCodeFromBasement;<a name="line.565"></a>
+<span class="sourceLineNo">566</span>    private String errMsgCn;<a name="line.566"></a>
+<span class="sourceLineNo">567</span>    private String errMsgEn;<a name="line.567"></a>
+<span class="sourceLineNo">568</span><a name="line.568"></a>
+<span class="sourceLineNo">569</span>    EPedDevException(int errCodeFromBasement, String errMsgEn, String errMsnCn) {<a name="line.569"></a>
+<span class="sourceLineNo">570</span>        this.errCodeFromBasement = errCodeFromBasement;<a name="line.570"></a>
+<span class="sourceLineNo">571</span>        this.errMsgCn = errMsnCn;<a name="line.571"></a>
+<span class="sourceLineNo">572</span>        this.errMsgEn = errMsgEn;<a name="line.572"></a>
+<span class="sourceLineNo">573</span>    }<a name="line.573"></a>
+<span class="sourceLineNo">574</span><a name="line.574"></a>
+<span class="sourceLineNo">575</span>    public int getErrCodeFromBasement() {<a name="line.575"></a>
+<span class="sourceLineNo">576</span>        return errCodeFromBasement;<a name="line.576"></a>
+<span class="sourceLineNo">577</span>    }<a name="line.577"></a>
+<span class="sourceLineNo">578</span><a name="line.578"></a>
+<span class="sourceLineNo">579</span>    public String getErrMsg() {<a name="line.579"></a>
+<span class="sourceLineNo">580</span>        if (Utils.isZh()) {<a name="line.580"></a>
+<span class="sourceLineNo">581</span>            return errMsgCn;<a name="line.581"></a>
+<span class="sourceLineNo">582</span>        } else {<a name="line.582"></a>
+<span class="sourceLineNo">583</span>            return errMsgEn;<a name="line.583"></a>
+<span class="sourceLineNo">584</span>        }<a name="line.584"></a>
+<span class="sourceLineNo">585</span><a name="line.585"></a>
+<span class="sourceLineNo">586</span>    }<a name="line.586"></a>
+<span class="sourceLineNo">587</span><a name="line.587"></a>
+<span class="sourceLineNo">588</span>}<a name="line.588"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

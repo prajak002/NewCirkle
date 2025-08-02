@@ -23,6 +23,21 @@ class DashboardScreen extends StatelessWidget {
       label: "Summary",
       route: '/summary',
     ),
+    _DashboardItem(
+      icon: Icons.payment,
+      label: "Razorpay POS",
+      route: '/razorpay_pos',
+    ),
+    _DashboardItem(
+      icon: Icons.phone_android,
+      label: "POS Main",
+      route: '/razorpay_pos_main',
+    ),
+    _DashboardItem(
+      icon: Icons.contactless,
+      label: "Card Reader",
+      route: '/neptune_card_payment',
+    ),
   ];
 
   DashboardScreen({super.key});

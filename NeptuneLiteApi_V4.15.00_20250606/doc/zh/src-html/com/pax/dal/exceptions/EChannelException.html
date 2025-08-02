@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span> /*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span> <a name="line.16"></a>
+<span class="sourceLineNo">017</span>package com.pax.dal.exceptions;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pax.dal.utils.Utils;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>public enum EChannelException {<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    /**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>     * &lt;div class="zh"&gt; 未知异常 &lt;/div&gt; &lt;div class="en"&gt; unexpected error &lt;/div&gt;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>    DEVICES_ERR_UNEXPECTED(97, "unexpected error", "未知异常"),<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    /**<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;div class="zh"&gt; RPC 参数为NULL &lt;/div&gt; &lt;div class="en"&gt; null point error &lt;/div&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    DEVICES_ERR_NULL_POINT(98, "null point error", "RPC 参数为NULL"),<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * &lt;div class="zh"&gt; RPC I/O 连接异常 &lt;/div&gt; &lt;div class="en"&gt; connect error &lt;/div&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     */<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    DEVICES_ERR_CONNECT(99, "connect error", "RPC I/O 连接异常"),<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * &lt;div class="zh"&gt; 不支持 &lt;/div&gt; &lt;div class="en"&gt; not support error &lt;/div&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    DEVICES_ERR_NO_SUPPORT(100, "not support error", "不支持"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt; 无权限异常&lt;/div&gt; &lt;div class="en"&gt; no permission error &lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     */<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    DEVICES_ERR_NO_PERMISSION(101,"no permission error","无权限异常"),<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    /**<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * &lt;div class="zh"&gt; 无效的通讯通道 &lt;/div&gt; &lt;div class="en"&gt; channel invalid error &lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     */<a name="line.44"></a>
+<span class="sourceLineNo">045</span>    CHANNEL_ERR_INVALID(1, "channel invalid error", "无效的通讯通道"),<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * &lt;div class="zh"&gt; 通讯通道未准备好 &lt;/div&gt; &lt;div class="en"&gt; channel not ready error &lt;/div&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    CHANNEL_ERR_NOT_READY(2, "channel not ready error", "通讯通道未准备好"),<a name="line.49"></a>
+<span class="sourceLineNo">050</span>    /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * &lt;div class="zh"&gt; 使能通讯通道错误 &lt;/div&gt; &lt;div class="en"&gt; channel enable error &lt;/div&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     */<a name="line.52"></a>
+<span class="sourceLineNo">053</span>    CHANNEL_ERR_ENABLE(3, "channel enable error", "使能通讯通道错误"),<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    /**<a name="line.54"></a>
+<span class="sourceLineNo">055</span>     * &lt;div class="zh"&gt; 关闭通讯通道错误 &lt;/div&gt; &lt;div class="en"&gt; channel disable error &lt;/div&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>     */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    CHANNEL_ERR_DISABLE(4, "channel disable error", "关闭通讯通道错误"),<a name="line.57"></a>
+<span class="sourceLineNo">058</span>    /**<a name="line.58"></a>
+<span class="sourceLineNo">059</span>     * &lt;div class="zh"&gt; 以太网线未连接 &lt;/div&gt; &lt;div class="en"&gt; channel eth link error &lt;/div&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    CHANNEL_ERR_ETH_LINK(5, "channel eth link error", "以太网线未连接"),<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    /**<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * &lt;div class="zh"&gt; 底座在位，关闭USBHOST失败 &lt;/div&gt; &lt;div class="en"&gt; The base is in place, failed to close USBHOST &lt;/div&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>    CHANNEL_ERR_BASE_IN_PLACE(-100, "The base is in place, failed to close USBHOST", "底座在位，关闭USBHOST失败"),<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    /**<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * &lt;div class="zh"&gt; 指纹正在使用，关闭USBHOST失败 &lt;/div&gt; &lt;div class="en"&gt; Fingerprint is in use, failed to close USBHOST &lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    CHANNEL_ERR_FINGERPRINT_IN_USE(-101, "Fingerprint is in use, failed to close USBHOST", "指纹正在使用，关闭USBHOST失败"),<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    /**<a name="line.70"></a>
+<span class="sourceLineNo">071</span>     * &lt;div class="zh"&gt; 接外电，关闭USBHOST失败 &lt;/div&gt; &lt;div class="en"&gt; Connecting external power, failed to close USBHOST &lt;/div&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    CHANNEL_ERR_EXTERNAL_POWER(-102, "Connecting external power, failed to close USBHOST", "接外电，关闭USBHOST失败"),<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     * &lt;div class="zh"&gt; 打开USBHOST驱动节点失败 &lt;/div&gt; &lt;div class="en"&gt; Failed to open USBHOST driver node &lt;/div&gt;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     */<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    CHANNEL_ERR_OPEN_USBHOST_DRIVER_NODE(-103, "Failed to open USBHOST driver node", "打开USBHOST驱动节点失败"),<a name="line.77"></a>
+<span class="sourceLineNo">078</span>    /**<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * &lt;div class="zh"&gt; 写USBHOST驱动节点失败 &lt;/div&gt; &lt;div class="en"&gt; Failed to write USBHOST driver node &lt;/div&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    CHANNEL_ERR_WRITE_USBHOST_DRIVER_NODE(-104, "Failed to write USBHOST driver node", "写USBHOST驱动节点失败"),<a name="line.81"></a>
+<span class="sourceLineNo">082</span>    /**<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     * &lt;div class="zh"&gt; usb虚拟串口已打开，关闭USBHOST失败 &lt;/div&gt; &lt;div class="en"&gt; USB virtual serial port has been opened, failed to close USBHOST &lt;/div&gt;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>     */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    CHANNEL_ERR_CLOSE_USBHOST(-105, "USB virtual serial port has been opened, failed to close USBHOST", "usb虚拟串口已打开，关闭USBHOST失败")<a name="line.85"></a>
+<span class="sourceLineNo">086</span>    ;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>    private int errCodeFromBasement;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    private String errMsgCn;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    private String errMsgEn;<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>    private EChannelException(int errCodeFromBasement, String errMsgEn, String errMsnCn) {<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        this.errCodeFromBasement = errCodeFromBasement;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        this.errMsgCn = errMsnCn;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        this.errMsgEn = errMsgEn;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>    }<a name="line.95"></a>
+<span class="sourceLineNo">096</span><a name="line.96"></a>
+<span class="sourceLineNo">097</span>    public int getErrCodeFromBasement() {<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        return errCodeFromBasement;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    }<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>    public String getErrMsg() {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        if (Utils.isZh()) {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>            return errMsgCn;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        } else {<a name="line.104"></a>
+<span class="sourceLineNo">105</span>            return errMsgEn;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        }<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>    }<a name="line.108"></a>
+<span class="sourceLineNo">109</span><a name="line.109"></a>
+<span class="sourceLineNo">110</span>}<a name="line.110"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -20,6 +20,12 @@ import 'screens/orders/order_screen.dart';
 import 'screens/orders/order_summary_screen.dart';
 import 'screens/payments/payment_success_screen.dart';
 import 'screens/orders/bill_kot_screen.dart';
+import 'screens/razorpay_pos/razorpay_pos_screen.dart';
+import 'screens/razorpay_pos/pos_payment_screen.dart';
+import 'screens/razorpay_pos/dqr_payment_screen.dart';
+import 'screens/razorpay_pos/razorpay_pos_setup_screen.dart';
+import 'screens/payments/razorpay_pos_main_screen.dart';
+import 'screens/cards/neptune_card_payment_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,6 +71,12 @@ class MyApp extends StatelessWidget {
         '/payment_success': (context) => PaymentSuccessScreen(),
         '/upi_payment': (context) => UpiPaymentScreen(),
         '/transaction_failed': (context) => TransactionFailedScreen(),
+        '/razorpay_pos': (context) => const RazorpayPOSScreen(),
+        '/razorpay_pos_main': (context) => const RazorpayPOSMainScreen(),
+        '/neptune_card_payment': (context) => const NeptuneCardPaymentScreen(),
+        '/pos_payment': (context) => const POSPaymentScreen(),
+        '/dqr_payment': (context) => const DQRPaymentScreen(),
+        '/razorpay_pos_setup': (context) => const RazorpayPOSSetupScreen(),
       },
     );
   }

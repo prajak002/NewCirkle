@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * ===========================================================================================<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * = COPYRIGHT<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *          PAX Computer Technology (Shenzhen) Co., Ltd. PROPRIETARY INFORMATION<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *   This software is supplied under the terms of a license agreement or nondisclosure<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *   agreement with PAX Computer Technology (Shenzhen) Co., Ltd. and may not be copied or<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *   disclosed except in accordance with the terms in that agreement.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     Copyright (C) 2017-2023 PAX Computer Technology (Shenzhen) Co., Ltd. All rights reserved.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Description: // Detail description about the function of this module,<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *             // interfaces with the other modules, and dependencies.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Revision History:<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Date                         Author                        Action<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * 2017/04/01                   PAX                     Create/Add/Modify/Delete<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * ===========================================================================================<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span>package com.pax.dal.exceptions;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import com.pax.dal.utils.Utils;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/**<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * &lt;div class="zh"&gt;P2PE异常类。&lt;/div&gt;<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * &lt;div class="en"&gt;P2PE exception.&lt;/div&gt;<a name="line.22"></a>
+<span class="sourceLineNo">023</span> */<a name="line.23"></a>
+<span class="sourceLineNo">024</span>public enum EP2PEException {<a name="line.24"></a>
+<span class="sourceLineNo">025</span>    /**<a name="line.25"></a>
+<span class="sourceLineNo">026</span>     * &lt;div class="zh"&gt; 未知异常 &lt;/div&gt; &lt;div class="en"&gt; unexpected error &lt;/div&gt;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     */<a name="line.27"></a>
+<span class="sourceLineNo">028</span>    DEVICES_ERR_UNEXPECTED(97, "未知异常", "unexpected error"),<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * &lt;div class="zh"&gt; 参数错误 &lt;/div&gt; &lt;div class="en"&gt; invalid argument error &lt;/div&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     */<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    DEVICES_ERR_INVALID_ARGUMENT(98, "参数错误", "invalid argument error"),<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * &lt;div class="zh"&gt; RPC I/O 连接异常 &lt;/div&gt; &lt;div class="en"&gt; connect error &lt;/div&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    DEVICES_ERR_CONNECT(99, "RPC I/O 连接异常", "connect error"),<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * &lt;div class="zh"&gt; 不支持 &lt;/div&gt; &lt;div class="en"&gt; not support error &lt;/div&gt;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     */<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    DEVICES_ERR_NO_SUPPORT(100, "不支持", "not support error"),<a name="line.41"></a>
+<span class="sourceLineNo">042</span>    /**<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * &lt;div class="zh"&gt; 无权限异常&lt;/div&gt; &lt;div class="en"&gt; no permission error &lt;/div&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     */<a name="line.44"></a>
+<span class="sourceLineNo">045</span>    DEVICES_ERR_NO_PERMISSION(101,"no permission error","无权限异常"),<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * &lt;div class="zh"&gt; RPC忙 &lt;/div&gt; &lt;div class="en"&gt; Rpc busy &lt;/div&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    RPC_BUSY(102, "RPC忙", "Rpc busy"),<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>    /**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     * &lt;div class="zh"&gt; 无效的加密数据长度 &lt;/div&gt; &lt;div class="en"&gt; Invalid clear data length &lt;/div&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     */<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    P2PE_TA_ERR_INVALID_CARD_DATA_LEN(-1023, "无效的加密数据长度", "Invalid clear data length"),<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>    /**<a name="line.56"></a>
+<span class="sourceLineNo">057</span>     * &lt;div class="zh"&gt; 无效的X509公钥 &lt;/div&gt; &lt;div class="en"&gt; Invalid X509 public key &lt;/div&gt;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>     */<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    P2PE_TA_ERR_INVALID_PUB_KEY(-1024, "无效的X509公钥", "Invalid X509 public key"),<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>    /**<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     * &lt;div class="zh"&gt; 缓冲区太小 &lt;/div&gt; &lt;div class="en"&gt; Buffer is too small &lt;/div&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     */<a name="line.63"></a>
+<span class="sourceLineNo">064</span>    P2PE_VP_ERR_BUFFER_TOO_SMALL(-1008, "缓冲区太小", "Buffer is too small"),<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>    /**<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * &lt;div class="zh"&gt; 文件认证失败 &lt;/div&gt; &lt;div class="en"&gt; File authentication failed &lt;/div&gt;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    P2PE_VP_ERR_FILE_AUTHENTICATE_FAIL(-1015, "文件认证失败", "File authentication failed"),<a name="line.69"></a>
+<span class="sourceLineNo">070</span><a name="line.70"></a>
+<span class="sourceLineNo">071</span>    /**<a name="line.71"></a>
+<span class="sourceLineNo">072</span>     * &lt;div class="zh"&gt; 文件不存在 &lt;/div&gt; &lt;div class="en"&gt;File not exist &lt;/div&gt;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>     */<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    P2PE_VP_ERR_FILE_NOT_EXIST(-1010, "文件不存在", "File not exist"),<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>    /**<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * &lt;div class="zh"&gt; 读取或写入文件时出错 &lt;/div&gt; &lt;div class="en"&gt; Error when reading from or writing into file &lt;/div&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     */<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    P2PE_VP_ERR_FILE_RW_ERROR(-1011, "读取或写入文件时出错", "Error when reading from or writing into file"),<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>    /**<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     * &lt;div class="zh"&gt; 内部错误 &lt;/div&gt; &lt;div class="en"&gt; Internal error. &lt;/div&gt;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    P2PE_VP_ERR_INTERNAL_ERROR(-1020, "内部错误", "Internal error."),<a name="line.84"></a>
+<span class="sourceLineNo">085</span><a name="line.85"></a>
+<span class="sourceLineNo">086</span>    /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>     * &lt;div class="zh"&gt; BIN 异常范围数据无效 &lt;/div&gt; &lt;div class="en"&gt; Invalid BIN exception ranges data &lt;/div&gt;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>     */<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    P2PE_VP_ERR_INVALID_BIN_EXCEPTIONS(-1016, "BIN 异常范围数据无效", "Invalid BIN exception ranges data"),<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>    /**<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     * &lt;div class="zh"&gt; BIN 异常表无效 &lt;/div&gt; &lt;div class="en"&gt; Invalid BIN exception table &lt;/div&gt;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     */<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    P2PE_VP_ERR_INVALID_BIN_TABLE(-1003, "BIN 异常表无效", "Invalid BIN exception table"),<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>    /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>     * &lt;div class="zh"&gt; 无效的清除卡数据，不对应正确的格式 &lt;/div&gt; &lt;div class="en"&gt; Invalid clear card data, does not correspond to proper format &lt;/div&gt;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>     */<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    P2PE_VP_ERR_INVALID_CARD_DATA(-1022, "无效的清除卡数据，不对应正确的格式", "Invalid clear card data, does not correspond to proper format"),<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>    /**<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * &lt;div class="zh"&gt; 无效的数据类型 &lt;/div&gt; &lt;div class="en"&gt; Invalid data type &lt;/div&gt;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     */<a name="line.103"></a>
+<span class="sourceLineNo">104</span>    P2PE_VP_ERR_INVALID_DATA_TYPE(-1009, "无效的数据类型", "Invalid data type"),<a name="line.104"></a>
+<span class="sourceLineNo">105</span><a name="line.105"></a>
+<span class="sourceLineNo">106</span>    /**<a name="line.106"></a>
+<span class="sourceLineNo">107</span>     * &lt;div class="zh"&gt; 无效的加密标志 &lt;/div&gt; &lt;div class="en"&gt; Invalid encryption flag &lt;/div&gt;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>     */<a name="line.108"></a>
+<span class="sourceLineNo">109</span>    P2PE_VP_ERR_INVALID_ENCRYPT_FLAG(-1004, "无效的加密标志", "Invalid encryption flag"),<a name="line.109"></a>
+<span class="sourceLineNo">110</span><a name="line.110"></a>
+<span class="sourceLineNo">111</span>    /**<a name="line.111"></a>
+<span class="sourceLineNo">112</span>     * &lt;div class="zh"&gt; 使用的身份日期无效 &lt;/div&gt; &lt;div class="en"&gt; Invalid identity date used &lt;/div&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>     */<a name="line.113"></a>
+<span class="sourceLineNo">114</span>    P2PE_VP_ERR_INVALID_IDENTITY_DATE(-1013, "使用的身份日期无效", "Invalid identity date used"),<a name="line.114"></a>
+<span class="sourceLineNo">115</span><a name="line.115"></a>
+<span class="sourceLineNo">116</span>    /**<a name="line.116"></a>
+<span class="sourceLineNo">117</span>     * &lt;div class="zh"&gt; 长度超过 255 个字符的标识字符串 &lt;/div&gt; &lt;div class="en"&gt; Identity string longer than 255 chars &lt;/div&gt;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>     */<a name="line.118"></a>
+<span class="sourceLineNo">119</span>    P2PE_VP_ERR_INVALID_IDENTITY_STRING(-1012, "长度超过 255 个字符的标识字符串", "Identity string longer than 255 chars"),<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>    /**<a name="line.121"></a>
+<span class="sourceLineNo">122</span>     * &lt;div class="zh"&gt; 给出了错误的 FPE 密钥 &lt;/div&gt; &lt;div class="en"&gt; Bad FPE key given &lt;/div&gt;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>     */<a name="line.123"></a>
+<span class="sourceLineNo">124</span>    P2PE_VP_ERR_INVALID_KEY(-1007, "给出了错误的 FPE 密钥", "Bad FPE key given"),<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>    /**<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     * &lt;div class="zh"&gt; 无效的键索引 &lt;/div&gt; &lt;div class="en"&gt; Invalid key index &lt;/div&gt;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>     */<a name="line.128"></a>
+<span class="sourceLineNo">129</span>    P2PE_VP_ERR_INVALID_KEY_INDEX(-1005, "无效的键索引", "Invalid key index"),<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>    /**<a name="line.131"></a>
+<span class="sourceLineNo">132</span>     * &lt;div class="zh"&gt; 无效的 BB 参数数据 &lt;/div&gt; &lt;div class="en"&gt; Invalid BB params data &lt;/div&gt;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>     */<a name="line.133"></a>
+<span class="sourceLineNo">134</span>    P2PE_VP_ERR_INVALID_PARAMS_DATA(-1014, "无效的 BB 参数数据", "Invalid BB params data"),<a name="line.134"></a>
+<span class="sourceLineNo">135</span><a name="line.135"></a>
+<span class="sourceLineNo">136</span>    /**<a name="line.136"></a>
+<span class="sourceLineNo">137</span>     * &lt;div class="zh"&gt; MSR工作模式无效 &lt;/div&gt; &lt;div class="en"&gt; Invalid work mode of MSR &lt;/div&gt;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>     */<a name="line.138"></a>
+<span class="sourceLineNo">139</span>    P2PE_VP_ERR_INVALID_WORK_MODE(-1002, "MSR工作模式无效", "Invalid work mode of MSR"),<a name="line.139"></a>
+<span class="sourceLineNo">140</span><a name="line.140"></a>
+<span class="sourceLineNo">141</span>    /**<a name="line.141"></a>
+<span class="sourceLineNo">142</span>     * &lt;div class="zh"&gt; 密钥不存在 &lt;/div&gt; &lt;div class="en"&gt; The Key is not exist &lt;/div&gt;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>     */<a name="line.143"></a>
+<span class="sourceLineNo">144</span>    P2PE_VP_ERR_KEY_NOT_EXIST(-1006, "密钥不存在", "The Key is not exist"),<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>    /**<a name="line.146"></a>
+<span class="sourceLineNo">147</span>     * &lt;div class="zh"&gt; 意外的空参数 &lt;/div&gt; &lt;div class="en"&gt; Unexpected null argument &lt;/div&gt;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>     */<a name="line.148"></a>
+<span class="sourceLineNo">149</span>    P2PE_VP_ERR_NULL_ARG(-1001, "意外的空参数", "Unexpected null argument"),<a name="line.149"></a>
+<span class="sourceLineNo">150</span><a name="line.150"></a>
+<span class="sourceLineNo">151</span>    /**<a name="line.151"></a>
+<span class="sourceLineNo">152</span>     * &lt;div class="zh"&gt; 用户取消 PAN 条目 &lt;/div&gt; &lt;div class="en"&gt; User cancels the PAN entry &lt;/div&gt;<a name="line.152"></a>
+<span class="sourceLineNo">153</span>     */<a name="line.153"></a>
+<span class="sourceLineNo">154</span>    P2PE_VP_ERR_PAN_INPUT_CANCEL(-1019, "用户取消 PAN 条目", "User cancels the PAN entry"),<a name="line.154"></a>
+<span class="sourceLineNo">155</span><a name="line.155"></a>
+<span class="sourceLineNo">156</span>    /**<a name="line.156"></a>
+<span class="sourceLineNo">157</span>     * &lt;div class="zh"&gt; 进入 PAN 时超时&lt;/div&gt; &lt;div class="en"&gt; Time out when entering PAN &lt;/div&gt;<a name="line.157"></a>
+<span class="sourceLineNo">158</span>     */<a name="line.158"></a>
+<span class="sourceLineNo">159</span>    P2PE_VP_ERR_PAN_TIME_OUT(-1018, "进入 PAN 时超时", "Time out when entering PAN"),<a name="line.159"></a>
+<span class="sourceLineNo">160</span><a name="line.160"></a>
+<span class="sourceLineNo">161</span>    /**<a name="line.161"></a>
+<span class="sourceLineNo">162</span>     * &lt;div class="zh"&gt; 读磁卡时出错 &lt;/div&gt; &lt;div class="en"&gt; Error when reading magnetic card &lt;/div&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>     */<a name="line.163"></a>
+<span class="sourceLineNo">164</span>    P2PE_VP_ERR_READ_TRACK_DATA(-1017, "读磁卡时出错", "Error when reading magnetic card"),<a name="line.164"></a>
+<span class="sourceLineNo">165</span><a name="line.165"></a>
+<span class="sourceLineNo">166</span>    /**<a name="line.166"></a>
+<span class="sourceLineNo">167</span>     * &lt;div class="zh"&gt; 应该在加密之前初始化一个 E2EE 上下文 &lt;/div&gt; &lt;div class="en"&gt; should initialize an E2EE context before encryption &lt;/div&gt;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>     */<a name="line.168"></a>
+<span class="sourceLineNo">169</span>    P2PE_VP_ERR_SHOULD_INIT_CONTEXT(-1021, "应该在加密之前初始化一个 E2EE 上下文", "should initialize an E2EE context before encryptiony"),<a name="line.169"></a>
+<span class="sourceLineNo">170</span><a name="line.170"></a>
+<span class="sourceLineNo">171</span><a name="line.171"></a>
+<span class="sourceLineNo">172</span>    ;<a name="line.172"></a>
+<span class="sourceLineNo">173</span>    private int errCodeFromBasement;<a name="line.173"></a>
+<span class="sourceLineNo">174</span>    private String errMsgCn;<a name="line.174"></a>
+<span class="sourceLineNo">175</span>    private String errMsgEn;<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>    EP2PEException(int errCodeFromBasement, String errMsnCn, String errMsgEn) {<a name="line.177"></a>
+<span class="sourceLineNo">178</span>        this.errCodeFromBasement = errCodeFromBasement;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        this.errMsgCn = errMsnCn;<a name="line.179"></a>
+<span class="sourceLineNo">180</span>        this.errMsgEn = errMsgEn;<a name="line.180"></a>
+<span class="sourceLineNo">181</span>    }<a name="line.181"></a>
+<span class="sourceLineNo">182</span><a name="line.182"></a>
+<span class="sourceLineNo">183</span>    public int getErrCodeFromBasement() {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>        return errCodeFromBasement;<a name="line.184"></a>
+<span class="sourceLineNo">185</span>    }<a name="line.185"></a>
+<span class="sourceLineNo">186</span><a name="line.186"></a>
+<span class="sourceLineNo">187</span>    public String getErrMsg() {<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        if (Utils.isZh()) {<a name="line.188"></a>
+<span class="sourceLineNo">189</span>            return errMsgCn;<a name="line.189"></a>
+<span class="sourceLineNo">190</span>        } else {<a name="line.190"></a>
+<span class="sourceLineNo">191</span>            return errMsgEn;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        }<a name="line.192"></a>
+<span class="sourceLineNo">193</span>    }<a name="line.193"></a>
+<span class="sourceLineNo">194</span>}<a name="line.194"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
