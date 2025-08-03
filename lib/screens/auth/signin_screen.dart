@@ -1,25 +1,45 @@
-import 'package:cirmle_rfid_pos/screens/auth/signup_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 
 class SignInPage extends StatefulWidget {
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignInPageState createState() =>                             children: [
+                              SizedBox(height: 20),
+                              
+                              // Error message
+                              if (_errorMessage != null) ...[
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade50,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    _errorMessage!,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.red.shade800),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                              ],
+
+                              // Username FieldnInPageState();
 }
 
 class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
   bool _isLoading = false;
+  String? _errorMessage;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthService _authService = AuthService();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -28,76 +48,50 @@ class _SignInPageState extends State<SignInPage> {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
+        _errorMessage = null;
       });
 
       try {
-        await _auth.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
+        final success = await _authService.login(
+          _usernameController.text.trim(),
+          _passwordController.text.trim(),
         );
 
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Signed in successfully!'),
-              backgroundColor: Colors.green,
-              duration: Duration(seconds: 2),
-            ),
-          );
-
-          await Future.delayed(Duration(milliseconds: 500));
-
+        if (success) {
           if (mounted) {
-            try {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Signed in successfully!'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+
+            // Navigate based on user role
+            if (_authService.isAdmin) {
+              Navigator.pushReplacementNamed(context, '/admin_dashboard');
+            } else if (_authService.isTopUpUser) {
+              Navigator.pushReplacementNamed(context, '/topup_dashboard');
+            } else {
               Navigator.pushReplacementNamed(context, '/dashboard');
-            } catch (e) {
-              print('Navigation error: $e');
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/dashboard',
-                    (route) => false,
-              );
             }
           }
-        }
-      } on FirebaseAuthException catch (e) {
-        String errorMessage = '';
-        switch (e.code) {
-          case 'user-not-found':
-            errorMessage = 'No user found for that email.';
-            break;
-          case 'wrong-password':
-            errorMessage = 'Wrong password provided.';
-            break;
-          case 'invalid-email':
-            errorMessage = 'The email address is not valid.';
-            break;
-          case 'user-disabled':
-            errorMessage = 'This user account has been disabled.';
-            break;
-          case 'too-many-requests':
-            errorMessage = 'Too many requests. Please try again later.';
-            break;
-          case 'invalid-credential':
-            errorMessage = 'Invalid email or password.';
-            break;
-          default:
-            errorMessage = 'An error occurred: ${e.message}';
-        }
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-          );
+        } else {
+          setState(() {
+            _errorMessage = 'Invalid username or password';
+          });
         }
       } catch (e) {
+        setState(() {
+          _errorMessage = 'An error occurred: ${e.toString()}';
+        });
+      } finally {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('An unexpected error occurred. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
         }
       } finally {
         if (mounted) {
@@ -201,20 +195,16 @@ class _SignInPageState extends State<SignInPage> {
                             children: [
                               SizedBox(height: 20),
 
-                              // Email Field
+                              // Username Field
                               _buildInputField(
-                                controller: _emailController,
-                                label: 'Email',
-                                hint: 'Enter your email address',
-                                icon: Icons.email,
-                                keyboardType: TextInputType.emailAddress,
+                                controller: _usernameController,
+                                label: 'Username',
+                                hint: 'Enter your username',
+                                icon: Icons.person,
+                                keyboardType: TextInputType.text,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter your email';
-                                  }
-                                  if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-                                      .hasMatch(value.trim())) {
-                                    return 'Please enter a valid email';
+                                    return 'Please enter your username';
                                   }
                                   return null;
                                 },

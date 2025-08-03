@@ -1,0 +1,388 @@
+import 'package:flutter/material.dart';
+import 'dart:async';
+import '../services/neptune/neptune_service.dart';
+import '../services/card_transaction_service.dart';
+import '../models/card_models.dart';
+
+class NeptuneCardPaymentScreen extends StatefulWidget {
+  const NeptuneCardPaymentScreen({Key? key}) : super(key: key);
+
+  @override
+  State<NeptuneCardPaymentScreen> createState() => _NeptuneCardPaymentScreenState();
+}
+
+class _NeptuneCardPaymentScreenState extends State<NeptuneCardPaymentScreen> {
+  final _amountController = TextEditingController();
+  final _merchantIdController = TextEditingController();
+  final _terminalIdController = TextEditingController();
+  
+  bool _isSDKInitialized = false;
+  bool _isDetecting = false;
+  bool _isProcessing = false;
+  String? _statusMessage;
+  String? _detectedCardUID;
+  CardBalance? _cardBalance;
+  CardTransaction? _lastTransaction;
+  
+  StreamSubscription? _cardDetectionSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeSDK();
+  }
+
+  @override
+  void dispose() {
+    _cardDetectionSubscription?.cancel();
+    _amountController.dispose();
+    _merchantIdController.dispose();
+    _terminalIdController.dispose();
+    NeptuneService().dispose();
+    super.dispose();
+  }
+
+  Future<void> _initializeSDK() async {
+    setState(() {
+      _statusMessage = "Initializing Neptune SDK...";
+    });
+
+    try {
+      final result = await NeptuneService().initialize();
+      setState(() {
+        _isSDKInitialized = result;
+        _statusMessage = result 
+            ? "SDK initialized successfully"
+            : "Failed to initialize SDK";
+      });
+    } catch (e) {
+      setState(() {
+        _isSDKInitialized = false;
+        _statusMessage = "Error initializing SDK: ${e.toString()}";
+      });
+    }
+  }
+
+  Future<void> _startCardDetection() async {
+    if (!_isSDKInitialized) {
+      setState(() {
+        _statusMessage = "SDK not initialized. Please try again.";
+      });
+      return;
+    }
+
+    setState(() {
+      _isDetecting = true;
+      _detectedCardUID = null;
+      _statusMessage = "Waiting for card...";
+    });
+
+    try {
+      _cardDetectionSubscription = NeptuneService().detectCard().listen(
+        (cardUID) {
+          if (cardUID != null && cardUID.isNotEmpty) {
+            setState(() {
+              _detectedCardUID = cardUID;
+              _statusMessage = "Card detected: $cardUID";
+              _isDetecting = false;
+            });
+            _cardDetectionSubscription?.cancel();
+            _readCardBalance(cardUID);
+          }
+        },
+        onError: (error) {
+          setState(() {
+            _statusMessage = "Error detecting card: ${error.toString()}";
+            _isDetecting = false;
+          });
+          _cardDetectionSubscription?.cancel();
+        }
+      );
+    } catch (e) {
+      setState(() {
+        _statusMessage = "Error starting card detection: ${e.toString()}";
+        _isDetecting = false;
+      });
+    }
+  }
+
+  Future<void> _readCardBalance(String cardUID) async {
+    setState(() {
+      _statusMessage = "Reading card balance...";
+    });
+
+    try {
+      final cardBalance = await CardTransactionService().getCardBalance(cardUID);
+      setState(() {
+        _cardBalance = cardBalance;
+        _statusMessage = "Card balance: ₹${cardBalance.balance.toStringAsFixed(2)}";
+      });
+    } catch (e) {
+      setState(() {
+        _statusMessage = "Error reading balance: ${e.toString()}";
+      });
+    }
+  }
+
+  Future<void> _processPayment() async {
+    if (_detectedCardUID == null) {
+      setState(() {
+        _statusMessage = "No card detected. Please tap a card first.";
+      });
+      return;
+    }
+
+    final double? amount = double.tryParse(_amountController.text);
+    if (amount == null || amount <= 0) {
+      setState(() {
+        _statusMessage = "Please enter a valid amount";
+      });
+      return;
+    }
+
+    if (_cardBalance != null && amount > _cardBalance!.balance) {
+      setState(() {
+        _statusMessage = "Insufficient balance";
+      });
+      return;
+    }
+
+    setState(() {
+      _isProcessing = true;
+      _statusMessage = "Processing payment...";
+    });
+
+    try {
+      final transaction = await CardTransactionService().processCardPayment(
+        CardPaymentRequest(
+          cardId: _detectedCardUID!,
+          amount: amount,
+          merchantId: _merchantIdController.text,
+          terminalId: _terminalIdController.text,
+        ),
+      );
+
+      setState(() {
+        _lastTransaction = transaction;
+        _statusMessage = "Payment successful: ₹${amount.toStringAsFixed(2)}";
+        _isProcessing = false;
+      });
+
+      // Read updated balance after successful payment
+      _readCardBalance(_detectedCardUID!);
+    } catch (e) {
+      setState(() {
+        _statusMessage = "Payment failed: ${e.toString()}";
+        _isProcessing = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Neptune Card Payment'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _isSDKInitialized ? null : _initializeSDK,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Device Status',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          _isSDKInitialized
+                              ? Icons.check_circle
+                              : Icons.error,
+                          color: _isSDKInitialized 
+                              ? Colors.green 
+                              : Colors.red,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _isSDKInitialized
+                              ? 'Reader Ready'
+                              : 'Reader Not Ready',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _statusMessage ?? 'Tap "Detect Card" to start',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    if (_detectedCardUID != null) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        'Card UID: $_detectedCardUID',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                    if (_cardBalance != null) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        'Available Balance: ₹${_cardBalance!.balance.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Payment Details',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _merchantIdController,
+                      decoration: const InputDecoration(
+                        labelText: 'Merchant ID',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _terminalIdController,
+                      decoration: const InputDecoration(
+                        labelText: 'Terminal ID',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Amount (₹)',
+                        hintText: '0.00',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: _isDetecting || _isProcessing
+                                ? null
+                                : _startCardDetection,
+                            icon: const Icon(Icons.contactless),
+                            label: Text(_isDetecting ? 'Detecting...' : 'Detect Card'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: (_detectedCardUID == null || _isProcessing || _isDetecting)
+                                ? null
+                                : _processPayment,
+                            icon: const Icon(Icons.payment),
+                            label: Text(_isProcessing ? 'Processing...' : 'Process Payment'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (_lastTransaction != null) ...[
+              const SizedBox(height: 16),
+              Card(
+                elevation: 4,
+                color: Colors.green[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Last Transaction',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 8),
+                      _buildTransactionDetail('Transaction ID', _lastTransaction!.transactionId),
+                      _buildTransactionDetail('Amount', '₹${_lastTransaction!.amount.toStringAsFixed(2)}'),
+                      _buildTransactionDetail('Status', _lastTransaction!.status),
+                      _buildTransactionDetail('Date', _formatDateTime(_lastTransaction!.timestamp)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTransactionDetail(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(value),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+}

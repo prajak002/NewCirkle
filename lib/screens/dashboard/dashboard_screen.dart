@@ -24,19 +24,15 @@ class DashboardScreen extends StatelessWidget {
       route: '/summary',
     ),
     _DashboardItem(
-      icon: Icons.payment,
-      label: "Razorpay POS",
-      route: '/razorpay_pos',
-    ),
-    _DashboardItem(
-      icon: Icons.phone_android,
-      label: "POS Main",
-      route: '/razorpay_pos_main',
-    ),
-    _DashboardItem(
       icon: Icons.contactless,
       label: "Card Reader",
-      route: '/neptune_card_payment',
+      route: '/card_payment',
+    ),
+    _DashboardItem(
+      icon: Icons.bug_report,
+      label: "Neptune Test",
+      route: '/neptune_mock_test',
+      color: Colors.orange,
     ),
   ];
 
@@ -166,6 +162,7 @@ class DashboardScreen extends StatelessWidget {
                             },
                             isMobile: isMobile,
                             isTablet: isTablet,
+                            iconColor: item.color,
                           );
                         },
                       ),
@@ -188,6 +185,7 @@ class _DashboardButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool isMobile;
   final bool isTablet;
+  final Color? iconColor;
 
   const _DashboardButton({
     required this.icon,
@@ -195,6 +193,7 @@ class _DashboardButton extends StatelessWidget {
     required this.onTap,
     this.isMobile = false,
     this.isTablet = false,
+    this.iconColor,
   });
 
   @override
@@ -231,7 +230,7 @@ class _DashboardButton extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: isMobile ? 32 : (isTablet ? 36 : 40),
-                  color: Color(0xFF1976D2),
+                  color: iconColor ?? Color(0xFF1976D2),
                 ),
               ),
               SizedBox(height: isMobile ? 8 : 12),
@@ -241,7 +240,7 @@ class _DashboardButton extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: isMobile ? 12 : (isTablet ? 14 : 16),
-                    color: Color(0xFF1976D2),
+                    color: iconColor ?? Color(0xFF1976D2),
                     letterSpacing: 0.3,
                   ),
                   textAlign: TextAlign.center,
@@ -262,9 +261,12 @@ class _DashboardItem {
   final IconData icon;
   final String label;
   final String route;
+  final Color? color;
+  
   _DashboardItem({
     required this.icon,
     required this.label,
     required this.route,
+    this.color,
   });
 }

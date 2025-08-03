@@ -1,4 +1,4 @@
-# Neptune Card Reader Integration Guide
+git commit -# Neptune Card Reader Integration Guide
 
 ## Overview
 
@@ -157,7 +157,7 @@ class CardTransactionService {
 
 #### Step 2: Backend API Endpoints
 
-Implement the following endpoints on your backend:
+Implement the following endpoints on your AWS API Gateway (https://kiis0e7lfj.execute-api.ap-south-1.amazonaws.com/uat): backend:
 
 ```bash
 POST /api/card/process-payment
