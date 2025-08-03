@@ -192,6 +192,7 @@ class CardTransactionService {
     try {
       final requestBody = {
         'cardUid': cardUid,
+        'userId': 'test', // Always use 'test' as userId
         'holderName': holderName,
         'holderPhone': holderPhone,
         'holderEmail': holderEmail,
